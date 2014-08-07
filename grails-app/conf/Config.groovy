@@ -397,3 +397,21 @@ elasticSearch {
 println "Config loaded"
 
 notifications.enabled = false
+
+marketplace.scheduledImports = [[
+    name: 'Test Import',
+    enabled: true,
+    url: 'https://localhost:9443/marketplace',
+    keyStore: [
+        file: null, //set null to use javax.net.ssl.keyStore system var
+        password: null //set null to use javax.net.ssl.keyStorePassword system var
+    ],
+    trustStore: [
+        file: null //set null to use javax.net.ssl.trustStore system var
+    ],
+    partial: true,
+    frequency: [
+        count: 2,
+        unit: 'minutes' //one of 'minutes', 'hours', 'days'
+    ]
+]]

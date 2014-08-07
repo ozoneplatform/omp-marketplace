@@ -46,6 +46,7 @@ class Constants {
 
     public static final String IMPORT_TYPE_FULL = "Entire"
     public static final String IMPORT_TYPE_DELTA = "Partial"
+    public static final String IMPORT_JOB_ID_KEY = 'importTaskId'
 
     public static final String FIELD_CREATEDDATE = 'createdDate'
     public static final String FIELD_EDITEDDATE = 'editedDate'

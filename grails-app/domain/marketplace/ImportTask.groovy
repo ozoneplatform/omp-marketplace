@@ -118,5 +118,30 @@ class ImportTask implements Serializable {
         println t.prettyPrint()
     }
 
+    /**
+     * Sets the execInterval from a base interval and units
+     * @param units The units which the baseInterval is in.
+     *  Valid values: "minutes", "hours", "days"
+     * @param baseInterval The number of <units> that the interval should be
+     * @throws IllegalArugmentException if the units are not one of the expected values
+     */
+    public void setExecInterval(int baseInterval, String units) {
+        int multFactor
 
+        switch (units) {
+            case 'minutes':
+                multFactor = 1
+                break
+            case 'hours':
+                multFactor = 60
+                break
+            case 'days':
+                multFactor = 1440
+            default:
+            throw new IllegalArgumentException(
+                "ImportTask units must be one of 'minutes', 'hours', or 'days'")
+        }
+
+        execInterval = baseInterval * multFactor
+    }
 }

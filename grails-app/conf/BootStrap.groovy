@@ -21,6 +21,7 @@ class BootStrap {
 	def marketplaceApplicationConfigurationService
     def profileService
     def textService
+    def scheduledImportSchedulingService
     def grailsApplication
 
     def messageSource
@@ -148,41 +149,7 @@ class BootStrap {
             }
         }
 
-        // Look up all active ImportTasks and schedule for execution
-        //   This requires the QuartzScheduler
-        def quartzScheduler = apc?.getBean('quartzScheduler')
-        if (quartzScheduler) {
-            importTasks = ImportTask.findAll()
-            importTasks.each { task ->
-                if (task.enabled) {
-                    try {
-                        ImportJob job = new ImportJob(task)
-                        job.schedule(quartzScheduler)
-                    } catch (Exception e) {
-                        def emessage = e.getMessage()
-                        log.error emessage
-
-                        ImportTaskResult result = new ImportTaskResult()
-                        result.runDate = new java.util.Date()
-                        result.result = false
-                        result.message = (emessage.length() < 4000 ? emessage : emessage.substring(0, 3998))
-                        result.task = task
-                        task.addToRuns(result);
-                        task.lastRunResult = result;
-                        try {
-                            task = task.save(flush: true)
-                        } catch (Exception ee) {
-                            log.warn "Error saving ImportTask: ${ee.message}"
-                        }
-                        return task
-                    }
-                }
-            }
-        } else {
-            log.error "Unable to schedule import tasks; bean quartzScheduler not available"
-        }
-
-
+        scheduledImportSchedulingService.updateImportTasksFromConfig()
     }
 
     //private method to register marshallers for domain objects
