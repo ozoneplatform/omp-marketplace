@@ -3,17 +3,21 @@ package marketplace.scheduledimport
 import org.quartz.JobKey
 import org.quartz.JobBuilder
 import org.quartz.JobDetail
-import org.quartz.JobExecutionContext
 import org.quartz.SimpleScheduleBuilder
 import org.quartz.TriggerBuilder
+import org.quartz.core.QuartzScheduler
 
+import org.codehaus.groovy.grails.commons.GrailsApplication
+
+import marketplace.ImportTask
+import marketplace.Constants
 
 /**
  * This class re-implements Scheduled Import for OMP 7.16.  It is separate from
  * the other import code (ImportExecutorService, etc) so that it can avoid the
  * complexities of interactive metadata mapping
  */
-class ScheduledImportService {
+class ScheduledImportSchedulingService {
     GrailsApplication grailsApplication
     QuartzScheduler quartzScheduler
 
@@ -27,7 +31,7 @@ class ScheduledImportService {
     public void updateImportTasksFromConfig() {
         def scheduledImportConfig = grailsApplication.config.marketplace.scheduledImport
 
-        if (scheduledImportConfig)
+        if (scheduledImportConfig) {
             scheduledImportConfig.each { conf ->
                 ImportTask task = ImportTask.findByName(conf.name) ?: new ImportTask()
 

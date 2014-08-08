@@ -1,5 +1,7 @@
 package marketplace.scheduledimport
 
+import marketplace.ImportTask
+
 /**
  * This class re-implements Scheduled Import for OMP 7.16.  It is separate from
  * the other import code (ImportExecutorService, etc) so that it can avoid the
