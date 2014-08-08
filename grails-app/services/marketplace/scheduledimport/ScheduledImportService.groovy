@@ -46,7 +46,7 @@ class ScheduledImportService {
     public void executeScheduledImport(ImportTask task) {
         log.info "Executing scheduled import [${task.name}]"
 
-        JSONObject json = scheduledImportHttpService.retrieveRemoteImportData(task)
+        ScheduledImportData importData = scheduledImportHttpService.retrieveRemoteImportData(task)
 
         importProfiles(json.profiles)
         importCategories(json.categories)
@@ -59,19 +59,19 @@ class ScheduledImportService {
 
     //template method for import items of a specific type
     private <T> void importUsingService(Class<T> dtoClass,
-            RestService<T> service, JSONArray items) {
+            RestService<T> service, Collection<T> items) {
 
         items.each {
             T existing = null
-            if (it.uuid && dtoClass.metaClass.respondsTo('findByUuid', String)) {
+            if (it.hasProperty('uuid')) {
                 existing = dtoClass.findByUuid(it.uuid)
             }
 
             if (existing != null) {
-                service.update(existing, it)
+                service.updateById(existing.id, it)
             }
             else {
-                service.createFromDto(dto)
+                service.createFromDto(it)
             }
         }
     }
@@ -82,59 +82,47 @@ class ScheduledImportService {
     private importStates = this&.importUsingService.curry(State, stateRestService)
     private importAgencies = this&.importUsingService.curry(Agency, agencyRestService)
 
-    private void importCustomFieldDefinitions(JSONArray customFieldDefs) {
+    private void importCustomFieldDefinitions(Collection<CustomFieldDefinition> customFieldDefs) {
         customFieldDefs.each { customFieldDef ->
-            //determine which style of custom field this is
-            CustomFieldDefinitionStyleType styleType =
-                Constants.CustomFieldDefinitionStyleType.values().find {
-                    it.styleTypeName() == customFieldDef.fieldType
-                }
 
             RestService<? extends CustomFieldDefinition> service
 
             //determine which service to use
-            switch (styleType) {
-                case Constants.CustomFieldDefinitionStyleType.TEXT:
+            switch (customFieldDef.getClass()) {
+                case TextCustomFieldDefinition:
                     service = textCustomFieldDefinitionRestService
                     break
-                case Constants.CustomFieldDefinitionStyleType.TEXT_AREA:
+                case TextAreaCustomFieldDefinition:
                     service = textAreaCustomFieldDefinitionRestService
                     break
-                case Constants.CustomFieldDefinitionStyleType.DROP_DOWN:
+                case DropDownCustomFieldDefinition:
                     service = dropDownCustomFieldDefinitionRestService
                     break
-                case Constants.CustomFieldDefinitionStyleType.IMAGE_URL:
+                case ImageURLCustomFieldDefinition:
                     service = imageURLCustomFieldDefinitionRestService
                     break
-                case Constants.CustomFieldDefinitionStyleType.CHECK_BOX:
+                case CheckBoxCustomFieldDefinition:
                     service = checkBoxCustomFieldDefinitionRestService
                     break
             }
 
             CustomFieldDefinition existing =
-                styleType.fieldDefinitionClass.findByUuid(customFieldDef.uuid)
+                customFieldDef.getClass().findByUuid(customFieldDef.uuid)
 
             if (existing != null) {
-                service.update(existing, customFieldDef)
+                service.updateById(existing.id, customFieldDef)
             }
             else {
-                service.createFromDto(styleType.fieldDefinitionClass.instantiate(customFieldDef))
+                service.createFromDto(customFieldDef)
             }
         }
     }
 
-    private void importServiceItems(JSONArray serviceItems) {
-        Set<Agency> agencies = serviceItems.collect { si ->
-            (si.agencyIcon && si.agency) ?
-                new Agency(
-                    iconUrl: si.agencyIcon,
-                    title: si.agency
-                ) :
-                null
-        } - null
+    private void importServiceItems(Collection<ServiceItem> serviceItems) {
+        Set<Agency> agencies = serviceItems.collect { it.agency } - null
 
         //import agencies based on information in the service items
-        importAgencies(new JSONArray(agencies.collect { it.asJSON() }))
+        importAgencies(agencies)
 
         serviceItems.each { siJson ->
             ServiceItem existing = ServiceItem.findByUuid(siJson.uuid)

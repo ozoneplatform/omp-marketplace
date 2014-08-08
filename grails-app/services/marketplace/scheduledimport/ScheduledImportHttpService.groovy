@@ -69,7 +69,7 @@ protected class ScheduledImportHttpService {
         return uriBuilder.toURL()
     }
 
-    public JSONObject retrieveRemoteImportData(ImportTask task) {
+    public ScheduledImportData retrieveRemoteImportData(ImportTask task) {
         HttpClient client = createHttpClient(task)
         HttpGet httpget = new HttpGet(getRemoteUrl(task));
 
@@ -79,10 +79,23 @@ protected class ScheduledImportHttpService {
             //TODO error handling
         }
         else {
-            String contentType = response.contentType?.value
-            String encoding = (contentType =~ /charset=(\S)/)[0][1] ?: "utf-8"
+            InputStream inputStream = null
+            try {
+                inputStream = response.entity.content
+                ScheduledImportData data = customDomainObjectReader.readFrom(
+                    ScheduledImportData.class,
+                    ScheduledImportData.class,
+                    null,
+                    MediaType.APPLICATION_JSON,
+                    null,
+                    inputStream
+                )
+            }
+            finally {
+                inputStream?.close()
+            }
 
-            return (JSONObject)JSON.parse(response.entity.content, encoding)
+            return data
         }
     }
 }
