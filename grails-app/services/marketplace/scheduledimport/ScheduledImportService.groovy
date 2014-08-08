@@ -2,6 +2,7 @@ package marketplace.scheduledimport
 
 import marketplace.ImportTask
 
+import marketplace.rest.RestService
 import marketplace.rest.ProfileRestService
 import marketplace.rest.CategoryRestService
 import marketplace.rest.TypeRestService
@@ -13,6 +14,16 @@ import marketplace.rest.TextCustomFieldDefinitionRestService
 import marketplace.rest.TextAreaCustomFieldDefinitionRestService
 import marketplace.rest.ImageURLCustomFieldDefinitionRestService
 import marketplace.rest.CheckBoxCustomFieldDefinitionRestService
+
+import marketplace.CustomFieldDefinition
+import marketplace.ServiceItem
+import marketplace.Types
+import marketplace.Agency
+import marketplace.Category
+import marketplace.State
+import marketplace.Relationship
+import ozone.marketplace.enums.RelationshipType
+
 
 /**
  * This class re-implements Scheduled Import for OMP 7.16.  It is separate from
@@ -76,11 +87,11 @@ class ScheduledImportService {
         }
     }
 
-    private importProfiles = this&.importUsingService.curry(Profile, profileRestService)
-    private importCategories = this&.importUsingService.curry(Category, categoryRestService)
-    private importTypes = this&.importUsingService.curry(Types, typeRestService)
-    private importStates = this&.importUsingService.curry(State, stateRestService)
-    private importAgencies = this&.importUsingService.curry(Agency, agencyRestService)
+    private importProfiles = this.&importUsingService.curry(Profile, profileRestService)
+    private importCategories = this.&importUsingService.curry(Category, categoryRestService)
+    private importTypes = this.&importUsingService.curry(Types, typeRestService)
+    private importStates = this.&importUsingService.curry(State, stateRestService)
+    private importAgencies = this.&importUsingService.curry(Agency, agencyRestService)
 
     private void importCustomFieldDefinitions(Collection<CustomFieldDefinition> customFieldDefs) {
         customFieldDefs.each { customFieldDef ->
