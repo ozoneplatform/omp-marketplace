@@ -8,6 +8,11 @@ import marketplace.rest.TypeRestService
 import marketplace.rest.StateRestService
 import marketplace.rest.ServiceItemRestService
 import marketplace.rest.AgencyRestService
+import marketplace.rest.DropDownCustomFieldDefinitionRestService
+import marketplace.rest.TextCustomFieldDefinitionRestService
+import marketplace.rest.TextAreaCustomFieldDefinitionRestService
+import marketplace.rest.ImageURLCustomFieldDefinitionRestService
+import marketplace.rest.CheckBoxCustomFieldDefinitionRestService
 
 /**
  * This class re-implements Scheduled Import for OMP 7.16.  It is separate from
@@ -24,6 +29,12 @@ class ScheduledImportService {
     StateRestService stateRestService
     ServiceItemRestService serviceItemRestService
     AgencyRestService agencyRestService
+
+    DropDownCustomFieldDefinitionRestService dropDownCustomFieldDefinitionRestService
+    TextCustomFieldDefinitionRestService textCustomFieldDefinitionRestService
+    TextAreaCustomFieldDefinitionRestService textAreaCustomFieldDefinitionRestService
+    ImageURLCustomFieldDefinitionRestService imageURLCustomFieldDefinitionRestService
+    CheckBoxCustomFieldDefinitionRestService checkBoxCustomFieldDefinitionRestService
 
     /**
      * Executes the import task with the corresponding id
@@ -46,19 +57,18 @@ class ScheduledImportService {
         importRelationships(json.relationships)
     }
 
+    //template method for import items of a specific type
     private <T> void importUsingService(Class<T> dtoClass,
             RestService<T> service, JSONArray items) {
 
         items.each {
-            T dto = dtoClass.instantiate(it)
-            Long existingId = null
-            if (dto.uuid && dtoClass.metaClass.respondsTo('findByUuid', String)) {
-                existingId = dtoClass.findByUuid(dto.uuid)?.id
+            T existing = null
+            if (it.uuid && dtoClass.metaClass.respondsTo('findByUuid', String)) {
+                existing = dtoClass.findByUuid(it.uuid)
             }
 
-            if (existingId != null) {
-                dto.id = existingId
-                service.updateById(existingId, dto)
+            if (existing != null) {
+                service.update(existing, it)
             }
             else {
                 service.createFromDto(dto)
@@ -71,8 +81,47 @@ class ScheduledImportService {
     private importTypes = this&.importUsingService.curry(Types, typeRestService)
     private importStates = this&.importUsingService.curry(State, stateRestService)
     private importAgencies = this&.importUsingService.curry(Agency, agencyRestService)
-    private importCustomFieldDefinitions =
-        this&.importUsingService.curry(CustomFieldDefinition, customFieldDefinitionRestService)
+
+    private void importCustomFieldDefinitions(JSONArray customFieldDefs) {
+        customFieldDefs.each { customFieldDef ->
+            //determine which style of custom field this is
+            CustomFieldDefinitionStyleType styleType =
+                Constants.CustomFieldDefinitionStyleType.values().find {
+                    it.styleTypeName() == customFieldDef.fieldType
+                }
+
+            RestService<? extends CustomFieldDefinition> service
+
+            //determine which service to use
+            switch (styleType) {
+                case Constants.CustomFieldDefinitionStyleType.TEXT:
+                    service = textCustomFieldDefinitionRestService
+                    break
+                case Constants.CustomFieldDefinitionStyleType.TEXT_AREA:
+                    service = textAreaCustomFieldDefinitionRestService
+                    break
+                case Constants.CustomFieldDefinitionStyleType.DROP_DOWN:
+                    service = dropDownCustomFieldDefinitionRestService
+                    break
+                case Constants.CustomFieldDefinitionStyleType.IMAGE_URL:
+                    service = imageURLCustomFieldDefinitionRestService
+                    break
+                case Constants.CustomFieldDefinitionStyleType.CHECK_BOX:
+                    service = checkBoxCustomFieldDefinitionRestService
+                    break
+            }
+
+            CustomFieldDefinition existing =
+                styleType.fieldDefinitionClass.findByUuid(customFieldDef.uuid)
+
+            if (existing != null) {
+                service.update(existing, customFieldDef)
+            }
+            else {
+                service.createFromDto(styleType.fieldDefinitionClass.instantiate(customFieldDef))
+            }
+        }
+    }
 
     private void importServiceItems(JSONArray serviceItems) {
         Set<Agency> agencies = serviceItems.collect { si ->
@@ -88,15 +137,13 @@ class ScheduledImportService {
         importAgencies(new JSONArray(agencies.collect { it.asJSON() }))
 
         serviceItems.each { siJson ->
-            T dto = new ServiceItem(siJson)
-            Long existingId = ServiceItem.findByUuid(dto.uuid)?.id
+            ServiceItem existing = ServiceItem.findByUuid(siJson.uuid)
 
-            if (existingId != null) {
-                dto.id = existingId
-                serviceItemRestService.updateById(existingId, dto)
+            if (existing != null) {
+                serviceItemRestService.update(existing, siJson)
             }
             else {
-                serviceItemRestService.createFromDto(dto)
+                serviceItemRestService.createFromDto(new ServiceItem(siJson))
             }
         }
     }
