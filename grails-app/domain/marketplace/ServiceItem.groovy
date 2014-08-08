@@ -374,6 +374,28 @@ class ServiceItem implements Serializable {
     }
 
     /**
+     * Legacy compat method
+     */
+    public void setAgencyIcon(String agencyIcon) {
+        if (!agency) {
+            agency = new Agency()
+        }
+
+        agency.iconUrl = agencyIcon
+    }
+
+    /**
+     * Legacy compat method
+     */
+    public void setAgency(String agencyName) {
+        if (!agency) {
+            agency = new Agency()
+        }
+
+        agency.title = agencyName
+    }
+
+    /**
      * Service Item screenshots are now stored internally as separate objects.
      * However, for compatibility, the import/export format still needs to have
      * the old format

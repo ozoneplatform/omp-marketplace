@@ -38,4 +38,16 @@ class Relationship implements Serializable {
             }
         }
     }
+
+    /**
+     * Setters for legacy format compatibility (scheduled import)
+     */
+
+    public void setRequires(Collection<ServiceItem> serviceItems) {
+        relatedItems.clear()
+        relatedItems << serviceItems
+    }
+    public void setServiceItem(ServiceItem owningEntity) {
+        this.owningEntity = owningEntity
+    }
 }

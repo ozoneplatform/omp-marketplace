@@ -135,4 +135,21 @@ class ScheduledImportService {
             }
         }
     }
+
+    private void importRelationships(Collection<Relationship> relationships) {
+        relationships.each { relationshipDto ->
+            ServiceItem si = serviceItemRestService.getById(relationshipDto.owningEntity.id)
+
+            Relationship relationship = si.relationships.find {
+                relationshipType == RelationshipType.REQUIRE
+            }
+
+            if (!relationship) {
+                relationship = new Relationship(relationshipType: RelationshipType.REQUIRE)
+                si.addToRelationships(relationship)
+            }
+
+            relationship.relatedItems.addAll(relationshipDto.relatedItems)
+        }
+    }
 }
