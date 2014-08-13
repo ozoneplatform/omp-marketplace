@@ -1,8 +1,12 @@
-package marketplace
+package marketplace.scheduledimport
+
+import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 
 import org.quartz.JobExecutionContext
 import org.quartz.JobExecutionException
 import org.quartz.Job
+
+import marketplace.Constants
 
 /**
  * <pre>
@@ -21,8 +25,6 @@ import org.quartz.Job
  */
 class ImportJob implements Job {
 
-    def scheduledImportService
-
     /**
      * Execute this Job.
      * @param context
@@ -31,8 +33,14 @@ class ImportJob implements Job {
         def jobMap = context.mergedJobDataMap
         log.debug "Executing ImportJob [${context?.jobDetail?.name}] with data: $jobMap"
 
+
         try {
-            scheduledImportService.execute(jobMap[Constants.JOB_ID_KEY])
+            //have to look up the service dynamically because autowiring doesn't work,
+            //event though it should
+            ScheduledImportService scheduledImportService =
+                AH.application.mainContext.getBean('scheduledImportService')
+
+            scheduledImportService.executeScheduledImport(jobMap[Constants.JOB_ID_KEY])
         }
         catch (Exception e) {
             log.error e

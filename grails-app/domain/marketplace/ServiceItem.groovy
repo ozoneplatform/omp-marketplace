@@ -394,6 +394,9 @@ class ServiceItem implements Serializable {
 
         agency.title = agencyName
     }
+    public void setAgency(Agency agency) {
+        this.agency = agency
+    }
 
     /**
      * Service Item screenshots are now stored internally as separate objects.
@@ -678,7 +681,31 @@ class ServiceItem implements Serializable {
     }
 
     public void setReleaseDate(String dateString) throws ParseException {
-        releaseDate = RELEASE_DATE_FORMAT.parse(dateString)
+        if (dateString && dateString != '') {
+            try {
+                releaseDate = RELEASE_DATE_FORMAT.parse(dateString)
+            }
+            catch (ParseException e) {
+                try {
+                    DateFormat dateFormat =
+                        new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
+                    releaseDate = dateFormat.parse(dateString)
+                }
+                catch (ParseException e2) {
+                    //throw the original exception
+                    throw e
+                }
+            }
+        }
+    }
+
+    public void setApprovedDate(String dateString) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
+        approvedDate = dateFormat.parse(dateString)
+    }
+
+    public void setApprovedDate(Date date) {
+        approvedDate = date
     }
 
     public void setReleaseDate(Date date) {

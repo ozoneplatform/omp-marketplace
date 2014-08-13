@@ -123,7 +123,19 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
 
             Map instantiatedMap = instantiateSubObjects(type, map)
 
-            def retval = type.metaClass.invokeConstructor(instantiatedMap)
+            def retval = type.metaClass.invokeConstructor()
+
+            //map constructor doesn't work well with overloaded setters, so use the setters
+            //explicitly
+            instantiatedMap.each { k, v ->
+                String method = "set${k.capitalize()}"
+                if (retval.respondsTo(method, v.getClass())) {
+                    retval."$method"(v)
+                }
+                else {
+                    log.debug "Discarding unusable property in JSON - $k: $v"
+                }
+            }
 
             // Workaround for http://jira.codehaus.org/browse/GRAILS-1984
             if (!retval.id) {
@@ -165,16 +177,31 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
         GrailsDomainClass grailsClass = grailsApplication.getDomainClass(type.name)
 
         collectEntries(map) { key, value ->
-            if (key != 'class') {
+            if (!(key in ['class', 'createdDate', 'editedDate'])) {
                 try {
                     //the given property of the parent domain class
                     GrailsDomainClassProperty property = grailsClass.getPropertyByName(key)
 
                     //the instantiated domain object or list of domain objects, or primitive or
                     //list of primitives
-                    def retval = value instanceof Collection ?
-                        value.collect(domainOrPrimitive.curry(property?.referencedPropertyType)) :
-                        domainOrPrimitive(property?.type, value)
+                    def retval
+                    if (property) {
+                        if (value instanceof Collection) {
+                            retval = value.collect(
+                                domainOrPrimitive.curry(property.referencedPropertyType))
+
+                            if (Set.isAssignableFrom(property.type)) {
+                                retval = retval as Set
+                            }
+                        }
+                        else {
+                            retval = domainOrPrimitive(property.type, value)
+                        }
+                    }
+                    else {
+                        retval = value
+                    }
+
 
                     [key, retval]
                 }

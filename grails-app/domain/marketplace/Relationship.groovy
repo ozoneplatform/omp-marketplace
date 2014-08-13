@@ -44,7 +44,13 @@ class Relationship implements Serializable {
      */
 
     public void setRequires(Collection<ServiceItem> serviceItems) {
-        relatedItems.clear()
+        if (relatedItems == null) {
+            relatedItems = []
+        }
+        else {
+            relatedItems.clear()
+        }
+
         relatedItems << serviceItems
     }
     public void setServiceItem(ServiceItem owningEntity) {

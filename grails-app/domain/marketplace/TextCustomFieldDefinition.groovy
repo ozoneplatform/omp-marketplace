@@ -3,6 +3,9 @@ package marketplace
 
 class TextCustomFieldDefinition extends CustomFieldDefinition {
 
+    static bindableProperties = CustomFieldDefinition.bindableProperties
+    static modifiableReferenceProperties = []
+
     static constraints = {
         styleType(nullable: false, validator: {
             if (it != Constants.CustomFieldDefinitionStyleType.TEXT) {

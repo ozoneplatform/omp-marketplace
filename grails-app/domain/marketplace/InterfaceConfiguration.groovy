@@ -39,8 +39,8 @@ class InterfaceConfiguration implements Serializable {
     }
 
     /**
-     * Given a field name, if this class has a default value for the 
-     * field mapped in the DEFAULT_IMAGE_MAP and a value exists, the 
+     * Given a field name, if this class has a default value for the
+     * field mapped in the DEFAULT_IMAGE_MAP and a value exists, the
      * value will be returned
      * @param imageName
      * @return
@@ -65,5 +65,13 @@ class InterfaceConfiguration implements Serializable {
 
     public static final InterfaceConfiguration FILE_IMPORT =
         new InterfaceConfiguration(name: Constants.FILE_BASED_IMPORT_EXECUTOR)
+
+    public static InterfaceConfiguration getOmpInterface() {
+        InterfaceConfiguration.findByName(Constants.OMP_IMPORT_EXECUTOR)
+    }
+
+    public static InterfaceConfiguration getFileInterface() {
+        InterfaceConfiguration.findByName(Constants.FILE_BASED_IMPORT_EXECUTOR)
+    }
 }
- 
+

@@ -7,19 +7,22 @@ import org.quartz.SimpleScheduleBuilder
 import org.quartz.TriggerBuilder
 import org.quartz.core.QuartzScheduler
 
+import org.springframework.scheduling.quartz.SchedulerFactoryBean
+
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
 import marketplace.ImportTask
+import marketplace.InterfaceConfiguration
 import marketplace.Constants
 
 /**
- * This class re-implements Scheduled Import for OMP 7.16.  It is separate from
- * the other import code (ImportExecutorService, etc) so that it can avoid the
- * complexities of interactive metadata mapping
+ * This class manages the conversion of scheduled import configs into domain objects and
+ * the scheduling of scheduled import jobs
  */
 class ScheduledImportSchedulingService {
     GrailsApplication grailsApplication
-    QuartzScheduler quartzScheduler
+    ScheduledImportService scheduledImportService
+    def quartzScheduler
 
     private static final String JOB_GROUP = 'ompImport'
 
@@ -29,27 +32,33 @@ class ScheduledImportSchedulingService {
      * updates the ImportTasks to match
      */
     public void updateImportTasksFromConfig() {
-        def scheduledImportConfig = grailsApplication.config.marketplace.scheduledImport
+        def scheduledImportConfig = grailsApplication.config.marketplace.scheduledImports
 
         if (scheduledImportConfig) {
+            InterfaceConfiguration ompInterface = InterfaceConfiguration.getOmpInterface()
+
             scheduledImportConfig.each { conf ->
                 ImportTask task = ImportTask.findByName(conf.name) ?: new ImportTask()
 
-                task.with {
-                    name = conf.name
-                    enabled = conf.enabled
-                    url = conf.url
-                    keystorePath = conf.keyStore?.file ?: System['javax.net.ssl.keyStore']
-                    keystorePass = conf.keyStore?.password ?:
-                        System['javax.net.ssl.keyStorePassword']
-                    truststorePath = conf.trustStore?.file ?: System['javax.net.ssl.trustStore']
-                    updateType = conf.partial ? Constants.IMPORT_TYPE_DELTA :
-                        Constants.IMPORT_TYPE_FULL
-                    setExecInterval(conf.frequency.count, conf.frequency.unit)
-                }
+                task.name = conf.name
+                task.enabled = conf.enabled
+                task.url = conf.url
+                task.keystorePath = conf.keyStore?.file ?:
+                    System.getProperty('javax.net.ssl.keyStore')
+                task.keystorePass = conf.keyStore?.password ?:
+                    System.getProperty('javax.net.ssl.keyStorePassword')
+                task.truststorePath = conf.trustStore?.file ?:
+                    System.getProperty('javax.net.ssl.trustStore')
+                task.updateType = conf.partial ? Constants.IMPORT_TYPE_DELTA :
+                    Constants.IMPORT_TYPE_FULL
+                task.interfaceConfig = ompInterface
+                task.setExecInterval(conf.frequency.count as Integer,
+                    conf.frequency.unit as String)
 
                 task.save(failOnError:true)
             }
+
+            //TODO remove ones that are no longer in the config
         }
 
         scheduleImportTasks()
@@ -61,7 +70,8 @@ class ScheduledImportSchedulingService {
      * everything, so calling it could result in a blip in the interval of existing jobs
      */
     public void scheduleImportTasks() {
-        Collection<ImportTask> tasks = ImportTask.list()
+        Collection<ImportTask> tasks =
+            ImportTask.findAllByInterfaceConfig(InterfaceConfiguration.getOmpInterface())
 
         tasks.each { unschedule(it) }
         tasks.each { schedule(it) }
@@ -76,7 +86,7 @@ class ScheduledImportSchedulingService {
     }
 
     private void schedule(ImportTask task) {
-        JobDetail jobDetail = JobBuilder.newJob(this.class)
+        JobDetail jobDetail = JobBuilder.newJob(ImportJob.class)
             .withIdentity(getJobKey(task))
             .usingJobData(Constants.JOB_ID_KEY, task.id)
             .build()
@@ -101,7 +111,6 @@ class ScheduledImportSchedulingService {
             throw new IllegalArgumentException(msg)
         }
 
-        log.debug "Scheduling ImportJob [$name]"
-        quartzScheduler.scheduleJob(triggerBuilder.build())
+        quartzScheduler.scheduleJob(jobDetail, triggerBuilder.build())
     }
 }

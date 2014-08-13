@@ -7,33 +7,49 @@ import java.security.KeyStore
 
 import javax.net.ssl.SSLContext
 
+import javax.ws.rs.core.MediaType
+
 import groovyx.net.http.URIBuilder
 
 import org.codehaus.groovy.grails.web.json.JSONObject
 
-import org.apache.http.HttpResponse
-import org.apache.http.client.HttpClient
-import org.apache.http.conn.ssl.SSLSocketFactory
+import org.apache.http.client.methods.CloseableHttpResponse
+import org.apache.http.impl.client.CloseableHttpClient
+import org.apache.http.impl.client.HttpClients
+import org.apache.http.util.EntityUtils
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory
+import org.apache.http.conn.ssl.SSLContexts
 import org.apache.http.client.methods.HttpGet
 
 import marketplace.ImportTask
 import marketplace.Constants
 
-protected class ScheduledImportHttpService {
+import marketplace.rest.CustomDomainObjectReader
+
+/**
+ * This class manages the HTTP retrieval of scheduled import data.  It would
+ * be labeled 'protected' but that breaks CGLIB
+ */
+class ScheduledImportHttpService {
+
+    CustomDomainObjectReader customDomainObjectReader
 
     private static final DateFormat QUERY_PARAM_DATE_FORMAT =
         new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
 
-    private HttpClient createHttpClient(ImportTask task) {
-        KeyStore trustStore  = KeyStore.getInstance(KeyStore.getDefaultType());
-        KeyStore keyStore  = KeyStore.getInstance(KeyStore.getDefaultType());
+    private CloseableHttpClient createHttpsClient(ImportTask task) {
+        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        char[] passwordArray = task.keystorePass.toCharArray()
 
-        FileInputStream trustStoreStream = new FileInputStream(new File(task.truststorePath));
-        FileInputStream keyStoreStream = new FileInputStream(new File(task.keystorePath));
+        FileInputStream trustStoreStream =
+            new FileInputStream(new File((String)task.truststorePath));
+        FileInputStream keyStoreStream =
+            new FileInputStream(new File((String)task.keystorePath));
 
         try {
             trustStore.load(trustStoreStream, null);
-            keyStore.load(keyStoreStream, task.keystorePass);
+            keyStore.load(keyStoreStream, passwordArray)
         } finally {
             trustStoreStream.close();
             keyStoreStream.close();
@@ -41,23 +57,27 @@ protected class ScheduledImportHttpService {
 
         SSLContext sslcontext = SSLContexts.custom()
             .loadTrustMaterial(trustStore)
-            .loadKeyMaterial(keyStore, task.keystorePass)
+            .loadKeyMaterial(keyStore, passwordArray)
             .build();
 
-        SSLSocketFactory socketFactory = new SSLSocketFactory(sslcontext)
+        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslcontext)
 
         return HttpClients.custom()
                 .setSSLSocketFactory(socketFactory)
                 .build();
     }
 
+    private CloseableHttpClient createHttpClient(ImportTask task) {
+        HttpClients.createDefault()
+    }
+
 
     /**
      * @return the URL to use to fetch import data for this ImportTask
      */
-    private URL getRemoteUrl(ImportTask task) {
+    private URI getRemoteUri(ImportTask task) {
         URIBuilder uriBuilder = new URIBuilder(task.url)
-        Date lastRunDate = task.lastRunResult.runDate
+        Date lastRunDate = task.lastRunResult?.runDate
 
         if (task.updateType == Constants.IMPORT_TYPE_DELTA &&
             lastRunDate != null) {
@@ -66,36 +86,49 @@ protected class ScheduledImportHttpService {
                 QUERY_PARAM_DATE_FORMAT.format(lastRunDate))
         }
 
-        return uriBuilder.toURL()
+        //skip access alert
+        uriBuilder.addQueryParam("accessAlertShown", "true")
+
+        return uriBuilder.toURI()
     }
 
     public ScheduledImportData retrieveRemoteImportData(ImportTask task) {
-        HttpClient client = createHttpClient(task)
-        HttpGet httpget = new HttpGet(getRemoteUrl(task));
+        CloseableHttpClient client = task.useClientAuthentication() ? createHttpsClient(task) :
+            createHttpClient(task)
 
-        HttpResponse response = client.execute(httpget)
+        try {
+            HttpGet httpget = new HttpGet(getRemoteUri(task))
 
-        if (response.statusLine.statusCode != 200) {
-            //TODO error handling
-        }
-        else {
-            InputStream inputStream = null
+            CloseableHttpResponse response = client.execute(httpget)
+
             try {
-                inputStream = response.entity.content
-                ScheduledImportData data = customDomainObjectReader.readFrom(
-                    ScheduledImportData.class,
-                    ScheduledImportData.class,
-                    null,
-                    MediaType.APPLICATION_JSON,
-                    null,
-                    inputStream
-                )
+                String contentType = response.entity.contentType.value
+
+                if (response.statusLine.statusCode != 200 || !contentType.contains('json')) {
+                    throw new Exception(
+                        "Invalid response from server - status ${response.statusLine.statusCode}:"
+                        + "${EntityUtils.toString(response.entity)}")
+                }
+                else {
+                    InputStream inputStream = response.entity.content
+                    ScheduledImportData data = customDomainObjectReader.readFrom(
+                        ScheduledImportData.class,
+                        ScheduledImportData.class,
+                        null,
+                        MediaType.APPLICATION_JSON_TYPE,
+                        null,
+                        inputStream
+                    )
+
+                    return data
+                }
             }
             finally {
-                inputStream?.close()
+                response.close()
             }
-
-            return data
+        }
+        finally {
+            client.close()
         }
     }
 }

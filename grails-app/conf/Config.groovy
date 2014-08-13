@@ -398,10 +398,10 @@ println "Config loaded"
 
 notifications.enabled = false
 
-marketplace.scheduledImports = [[
+marketplace.scheduledImports = [/*[
     name: 'Test Import',
     enabled: true,
-    url: 'https://localhost:9443/marketplace',
+    url: 'https://localhost:8443/marketplace/public/exportAll',
     keyStore: [
         file: null, //set null to use javax.net.ssl.keyStore system var
         password: null //set null to use javax.net.ssl.keyStorePassword system var
@@ -411,7 +411,7 @@ marketplace.scheduledImports = [[
     ],
     partial: true,
     frequency: [
-        count: 2,
+        count: 1,
         unit: 'minutes' //one of 'minutes', 'hours', 'days'
     ]
-]]
+]*/]

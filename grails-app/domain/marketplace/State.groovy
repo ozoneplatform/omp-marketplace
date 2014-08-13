@@ -9,6 +9,9 @@ import org.apache.commons.lang.builder.EqualsBuilder
 @gorm.AuditStamp
 class State implements Serializable {
 
+    static bindableProperties = ['title', 'description', 'isPublished', 'uuid']
+    static modifiableReferenceProperties = []
+
     static searchable = {
         root false
         title index: 'analyzed'

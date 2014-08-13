@@ -7,6 +7,9 @@ import ozone.marketplace.enums.ImageType
 @AuditStamp
 class Images implements Serializable {
 
+    static bindableProperties = ['contentType', 'type', 'isDefault', 'bytes', 'imageSize']
+    static modifiableReferenceProperties = []
+
     String contentType
     ImageType type
     boolean isDefault = false

@@ -16,6 +16,15 @@ class Types implements Serializable {
         only = ['id', 'title', 'ozoneAware']
     }
 
+    static bindableProperties = [
+        'title', 'description',
+        'ozoneAware', 'hasLaunchUrl',
+        'hasIcons', 'image',
+        'uuid'
+    ]
+
+    static modifiableReferenceProperties = ['image']
+
     String title
     String description
     boolean ozoneAware = false

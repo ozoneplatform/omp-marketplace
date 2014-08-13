@@ -125,7 +125,7 @@ class ImportTask implements Serializable {
      * @param baseInterval The number of <units> that the interval should be
      * @throws IllegalArugmentException if the units are not one of the expected values
      */
-    public void setExecInterval(int baseInterval, String units) {
+    public void setExecInterval(Integer baseInterval, String units) {
         int multFactor
 
         switch (units) {
@@ -138,8 +138,8 @@ class ImportTask implements Serializable {
             case 'days':
                 multFactor = 1440
             default:
-            throw new IllegalArgumentException(
-                "ImportTask units must be one of 'minutes', 'hours', or 'days'")
+                throw new IllegalArgumentException(
+                    "ImportTask units must be one of 'minutes', 'hours', or 'days'")
         }
 
         execInterval = baseInterval * multFactor

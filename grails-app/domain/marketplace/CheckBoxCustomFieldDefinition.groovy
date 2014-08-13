@@ -4,6 +4,9 @@ import org.codehaus.groovy.grails.web.json.JSONObject
 
 class CheckBoxCustomFieldDefinition extends CustomFieldDefinition {
 
+    static bindableProperties = CustomFieldDefinition.bindableProperties + ['selectedByDefault']
+    static modifiableReferenceProperties = []
+
     boolean selectedByDefault = false
 
     static constraints = {

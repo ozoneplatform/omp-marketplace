@@ -5,6 +5,11 @@ import org.codehaus.groovy.grails.web.json.JSONObject
 
 class DropDownCustomFieldDefinition extends CustomFieldDefinition {
 
+    static bindableProperties = CustomFieldDefinition.bindableProperties + [
+        'isMultiSelect', 'fieldValues'
+    ]
+    static modifiableReferenceProperties = ['fieldValues']
+
     def beforeValidate() {
         //beforeValidate isn't automatically called on child
         //objects
