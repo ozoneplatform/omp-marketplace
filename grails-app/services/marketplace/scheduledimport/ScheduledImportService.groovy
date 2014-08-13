@@ -32,6 +32,7 @@ import marketplace.TextCustomFieldDefinition
 import marketplace.TextAreaCustomFieldDefinition
 import marketplace.ImageURLCustomFieldDefinition
 import marketplace.CheckBoxCustomFieldDefinition
+import marketplace.ImportStatus
 import marketplace.Constants
 import ozone.marketplace.enums.RelationshipType
 
@@ -42,6 +43,8 @@ import ozone.marketplace.enums.RelationshipType
  * complexities of interactive metadata mapping
  */
 class ScheduledImportService {
+
+    private static enum CreationStatus { CREATED, UPDATED, NOT_UPDATED }
 
     ScheduledImportHttpService scheduledImportHttpService
 
@@ -69,19 +72,31 @@ class ScheduledImportService {
     @Transactional(noRollbackFor=ValidationException)
     public void executeScheduledImport(ImportTask task) {
         log.info "Executing scheduled import [${task.name}]"
+        ImportStatus importStatus = new ImportStatus()
 
-        ScheduledImportData importData = scheduledImportHttpService.retrieveRemoteImportData(task)
+        try {
+            ScheduledImportData importData = scheduledImportHttpService.retrieveRemoteImportData(task)
+        }
+        catch (Exception e) {
+            importStatus.messages << "Error during import retrieval: $e.message"
+        }
 
+        importProfiles(importData.profiles, importStatus)
+        importCategories(importData.categories, importStatus)
+        importTypes(importData.types, importStatus)
+        importStates(importData.states, importStatus)
+        importCustomFieldDefinitions(importData.customFieldDefs, importStatus)
+        importServiceItems(importData.serviceItems, importStatus)
+        importRelationships(importData.relationships, importStatus)
 
-        Collection<Errors> errors = []
+        boolean anyfailures = importStatus.message.size() ||
+            importStatus.entities.any { it.failed > 0 }
 
-        errors << importProfiles(importData.profiles)
-        errors << importCategories(importData.categories)
-        errors << importTypes(importData.types)
-        errors << importStates(importData.states)
-        errors << importCustomFieldDefinitions(importData.customFieldDefs)
-        errors << importServiceItems(importData.serviceItems)
-        errors << importRelationships(importData.relationships)
+        if (anyFailures) {
+            importStatus.success = false
+        }
+
+        //TODO construct ImportTaskResult
     }
 
     private void removeImagesFromTypes(Collection<Types> types) {
@@ -92,72 +107,85 @@ class ScheduledImportService {
      * Runs the closure on each item in the Collection, and returns the aggregation
      * of all of the resulting Errors.  An error in one item does not stop processing
      * of the rest of the items
+     * @param fn a function which processes each item in the collection.  Should return
+     * a CreationStatus indicating what happpened to the item, but can return null if NA.
+     * If the is a problem, fn should throw an exception
      * @return The aggregation of the Errors
      * @return null if there were no errors
      */
-    private Errors runAndReturnErrors(Collection items, Closure fn) {
-        Collection<Errors> errors = items.collect {
+    private void runAndCatchErrors(Collection items, ImportStatus.Summary summary, Closure fn) {
+        items.collect {
             try {
-                fn(it)
-                return null
-            }
-            catch (ValidationException e) {
-                return e.errors
-            }
-        }
-
-        //combine all errors into one object
-        return errors.inject { acc, e ->
-            if (acc == null) {
-                return e
-            }
-            else {
-                if (e != null) {
-                    acc.addAllErrors(e)
+                CreationStatus cs = fn(it)
+                switch (cs) {
+                    case CreationStatus.NOT_UPDATED:
+                        summary.notUpdated++
+                    case CreationStatus.UPDATED:
+                        summary.updated++
+                    case CreationStatus.CREATED:
+                        summary.created++
                 }
-
-                return acc
+            }
+            catch (ValidationException ve) {
+                summary.messages += ve.errors.allErrors.collect { it.toString() }
+                summary.failed++
+            }
+            catch (IllegalArgumentException ie) {
+                summary.messages << "Invalid input: $ie for item $item"
+                summary.failed++
+            }
+            catch (Exception e) {
+                summary.messages << "Error $e when importing $item"
+                summary.failed++
             }
         }
     }
 
     //template method for import items of a specific type
-    private <T> Errors importUsingService(Class<T> dtoClass,
-            RestService<T> service, Collection<T> items) {
+    private <T> CreationStatus importUsingService(Class<T> dtoClass,
+            RestService<T> service, ImportStatus.Summary summary, Collection<T> items) {
 
-        runAndReturnErrors(items) {
+        runAndCatchErrors(items, summary) {
             def existing = null
             if (it.hasProperty('uuid')) {
                 existing = dtoClass.findByUuid(it.uuid)
             }
 
             if (existing != null) {
-                it.id = existing.id
-                service.updateById(existing.id, it)
+
+                if (existing.editedDate < it.editedDate) {
+                    it.id = existing.id
+                    service.updateById(existing.id, it)
+                    return CreationStatus.UPDATED
+                }
+                else {
+                    return CreationStatus.NOT_UPDATED
+                }
             }
             else {
                 service.createFromDto(it)
+                return CreationStatus.CREATED
             }
         }
     }
 
-    private Errors importProfiles(Collection<Profile> data) {
-        importUsingService(Profile, profileRestService, data)
+    private void importProfiles(Collection<Profile> data, ImportStatus status) {
+        importUsingService(Profile, profileRestService, status.profiles, data)
     }
 
-    private Errors importCategories(Collection<Category> data) {
-        importUsingService(Category, categoryRestService, data)
+    private void importCategories(Collection<Category> data, ImportStatus status) {
+        importUsingService(Category, categoryRestService, status.categories, data)
     }
 
-    private Errors importTypes(Collection<Types> data) {
+    private void importTypes(Collection<Types> data, ImportStatus status) {
         //TODO is this the proper way of handling this
         removeImagesFromTypes(data)
 
-        importUsingService(Types, typeRestService, data)
+        importUsingService(Types, typeRestService, status.types, data)
     }
 
-    private Errors importStates(Collection<State> data) {
-        importUsingService(State, stateRestService, data)
+    private void importStates(Collection<State> data, ImportStatus status) {
+        importUsingService(State, stateRestService, status.states, data)
     }
 
     /**
@@ -189,11 +217,11 @@ class ScheduledImportService {
         }
     }
 
-    private Errors importCustomFieldDefinitions(
-            Collection<CustomFieldDefinition> customFieldDefs) {
+    private void importCustomFieldDefinitions(
+            Collection<CustomFieldDefinition> customFieldDefs, ImportStatus status) {
         resolveReferencesByUuid(customFieldDefs, Types, 'types')
 
-        runAndReturnErrors(customFieldDefs) { customFieldDef ->
+        runAndCatchErrors(customFieldDefs, status.customFieldDefs) { customFieldDef ->
             RestService<? extends CustomFieldDefinition> service
 
             //determine which service to use
@@ -230,8 +258,9 @@ class ScheduledImportService {
     /**
      * Import agencies and associate the persisted Agency objects with their ServiceItems
      */
-    private Errors importAgenciesFromServiceItems(Collection<ServiceItem> serviceItems) {
-        runAndReturnErrors(serviceItems) { si ->
+    private void importAgenciesFromServiceItems(Collection<ServiceItem> serviceItems,
+            ImportStatus status) {
+        runAndCatchErrors(serviceItems, status.agencies) { si ->
             Agency dto = si.agency
             Agency existing =
                 Agency.findByTitle(dto.title)
@@ -246,13 +275,9 @@ class ScheduledImportService {
         }
     }
 
-    private void resolveCategories(Collection<ServiceItem> si) {
-        Collection<Category> categories = Category.list
-    }
-
-    private Errors importServiceItems(Collection<ServiceItem> serviceItems) {
+    private void importServiceItems(Collection<ServiceItem> serviceItems, ImportStatus status) {
         //import agencies based on information in the service items
-        importAgenciesFromServiceItems(serviceItems)
+        importAgenciesFromServiceItems(serviceItems, status)
         resolveReferencesByUuid(serviceItems, Types, 'types')
         resolveReferencesByUuid(serviceItems, Category, 'categories')
         resolveReferencesByUuid(serviceItems, State, 'state')
@@ -260,7 +285,7 @@ class ScheduledImportService {
         resolveReferencesByUuid(serviceItems.collect { it.customFields }.flatten(),
             CustomFieldDefinition, 'customFieldDefinition')
 
-        return runAndReturnErrors(serviceItems) { si ->
+        return runAndCatchErrors(serviceItems, status.serivceItems) { si ->
             ServiceItem existing = ServiceItem.findByUuid(si.uuid)
             String actualApprovalStatus = si.approvalStatus
             ServiceItem result
@@ -282,8 +307,9 @@ class ScheduledImportService {
         }
     }
 
-    private Errors importRelationships(Collection<Relationship> relationships) {
-        runAndReturnErrors(relationships) { relationshipDto ->
+    private void importRelationships(Collection<Relationship> relationships,
+            ImportStatus status) {
+        runAndCatchErrors(relationships, status.relationships) { relationshipDto ->
             ServiceItem si = ServiceItem.findByUuid(relationshipDto.owningEntity)
 
             if (si) {
