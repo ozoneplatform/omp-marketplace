@@ -398,7 +398,7 @@ println "Config loaded"
 
 notifications.enabled = false
 
-marketplace.scheduledImports = [/*[
+marketplace.scheduledImports = [[
     name: 'Test Import',
     enabled: true,
     url: 'https://localhost:8443/marketplace/public/exportAll',
@@ -414,4 +414,4 @@ marketplace.scheduledImports = [/*[
         count: 1,
         unit: 'minutes' //one of 'minutes', 'hours', 'days'
     ]
-]*/]
+]]

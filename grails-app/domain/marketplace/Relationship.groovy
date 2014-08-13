@@ -12,7 +12,7 @@ class Relationship implements Serializable {
 
 
     List<ServiceItem> relatedItems
-    RelationshipType relationshipType
+    RelationshipType relationshipType = RelationshipType.REQUIRE
 
     static hasMany = [relatedItems: ServiceItem]
     static belongsTo = [owningEntity: ServiceItem]
@@ -53,6 +53,7 @@ class Relationship implements Serializable {
 
         relatedItems << serviceItems
     }
+
     public void setServiceItem(ServiceItem owningEntity) {
         this.owningEntity = owningEntity
     }

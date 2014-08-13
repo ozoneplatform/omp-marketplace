@@ -257,41 +257,44 @@ class ScheduledImportService {
         resolveReferencesByUuid(serviceItems.collect { it.customFields }.flatten(),
             CustomFieldDefinition, 'customFieldDefinition')
 
-        //Save the approval statuses on the listings, set them all
-        //back to In Progress, and then set them to what they should
-        //be after they are initially saved
-        Map<ServiceItem, String> actualApprovalStatuses = [:]
-        serviceItems.each{ si ->
+        return runAndReturnErrors(serviceItems) { si ->
+            ServiceItem existing = ServiceItem.findByUuid(si.uuid)
             String actualApprovalStatus = si.approvalStatus
-            actualApprovalStatuses.put(si, si.approvalStatus)
-            si.approvalStatus = Constants.APPROVAL_STATUSES['IN_PROGRESS']
-        }
+            ServiceItem result
 
-        Errors errors = importUsingService(ServiceItem, serviceItemRestService, serviceItems)
+            if (existing != null) {
+                si.id = existing.id
+                si.approvalStatus = existing.approvalStatus
 
-        //update approval status
-        serviceItems.each { si ->
-            String approvalStatus = actualApprovalStatuses.get(si)
-            if (approvalStatus != Constants.APPROVAL_STATUSES['IN_PROGRESS']) {
-                serviceItemRestService.update(si, [approvalStatus: approvalStatus], true)
+                result = service.updateById(existing.id, si)
             }
+            else {
+                si.approvalStatus = Constants.APPROVAL_STATUSES['IN_PROGRESS']
+
+                result = serviceItemRestService.createFromDto(si)
+            }
+
+            //update approvalStatus in a separate step to prevent validation problems
+            serviceItemRestService.update(result, [approvalStatus: actualApprovalStatus], true)
         }
     }
 
     private Errors importRelationships(Collection<Relationship> relationships) {
         runAndReturnErrors(relationships) { relationshipDto ->
-            ServiceItem si = serviceItemRestService.getById(relationshipDto.owningEntity.id)
+            ServiceItem si = ServiceItem.findByUuid(relationshipDto.owningEntity)
 
-            Relationship relationship = si.relationships.find {
-                relationshipType == RelationshipType.REQUIRE
+            if (si) {
+                Relationship relationship = si.relationships.find {
+                    relationshipType == RelationshipType.REQUIRE
+                }
+
+                if (!relationship) {
+                    relationship = new Relationship()
+                    si.addToRelationships(relationship)
+                }
+
+                relationship.relatedItems.addAll(relationshipDto.relatedItems)
             }
-
-            if (!relationship) {
-                relationship = new Relationship(relationshipType: RelationshipType.REQUIRE)
-                si.addToRelationships(relationship)
-            }
-
-            relationship.relatedItems.addAll(relationshipDto.relatedItems)
         }
     }
 }

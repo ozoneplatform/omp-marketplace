@@ -70,9 +70,8 @@ class ServiceItemActivityInternalService {
     @Transactional
     public ServiceItemActivity addServiceItemActivity(ServiceItem si,
             ServiceItemActivity activity) {
-        activity.author = profileRestService.currentUserProfile
-
         si.save()
+        activity.author = profileRestService.currentUserProfile
 
         si.addToServiceItemActivities(activity)
         si.lastActivity = activity
