@@ -1,6 +1,7 @@
 package marketplace.scheduledimport
 
 import org.springframework.validation.Errors
+import org.springframework.transaction.annotation.Transactional
 import grails.validation.ValidationException
 
 import marketplace.ImportTask
@@ -64,6 +65,8 @@ class ScheduledImportService {
         executeScheduledImport(ImportTask.get(importTaskId))
     }
 
+
+    @Transactional(noRollbackFor=ValidationException)
     public void executeScheduledImport(ImportTask task) {
         log.info "Executing scheduled import [${task.name}]"
 
