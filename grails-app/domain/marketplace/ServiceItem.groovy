@@ -35,7 +35,8 @@ class ServiceItem implements Serializable {
         'isEnabled', 'techPocs',
         'organization', 'relationships',
         'isHidden', 'recommendedLayouts',
-        'opensInNewBrowserTab', 'satisfiedScoreCardItems'
+        'opensInNewBrowserTab', 'satisfiedScoreCardItems',
+        'uuid'
     ]
 
     final static modifiableReferenceProperties = [

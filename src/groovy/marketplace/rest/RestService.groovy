@@ -76,7 +76,12 @@ abstract class RestService<T> {
         obj.delete(flush: true)
     }
 
-    public T updateById(Long id, T dto) {
+    /**
+     * @param skipValidation Set to true to skip the usage of the DomainValidator.  This should
+     * only be used for special cases like Import where the normal governance workflow should
+     * be skipped
+     */
+    public T updateById(Long id, T dto, boolean skipValidation=false) {
         //ensure that the ID from the request body and the ID
         //from the URL match
         if (dto.id != id) {
@@ -94,7 +99,10 @@ abstract class RestService<T> {
         copyCollections(old)
 
         preprocess(dto)
-        validator?.validateChanges(toUpdate, dto)
+
+        if (!skipValidation) {
+            validator?.validateChanges(toUpdate, dto)
+        }
         authorizeUpdate(toUpdate)
 
         bind(toUpdate, dto)
@@ -326,10 +334,20 @@ abstract class RestService<T> {
         }
     }
 
-    public T createFromDto(T dto) {
+    /**
+     * @param skipValidation Set to true to skip the usage of the DomainValidator.  This should
+     * only be used for special cases like Import where the normal governance workflow should
+     * be skipped
+     */
+    public T createFromDto(T dto, boolean skipValidation=false) {
         populateDefaults(dto)
         preprocess(dto)
-        validator?.validateNew(dto)
+
+        if (!skipValidation) {
+            validator?.validateNew(dto)
+        }
+
+
         authorizeCreate(dto)
 
         //we cannot just save the dto because we need to make sure

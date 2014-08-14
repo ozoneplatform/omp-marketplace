@@ -112,6 +112,8 @@ class ScheduledImportService {
 
         recordImportResult(task, importStatus)
 
+
+        task.save(failOnError:true, flush:true)
         TransactionUtils.closeAndUnbindSession(sessionFactory)
     }
 
@@ -131,10 +133,13 @@ class ScheduledImportService {
                 switch (cs) {
                     case CreationStatus.NOT_UPDATED:
                         summary.notUpdated++
+                        break
                     case CreationStatus.UPDATED:
                         summary.updated++
+                        break
                     case CreationStatus.CREATED:
                         summary.created++
+                        break
                 }
             }
             catch (ValidationException ve) {
@@ -181,6 +186,8 @@ class ScheduledImportService {
     }
 
     private void importProfiles(Collection<Profile> data, ImportStatus status) {
+        //don't try to import System user since it is guaranteed to fail
+        data = data.grep { it.username != Profile.SYSTEM_USER_NAME }
         importUsingService(Profile, profileRestService, status.profiles, data)
     }
 
@@ -258,10 +265,18 @@ class ScheduledImportService {
                 customFieldDef.getClass().findByUuid(customFieldDef.uuid)
 
             if (existing != null) {
-                service.updateById(existing.id, customFieldDef)
+                if (existing.editedDate < customFieldDef.editedDate) {
+                    customFieldDef.id = existing.id
+                    service.updateById(existing.id, customFieldDef)
+                    return CreationStatus.UPDATED
+                }
+                else {
+                    return CreationStatus.NOT_UPDATED
+                }
             }
             else {
                 service.createFromDto(customFieldDef)
+                return CreationStatus.CREATED
             }
         }
     }
@@ -271,17 +286,34 @@ class ScheduledImportService {
      */
     private void importAgenciesFromServiceItems(Collection<ServiceItem> serviceItems,
             ImportStatus status) {
+
+        Collection<Agency> agenciesAlreadySeen = new HashSet()
+
         runAndCatchErrors(serviceItems, status.agencies) { si ->
             Agency dto = si.agency
             Agency existing =
                 Agency.findByTitle(dto.title)
 
             if (existing != null) {
-                dto.id = existing.id
-                si.agency = agencyRestService.updateById(existing.id, dto)
+                if (existing.editedDate < dto.editedDate) {
+                    dto.id = existing.id
+                    si.agency = agencyRestService.updateById(existing.id, dto)
+                    agenciesAlreadySeen << si.agency
+                    return CreationStatus.UPDATED
+                }
+                else {
+                    si.agency = existing
+
+                    //do not increase the NOT_UPDATED count if its an agency that was
+                    //in fact created or updated on an earlier listing in this same import
+                    return (agenciesAlreadySeen.contains(existing)) ? null :
+                        CreationStatus.NOT_UPDATED
+                }
             }
             else {
                 si.agency = agencyRestService.createFromDto(dto)
+                agenciesAlreadySeen << si.agency
+                return CreationStatus.CREATED
             }
         }
     }
@@ -298,23 +330,33 @@ class ScheduledImportService {
 
         runAndCatchErrors(serviceItems, status.serviceItems) { si ->
             ServiceItem existing = ServiceItem.findByUuid(si.uuid)
-            String actualApprovalStatus = si.approvalStatus
-            ServiceItem result
+            //String actualApprovalStatus = si.approvalStatus
+            //ServiceItem result
+            CreationStatus retval
 
             if (existing != null) {
-                si.id = existing.id
-                si.approvalStatus = existing.approvalStatus
+                if (existing.editedDate < si.editedDate) {
+                    si.id = existing.id
+                    //si.approvalStatus = existing.approvalStatus
 
-                result = service.updateById(existing.id, si)
+                    service.updateById(existing.id, si, true)
+                    return CreationStatus.UPDATED
+                }
+                else {
+                    return CreationStatus.NOT_UPDATED
+                }
             }
             else {
-                si.approvalStatus = Constants.APPROVAL_STATUSES['IN_PROGRESS']
+                //si.approvalStatus = Constants.APPROVAL_STATUSES['IN_PROGRESS']
 
-                result = serviceItemRestService.createFromDto(si)
+                serviceItemRestService.createFromDto(si, true)
+                return CreationStatus.CREATED
             }
 
             //update approvalStatus in a separate step to prevent validation problems
-            serviceItemRestService.update(result, [approvalStatus: actualApprovalStatus], true)
+            //serviceItemRestService.update(result, [approvalStatus: actualApprovalStatus], true)
+
+            //return retval
         }
     }
 

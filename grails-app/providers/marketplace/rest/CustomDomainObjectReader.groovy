@@ -28,6 +28,8 @@ import static org.grails.jaxrs.support.ProviderUtils.isJsonType
 import static org.grails.jaxrs.support.ProviderUtils.isXmlType
 import static ozone.utils.Utils.collectEntries
 
+import marketplace.Constants
+
 @Provider
 @Consumes(['text/x-json', 'application/json'])
 class CustomDomainObjectReader extends DomainObjectReaderSupport {
@@ -180,7 +182,7 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
         GrailsDomainClass grailsClass = grailsApplication.getDomainClass(type.name)
 
         collectEntries(map) { key, value ->
-            if (key == 'createdDate' || key == editedDate) {
+            if (key == 'createdDate' || key == 'editedDate') {
                 DateFormat auditDateFormat =
                     new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
                 value = auditDateFormat.parse(value)
