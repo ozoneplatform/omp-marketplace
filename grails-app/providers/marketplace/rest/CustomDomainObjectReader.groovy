@@ -1,5 +1,8 @@
 package marketplace.rest
 
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
 import grails.converters.JSON
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
@@ -177,7 +180,13 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
         GrailsDomainClass grailsClass = grailsApplication.getDomainClass(type.name)
 
         collectEntries(map) { key, value ->
-            if (!(key in ['class', 'createdDate', 'editedDate'])) {
+            if (key == 'createdDate' || key == editedDate) {
+                DateFormat auditDateFormat =
+                    new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
+                value = auditDateFormat.parse(value)
+            }
+
+            if (key != 'class') {
                 try {
                     //the given property of the parent domain class
                     GrailsDomainClassProperty property = grailsClass.getPropertyByName(key)
