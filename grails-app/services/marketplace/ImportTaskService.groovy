@@ -11,6 +11,7 @@ class ImportTaskService {
     def transactional = false
     def sessionFactory
     def importService;
+    def accountService
 
     /**
      * There are three cases to consider:
@@ -99,40 +100,14 @@ class ImportTaskService {
         return ImportTask.findByName(Constants.FILE_BASED_IMPORT_TASK)
     }
 
-
     @Transactional
-    def deleteFileImportResultsSince(Date cutoff) {
-        deleteImportResultsSince(cutoff, getFileImportTask()?.id)
+    def deleteAllImportTaskResults() {
+        accountService.checkAdmin()
+
+        // First unset the last run so we do not get into association trouble
+        ImportTask.list().each { it.lastRunResult = null }
+
+        log.info("Deleting all results")
+        ImportTaskResult.list().each { it.delete() }
     }
-
-    @Transactional
-    def deleteScheduledImportResultsSince(Date cutoff, Long importTaskId = null) {
-        deleteImportResultsSince(cutoff, importTaskId)
-    }
-
-    @Transactional
-    def deleteImportResultsSince(Date cutoff, Long importTaskId = null) {
-        log.debug "Deleting ImportTaskResults for ImportTask [$importTaskId] since [$cutoff]"
-        def issues = []
-        def c = ImportTaskResult.createCriteria()
-        def results = c.list {
-            lt("runDate", cutoff)
-            if (importTaskId) {
-                eq("task", ImportTask.get(importTaskId))
-            }
-        }
-
-        while (results.size()) {
-            try {
-                if (results[0]?.task?.lastRunResult?.id != results[0]?.id) {
-                    delete(results[0])
-                }
-                results.remove(0)
-            } catch (e) {
-                issues << e
-            }
-        }
-        return issues
-    }
-
 }

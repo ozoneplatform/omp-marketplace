@@ -20,7 +20,16 @@ class DataExchangeController extends BaseMarketplaceRestController {
     def index = {
         int listCount = ImportTask.list([id: params.id, sort: params.sort, order: params.order]).size()
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [importTaskInstanceList: ImportTask.list(params), importTaskInstanceTotal: listCount, importTaskHistory: ImportTask.findByName("File Import")]
+
+        def history = ImportTask.list().collect { it.runs }.flatten().sort { a, b ->
+            b.runDate <=> a.runDate
+        }
+
+        return [
+            importTaskInstanceList: ImportTask.list(params),
+            importTaskInstanceTotal: listCount,
+            importTaskHistory: history
+        ]
     }
 
     def exportListings = {
@@ -107,13 +116,7 @@ class DataExchangeController extends BaseMarketplaceRestController {
     def deleteAllResults = {
         def issues
         try {
-            // First unset the last run so we do not get into association trouble
-            def fileImportTask = importTaskService.getFileImportTask()
-            fileImportTask.lastRunResult = null
-            importTaskService.save(fileImportTask)
-
-            log.info("Deleting all results")
-            issues = importTaskService.deleteFileImportResultsSince(new Date())
+            importTaskService.deleteAllImportTaskResults()
         } catch (e) {
             log.error("Error deleting all results", e)
             render ([success: false, message: "Error deleting all results: $e"] as JSON)
