@@ -2,6 +2,9 @@ package marketplace.scheduledimport
 
 import org.springframework.validation.Errors
 import org.springframework.transaction.annotation.Transactional
+
+import org.hibernate.SessionFactory
+
 import grails.validation.ValidationException
 
 import marketplace.ImportTask
@@ -19,6 +22,7 @@ import marketplace.rest.TextAreaCustomFieldDefinitionRestService
 import marketplace.rest.ImageURLCustomFieldDefinitionRestService
 import marketplace.rest.CheckBoxCustomFieldDefinitionRestService
 
+import marketplace.TransactionUtils
 import marketplace.CustomFieldDefinition
 import marketplace.ServiceItem
 import marketplace.Profile
@@ -62,16 +66,22 @@ class ScheduledImportService {
     ImageURLCustomFieldDefinitionRestService imageURLCustomFieldDefinitionRestService
     CheckBoxCustomFieldDefinitionRestService checkBoxCustomFieldDefinitionRestService
 
+    SessionFactory sessionFactory
+
     /**
      * Executes the import task with the corresponding id
      */
     public void executeScheduledImport(Long importTaskId) {
-        executeScheduledImport(ImportTask.get(importTaskId))
+        TransactionUtils.ensureSession(sessionFactory, log)
+        ImportTask task = ImportTask.get(importTaskId)
+        task.runs.size() //init lazy collection; not sure why this is necessary but it doesn't
+                         //work if this collection isn't initialized in this method
+        executeScheduledImport(task)
     }
-
 
     @Transactional(noRollbackFor=ValidationException)
     public void executeScheduledImport(ImportTask task) {
+
         log.info "Executing scheduled import [${task.name}]"
         ImportStatus importStatus = new ImportStatus()
 

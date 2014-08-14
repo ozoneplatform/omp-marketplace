@@ -17,8 +17,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 class TransactionUtils {
 
     /**
-     * Given a global sessionFactory, ensure that a HBM session is bound to the 
-     * current thread. May be required for threads of execution outside of 
+     * Given a global sessionFactory, ensure that a HBM session is bound to the
+     * current thread. May be required for threads of execution outside of
      * request-handling threads. This is JTA-compliant such that installation
      * of a JTA TransactionManager will enlist the session into a JTA Transaction.
      * @param sessionFactory
@@ -89,5 +89,10 @@ class TransactionUtils {
             logger?.debug "---Session Details via SessionFactoryUtils ---\n\tSession [${java.lang.Integer.toHexString(session.hashCode())}]\n\tSessionFactory [${Integer.toHexString(session.getSessionFactory().hashCode())}] \n\tTransaction: ${Integer.toHexString(session?.transaction?.hashCode())}"
         }
         return session
+    }
+
+    public static void closeAndUnbindSession(SessionFactory sessionFactory) {
+        sessionFactory.getCurrentSession().close()
+        TransactionSynchronizationManager.unbindResource(sessionFactory)
     }
 }
