@@ -92,7 +92,7 @@ class ScheduledImportHttpService {
         return uriBuilder.toURI()
     }
 
-    public ScheduledImportData retrieveRemoteImportData(ImportTask task) {
+    public ScheduledImportData retrieveRemoteImportData(ImportTask task) throws IOException {
         CloseableHttpClient client = task.useClientAuthentication() ? createHttpsClient(task) :
             createHttpClient(task)
 

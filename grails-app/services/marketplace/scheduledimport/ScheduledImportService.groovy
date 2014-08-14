@@ -74,22 +74,25 @@ class ScheduledImportService {
         log.info "Executing scheduled import [${task.name}]"
         ImportStatus importStatus = new ImportStatus()
 
+        ScheduledImportData importData
         try {
-            ScheduledImportData importData = scheduledImportHttpService.retrieveRemoteImportData(task)
+            importData = scheduledImportHttpService.retrieveRemoteImportData(task)
         }
         catch (Exception e) {
             importStatus.messages << "Error during import retrieval: $e.message"
         }
 
-        importProfiles(importData.profiles, importStatus)
-        importCategories(importData.categories, importStatus)
-        importTypes(importData.types, importStatus)
-        importStates(importData.states, importStatus)
-        importCustomFieldDefinitions(importData.customFieldDefs, importStatus)
-        importServiceItems(importData.serviceItems, importStatus)
-        importRelationships(importData.relationships, importStatus)
+        if (importData) {
+            importProfiles(importData.profiles, importStatus)
+            importCategories(importData.categories, importStatus)
+            importTypes(importData.types, importStatus)
+            importStates(importData.states, importStatus)
+            importCustomFieldDefinitions(importData.customFieldDefs, importStatus)
+            importServiceItems(importData.serviceItems, importStatus)
+            importRelationships(importData.relationships, importStatus)
+        }
 
-        boolean anyfailures = importStatus.message.size() ||
+        boolean anyFailures = importStatus.messages.size() ||
             importStatus.entities.any { it.failed > 0 }
 
         if (anyFailures) {
@@ -97,6 +100,7 @@ class ScheduledImportService {
         }
 
         //TODO construct ImportTaskResult
+System.err.println "status = ${importStatus.dump()}"
     }
 
     private void removeImagesFromTypes(Collection<Types> types) {
@@ -104,14 +108,9 @@ class ScheduledImportService {
     }
 
     /**
-     * Runs the closure on each item in the Collection, and returns the aggregation
-     * of all of the resulting Errors.  An error in one item does not stop processing
+     * Runs the closure on each item in the Collection, and updates the summary accordingly.
+     * An error in one item does not stop processing
      * of the rest of the items
-     * @param fn a function which processes each item in the collection.  Should return
-     * a CreationStatus indicating what happpened to the item, but can return null if NA.
-     * If the is a problem, fn should throw an exception
-     * @return The aggregation of the Errors
-     * @return null if there were no errors
      */
     private void runAndCatchErrors(Collection items, ImportStatus.Summary summary, Closure fn) {
         items.collect {
@@ -131,11 +130,11 @@ class ScheduledImportService {
                 summary.failed++
             }
             catch (IllegalArgumentException ie) {
-                summary.messages << "Invalid input: $ie for item $item"
+                summary.messages << "Invalid input: $ie for item $it"
                 summary.failed++
             }
             catch (Exception e) {
-                summary.messages << "Error $e when importing $item"
+                summary.messages << "Error $e when importing $it"
                 summary.failed++
             }
         }
@@ -285,7 +284,7 @@ class ScheduledImportService {
         resolveReferencesByUuid(serviceItems.collect { it.customFields }.flatten(),
             CustomFieldDefinition, 'customFieldDefinition')
 
-        return runAndCatchErrors(serviceItems, status.serivceItems) { si ->
+        runAndCatchErrors(serviceItems, status.serviceItems) { si ->
             ServiceItem existing = ServiceItem.findByUuid(si.uuid)
             String actualApprovalStatus = si.approvalStatus
             ServiceItem result
