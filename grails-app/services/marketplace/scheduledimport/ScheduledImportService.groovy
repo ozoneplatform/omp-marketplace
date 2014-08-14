@@ -33,6 +33,7 @@ import marketplace.TextAreaCustomFieldDefinition
 import marketplace.ImageURLCustomFieldDefinition
 import marketplace.CheckBoxCustomFieldDefinition
 import marketplace.ImportStatus
+import marketplace.ImportTaskResult
 import marketplace.Constants
 import ozone.marketplace.enums.RelationshipType
 
@@ -99,8 +100,9 @@ class ScheduledImportService {
             importStatus.success = false
         }
 
-        //TODO construct ImportTaskResult
-System.err.println "status = ${importStatus.dump()}"
+        recordImportResult(task, importStatus)
+
+        TransactionUtils.closeAndUnbindSession(sessionFactory)
     }
 
     private void removeImagesFromTypes(Collection<Types> types) {
@@ -324,5 +326,15 @@ System.err.println "status = ${importStatus.dump()}"
                 relationship.relatedItems.addAll(relationshipDto.relatedItems)
             }
         }
+    }
+
+    private void recordImportResult(ImportTask task, ImportStatus status) {
+        ImportTaskResult result = new ImportTaskResult(
+            result: status.success,
+            message: status.summaryMessage
+        )
+
+        task.addToRuns(result)
+        task.lastRunResult = result
     }
 }
