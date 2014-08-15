@@ -4,6 +4,7 @@ import java.lang.reflect.UndeclaredThrowableException
 
 import org.springframework.validation.Errors
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.annotation.Propagation
 
 import org.hibernate.SessionFactory
 
@@ -24,7 +25,6 @@ import marketplace.rest.TextAreaCustomFieldDefinitionRestService
 import marketplace.rest.ImageURLCustomFieldDefinitionRestService
 import marketplace.rest.CheckBoxCustomFieldDefinitionRestService
 
-import marketplace.TransactionUtils
 import marketplace.CustomFieldDefinition
 import marketplace.ServiceItem
 import marketplace.Profile
@@ -49,6 +49,9 @@ import ozone.marketplace.enums.RelationshipType
  * the other import code (ImportExecutorService, etc) so that it can avoid the
  * complexities of interactive metadata mapping
  */
+
+//each item import should be in its own transaction
+@Transactional(propagation=Propagation.NOT_SUPPORTED)
 class ScheduledImportService {
 
     private static enum CreationStatus { CREATED, UPDATED, NOT_UPDATED }
@@ -74,14 +77,12 @@ class ScheduledImportService {
      * Executes the import task with the corresponding id
      */
     public void executeScheduledImport(Long importTaskId) {
-        TransactionUtils.ensureSession(sessionFactory, log)
         ImportTask task = ImportTask.get(importTaskId)
         task.runs.size() //init lazy collection; not sure why this is necessary but it doesn't
                          //work if this collection isn't initialized in this method
         executeScheduledImport(task)
     }
 
-    @Transactional(noRollbackFor=ValidationException)
     public void executeScheduledImport(ImportTask task) {
 
         log.info "Executing scheduled import [${task.name}]"
@@ -92,12 +93,9 @@ class ScheduledImportService {
             importData = scheduledImportHttpService.retrieveRemoteImportData(task)
         }
         catch (Exception e) {
-            if (e instanceof UndeclaredThrowableException) {
-                e = e.cause
-            }
-
-            String message = e.message ?: e.toString()
-            importStatus.messages << "Error during import retrieval: $message"
+            String message = "Error during import retrieval: ${exceptionToMessage(e)}"
+            importStatus.messages << message
+            log.error message, e
         }
 
         if (importData) {
@@ -121,7 +119,6 @@ class ScheduledImportService {
 
 
         task.save(failOnError:true, flush:true)
-        TransactionUtils.closeAndUnbindSession(sessionFactory)
     }
 
     private void removeImagesFromTypes(Collection<Types> types) {
@@ -158,8 +155,10 @@ class ScheduledImportService {
                 summary.failed++
             }
             catch (Exception e) {
-                summary.messages << "Error $e when importing $it"
+                summary.messages << "Error ${exceptionToMessage(e)} when importing $it"
                 summary.failed++
+
+                log.error "Unexpected exception during import", e
             }
         }
     }
@@ -395,5 +394,13 @@ class ScheduledImportService {
 
         task.addToRuns(result)
         task.lastRunResult = result
+    }
+
+    private String exceptionToMessage(Exception e) {
+        if (e instanceof UndeclaredThrowableException) {
+            e = e.cause
+        }
+
+        return e.message ?: e.toString()
     }
 }

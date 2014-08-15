@@ -9,6 +9,9 @@ import javax.net.ssl.SSLContext
 
 import javax.ws.rs.core.MediaType
 
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.annotation.Propagation
+
 import groovyx.net.http.URIBuilder
 
 import org.codehaus.groovy.grails.web.json.JSONObject
@@ -30,6 +33,9 @@ import marketplace.rest.CustomDomainObjectReader
  * This class manages the HTTP retrieval of scheduled import data.  It would
  * be labeled 'protected' but that breaks CGLIB
  */
+
+//doesn't need a transaction
+@Transactional(propagation=Propagation.SUPPORTS)
 class ScheduledImportHttpService {
 
     CustomDomainObjectReader customDomainObjectReader
