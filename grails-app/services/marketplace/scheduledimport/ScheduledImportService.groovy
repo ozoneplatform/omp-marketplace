@@ -336,14 +336,11 @@ class ScheduledImportService {
 
         runAndCatchErrors(serviceItems, status.serviceItems) { si ->
             ServiceItem existing = ServiceItem.findByUuid(si.uuid)
-            //String actualApprovalStatus = si.approvalStatus
-            //ServiceItem result
             CreationStatus retval
 
             if (existing != null) {
                 if (existing.editedDate < si.editedDate) {
                     si.id = existing.id
-                    //si.approvalStatus = existing.approvalStatus
 
                     serviceItemRestService.updateById(existing.id, si, true)
                     return CreationStatus.UPDATED
@@ -353,16 +350,9 @@ class ScheduledImportService {
                 }
             }
             else {
-                //si.approvalStatus = Constants.APPROVAL_STATUSES['IN_PROGRESS']
-
                 serviceItemRestService.createFromDto(si, true)
                 return CreationStatus.CREATED
             }
-
-            //update approvalStatus in a separate step to prevent validation problems
-            //serviceItemRestService.update(result, [approvalStatus: actualApprovalStatus], true)
-
-            //return retval
         }
     }
 
