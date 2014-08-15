@@ -1,5 +1,7 @@
 package marketplace.scheduledimport
 
+import java.lang.reflect.UndeclaredThrowableException
+
 import org.springframework.validation.Errors
 import org.springframework.transaction.annotation.Transactional
 
@@ -90,7 +92,12 @@ class ScheduledImportService {
             importData = scheduledImportHttpService.retrieveRemoteImportData(task)
         }
         catch (Exception e) {
-            importStatus.messages << "Error during import retrieval: $e.message"
+            if (e instanceof UndeclaredThrowableException) {
+                e = e.cause
+            }
+
+            String message = e.message ?: e.toString()
+            importStatus.messages << "Error during import retrieval: $message"
         }
 
         if (importData) {
@@ -339,7 +346,7 @@ class ScheduledImportService {
                     si.id = existing.id
                     //si.approvalStatus = existing.approvalStatus
 
-                    service.updateById(existing.id, si, true)
+                    serviceItemRestService.updateById(existing.id, si, true)
                     return CreationStatus.UPDATED
                 }
                 else {

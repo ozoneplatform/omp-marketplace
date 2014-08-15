@@ -34,9 +34,6 @@ class ScheduledImportHttpService {
 
     CustomDomainObjectReader customDomainObjectReader
 
-    private static final DateFormat QUERY_PARAM_DATE_FORMAT =
-        new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
-
     private CloseableHttpClient createHttpsClient(ImportTask task) {
         KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -76,6 +73,11 @@ class ScheduledImportHttpService {
      * @return the URL to use to fetch import data for this ImportTask
      */
     private URI getRemoteUri(ImportTask task) {
+        DateFormat queryParamDateFormat =
+            new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
+
+        queryParamDateFormat.setTimeZone(TimeZone.getTimeZone('UTC'))
+
         URIBuilder uriBuilder = new URIBuilder(task.url)
         Date lastRunDate = task.lastRunResult?.runDate
 
@@ -83,7 +85,7 @@ class ScheduledImportHttpService {
             lastRunDate != null) {
 
             uriBuilder.addQueryParam(Constants.OMP_IMPORT_DELTA_DATE_FIELD,
-                QUERY_PARAM_DATE_FORMAT.format(lastRunDate))
+                queryParamDateFormat.format(lastRunDate))
         }
 
         //skip access alert

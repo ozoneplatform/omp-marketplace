@@ -748,6 +748,13 @@ class ServiceItem implements Serializable {
         this.owners?.find { it.username == username }
     }
 
+    /**
+     * Legacy support for JSON from single-owner stores
+     */
+    public void setAuthor(String username) {
+        this.owners = [Profile.findByUsername(username)]
+    }
+
     void addScreenshot(Screenshot screenshot) {
         this.addToScreenshots(screenshot)
     }

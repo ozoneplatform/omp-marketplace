@@ -313,11 +313,11 @@ class ServiceItemRestService extends RestService<ServiceItem> {
 
     @Override
     protected void populateDefaults(ServiceItem dto) {
-        Profile profile = profileRestService.currentUserProfile
+        Profile profile = profileRestService.currentUserProfile ?: Profile.getSystemUser()
         User user = accountService.loggedInUser
         dto.with {
-            owners = owners ?: [profile]
-            techPocs = techPocs ?: [profile.username]
+            owners = owners?.size() ? owners : [profile]
+            techPocs = techPocs?.size() ? techPocs : [profile.username]
             organization = organization ?: user.org
             state = state ?: State.findByTitle("Active")
         }
