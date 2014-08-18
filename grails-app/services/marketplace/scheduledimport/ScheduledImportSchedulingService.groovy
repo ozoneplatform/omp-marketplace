@@ -65,8 +65,8 @@ class ScheduledImportSchedulingService {
     }
 
     /**
-     * Ensures that all existing ImportTasks are currently scheduled in ImportJobs.
-     * Note: this currently works by unscheduling all existing import jobs and the rescheduling
+     * Ensures that all existing (enabled) ImportTasks are currently scheduled in ImportJobs.
+     * Note: this currently works by unscheduling all existing import jobs and then rescheduling
      * everything, so calling it could result in a blip in the interval of existing jobs
      */
     public void scheduleImportTasks() {
@@ -74,7 +74,7 @@ class ScheduledImportSchedulingService {
             ImportTask.findAllByInterfaceConfig(InterfaceConfiguration.getOmpInterface())
 
         tasks.each { unschedule(it) }
-        tasks.each { schedule(it) }
+        tasks.grep { it.enabled }.each { schedule(it) }
     }
 
     private JobKey getJobKey(ImportTask task) {
