@@ -751,8 +751,8 @@ class ServiceItem implements Serializable {
     /**
      * Legacy support for JSON from single-owner stores
      */
-    public void setAuthor(String username) {
-        this.owners = [Profile.findByUsername(username)]
+    public void setOwner(Profile owner) {
+        this.owners = [owner]
     }
 
     void addScreenshot(Screenshot screenshot) {

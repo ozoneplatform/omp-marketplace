@@ -163,38 +163,53 @@ class ScheduledImportService {
         }
     }
 
-    //template method for import items of a specific type
-    private <T> CreationStatus importUsingService(Class<T> dtoClass,
-            RestService<T> service, ImportStatus.Summary summary, Collection<T> items) {
+    /**
+     * template method for import items of a specific type.
+     * @param dtoClass The class of item being imported
+     * @param service The RestService for importing the items
+     * @param summary The summary object to update with the results
+     * @param items the items to import
+     * @param equivalenceField The field to check for existing items (defaults to 'uuid')
+     */
+    private <T> void importUsingService(Class<T> dtoClass,
+            RestService<T> service, ImportStatus.Summary summary, Collection<T> items,
+            String equivalenceField='uuid', boolean skipValidation=false) {
 
         runAndCatchErrors(items, summary) {
-            def existing = null
-            if (it.hasProperty('uuid')) {
-                existing = dtoClass.findByUuid(it.uuid)
-            }
+            importOneUsingService(dtoClass, service, it, equivalenceField, skipValidation)
+        }
+    }
 
-            if (existing != null) {
+    private <T> CreationStatus importOneUsingService(Class<T> dtoClass,
+            RestService<T> service, T item, String equivalenceField='uuid',
+            boolean skipValidation=false) {
+        def existing = null
+        if (item.hasProperty(equivalenceField)) {
+            existing = dtoClass."findBy${equivalenceField.capitalize()}"(item[equivalenceField])
+        }
 
-                if (existing.editedDate < it.editedDate) {
-                    it.id = existing.id
-                    service.updateById(existing.id, it)
-                    return CreationStatus.UPDATED
-                }
-                else {
-                    return CreationStatus.NOT_UPDATED
-                }
+        if (existing != null) {
+
+            if (existing.editedDate < item.editedDate) {
+                item.id = existing.id
+                service.updateById(existing.id, item, skipValidation)
+                return CreationStatus.UPDATED
             }
             else {
-                service.createFromDto(it)
-                return CreationStatus.CREATED
+                return CreationStatus.NOT_UPDATED
             }
+        }
+        else {
+            service.createFromDto(item, skipValidation)
+            return CreationStatus.CREATED
         }
     }
 
     private void importProfiles(Collection<Profile> data, ImportStatus status) {
-        //don't try to import System user since it is guaranteed to fail
+        //don't try to import System user
         data = data.grep { it.username != Profile.SYSTEM_USER_NAME }
-        importUsingService(Profile, profileRestService, status.profiles, data)
+
+        importUsingService(Profile, profileRestService, status.profiles, data, 'username')
     }
 
     private void importCategories(Collection<Category> data, ImportStatus status) {
@@ -202,7 +217,6 @@ class ScheduledImportService {
     }
 
     private void importTypes(Collection<Types> data, ImportStatus status) {
-        //TODO is this the proper way of handling this
         removeImagesFromTypes(data)
 
         importUsingService(Types, typeRestService, status.types, data)
@@ -218,25 +232,26 @@ class ScheduledImportService {
      * @param items Items to go through and replace DTO subobjects
      * @param referencedClass The Class of the subobject being replaced
      * @param referenceProperty The property on each item in items on which the DTO is attached
+     * @param equivalenceField The field the use to resolve references (defaults to uuid)
      */
     private <T> void resolveReferencesByUuid(Collection items, Class<T> referencedClass,
-            String referenceProperty) {
+            String referenceProperty, String equivalenceField='uuid') {
 
-        Map<String, T> uuidMap = [:]
-        referencedClass.list().each { uuidMap.put(it.uuid, it) }
+        Map<Object, T> equivalenceFieldMap = [:]
+        referencedClass.list().each { equivalenceFieldMap.put(it[equivalenceField], it) }
 
         items.each {
             def referencedItem = it[referenceProperty]
             if (referencedItem instanceof Collection) {
                 List<T> newCollection = []
 
-                referencedItem.each { newCollection << uuidMap[it.uuid] }
+                referencedItem.each { newCollection << equivalenceFieldMap[it[equivalenceField]] }
 
                 referencedItem.clear()
                 referencedItem.addAll(newCollection)
             }
             else if (referencedItem != null) {
-                it[referenceProperty] = uuidMap[referencedItem.uuid]
+                it[referenceProperty] = equivalenceFieldMap[referencedItem[equivalenceField]]
             }
         }
     }
@@ -267,23 +282,7 @@ class ScheduledImportService {
                     break
             }
 
-            CustomFieldDefinition existing =
-                customFieldDef.getClass().findByUuid(customFieldDef.uuid)
-
-            if (existing != null) {
-                if (existing.editedDate < customFieldDef.editedDate) {
-                    customFieldDef.id = existing.id
-                    service.updateById(existing.id, customFieldDef)
-                    return CreationStatus.UPDATED
-                }
-                else {
-                    return CreationStatus.NOT_UPDATED
-                }
-            }
-            else {
-                service.createFromDto(customFieldDef)
-                return CreationStatus.CREATED
-            }
+            return importOneUsingService(CustomFieldDefinition, service, customFieldDef)
         }
     }
 
@@ -312,7 +311,7 @@ class ScheduledImportService {
 
                     //do not increase the NOT_UPDATED count if its an agency that was
                     //in fact created or updated on an earlier listing in this same import
-                    return (agenciesAlreadySeen.contains(existing)) ? null :
+                    return agenciesAlreadySeen.contains(existing) ? null :
                         CreationStatus.NOT_UPDATED
                 }
             }
@@ -330,30 +329,12 @@ class ScheduledImportService {
         resolveReferencesByUuid(serviceItems, Types, 'types')
         resolveReferencesByUuid(serviceItems, Category, 'categories')
         resolveReferencesByUuid(serviceItems, State, 'state')
-        resolveReferencesByUuid(serviceItems, Profile, 'owners')
+        resolveReferencesByUuid(serviceItems, Profile, 'owners', 'username')
         resolveReferencesByUuid(serviceItems.collect { it.customFields }.flatten(),
             CustomFieldDefinition, 'customFieldDefinition')
 
-        runAndCatchErrors(serviceItems, status.serviceItems) { si ->
-            ServiceItem existing = ServiceItem.findByUuid(si.uuid)
-            CreationStatus retval
-
-            if (existing != null) {
-                if (existing.editedDate < si.editedDate) {
-                    si.id = existing.id
-
-                    serviceItemRestService.updateById(existing.id, si, true)
-                    return CreationStatus.UPDATED
-                }
-                else {
-                    return CreationStatus.NOT_UPDATED
-                }
-            }
-            else {
-                serviceItemRestService.createFromDto(si, true)
-                return CreationStatus.CREATED
-            }
-        }
+        importUsingService(ServiceItem, serviceItemRestService, status.serviceItems, serviceItems,
+            'uuid', true)
     }
 
     private void importRelationships(Collection<Relationship> relationships,

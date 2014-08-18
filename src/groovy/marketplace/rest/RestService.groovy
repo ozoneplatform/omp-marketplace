@@ -337,10 +337,13 @@ abstract class RestService<T> {
     /**
      * @param skipValidation Set to true to skip the usage of the DomainValidator.  This should
      * only be used for special cases like Import where the normal governance workflow should
-     * be skipped
+     * be skipped.  This flag will also cause defaults not to be populated
      */
     public T createFromDto(T dto, boolean skipValidation=false) {
-        populateDefaults(dto)
+        if (!skipValidation) {
+            populateDefaults(dto)
+        }
+
         preprocess(dto)
 
         if (!skipValidation) {
