@@ -39,6 +39,7 @@ import marketplace.rest.CustomDomainObjectReader
 class ScheduledImportHttpService {
 
     CustomDomainObjectReader customDomainObjectReader
+    def mp_RESTInterceptorService
 
     private CloseableHttpClient createHttpsClient(ImportTask task) {
         KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -127,6 +128,15 @@ class ScheduledImportHttpService {
                         null,
                         inputStream
                     )
+
+                    //check the maxClassification
+                    def interceptorResult =
+                        mp_RESTInterceptorService.processIncoming(data.properties)
+
+                    if (!interceptorResult.continueProcessing) {
+                        throw new Exception(
+                            "Import rejected by interceptor: ${interceptorResult.message}")
+                    }
 
                     return data
                 }
