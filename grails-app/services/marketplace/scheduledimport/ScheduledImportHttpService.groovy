@@ -85,7 +85,7 @@ class ScheduledImportHttpService {
         queryParamDateFormat.setTimeZone(TimeZone.getTimeZone('UTC'))
 
         URIBuilder uriBuilder = new URIBuilder(task.url)
-        Date lastRunDate = task.lastRunResult?.runDate
+        Date lastRunDate = task.lastSuccessfulRunResult?.runDate
 
         if (task.updateType == Constants.IMPORT_TYPE_DELTA &&
             lastRunDate != null) {

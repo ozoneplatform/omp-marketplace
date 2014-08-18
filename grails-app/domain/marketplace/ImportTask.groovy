@@ -19,7 +19,7 @@ class ImportTask implements Serializable {
     transient def json  // Use this in place of a url when this is all we have
     //    e.g. file-based imports
 
-    static transients = ['inHours', 'inDays', 'json', 'remoteImport']
+    static transients = ['inHours', 'inDays', 'json', 'remoteImport', 'lastSuccessfulRunResult']
     static hasMany = [runs: ImportTaskResult]
 
     static constraints = {
@@ -143,5 +143,11 @@ class ImportTask implements Serializable {
         }
 
         execInterval = baseInterval * multFactor
+    }
+
+    public ImportTaskResult getLastSuccessfulRunResult() {
+        //runs are sorted by most recent, so just find the first one that
+        //was successful
+        runs.find { it.result }
     }
 }
