@@ -80,16 +80,16 @@ class ScheduledImportHttpService {
      * @return the URL to use to fetch import data for this ImportTask
      */
     private URI getRemoteUri(ImportTask task) {
-        DateFormat queryParamDateFormat =
-            new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
-
-        queryParamDateFormat.setTimeZone(TimeZone.getTimeZone('UTC'))
-
         URIBuilder uriBuilder = new URIBuilder(task.url)
         Date lastRunDate = task.lastSuccessfulRunResult?.runDate
 
         if (task.updateType == Constants.IMPORT_TYPE_DELTA &&
             lastRunDate != null) {
+
+            DateFormat queryParamDateFormat =
+                new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
+
+            queryParamDateFormat.setTimeZone(TimeZone.getTimeZone('UTC'))
 
             uriBuilder.addQueryParam(Constants.OMP_IMPORT_DELTA_DATE_FIELD,
                 queryParamDateFormat.format(lastRunDate))
