@@ -42,6 +42,7 @@ class ServiceItemActivityInternalServiceUnitTest {
         ServiceItem serviceItem = new ServiceItem(
             title: "test service item",
             description: "a test service item",
+            uuid: '54c12429-82a5-4b9c-b83e-9b5a71c9ccdf',
             launchUrl: "https://localhost/asf",
             versionName: '1',
             approvalStatus: Constants.APPROVAL_STATUSES['IN_PROGRESS'],
@@ -96,8 +97,8 @@ class ServiceItemActivityInternalServiceUnitTest {
         mockDomain(Contact)
         mockDomain(Screenshot)
         mockDomain(ServiceItemDocumentationUrl)
-        mockDomain(ServiceItemActivity, serviceItemActivities)
         mockDomain(ChangeDetail, changeDetails)
+        mockDomain(ServiceItemActivity, serviceItemActivities)
         mockDomain(ServiceItem.class, [serviceItem1, serviceItem2])
 
         currentUser = new Profile(username: 'admin')

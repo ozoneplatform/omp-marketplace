@@ -87,9 +87,12 @@ class ProfileRestServiceUnitTest {
     void testAuthorizeCreate() {
         currentUser = admin1
 
-        //create not allowed at all
+        //create allowed for admin
+        service.createFromDto(makeProfile('willSucceed', 10))
+
+        currentUser = user1
         shouldFail(AccessDeniedException) {
-            service.createFromDto(makeProfile('willFail', 10))
+            service.createFromDto(makeProfile('willFail', 11))
         }
     }
 

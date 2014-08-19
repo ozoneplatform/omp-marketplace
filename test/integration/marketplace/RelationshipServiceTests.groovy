@@ -38,7 +38,10 @@ class RelationshipServiceTests extends MarketplaceIntegrationTestCase {
             owners: [testUser1]
         ).save(flush:true, failOnError:true)
 		shouldFail(grails.validation.ValidationException){
-			relationshipService.saveRelationship(new Relationship(owningEntity: parent))
+			relationshipService.saveRelationship(new Relationship(
+                relationshipType: null,
+                owningEntity: parent)
+            )
 		}
 	}
 
