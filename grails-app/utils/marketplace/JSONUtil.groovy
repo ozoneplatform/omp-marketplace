@@ -74,32 +74,14 @@ class JSONUtil {
                     def targetSdf = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT,
                         Locale.US)
 
-                    targetSdf.setTimeZone(TimeZone.getTimeZone('UTC'))
-
-                    Date parsedDate
-                    try {
-                        parsedDate = parseSdf.parse(val)
-                    }
-                    catch (ParseException e) {
-                        try {
-                            if (val[-1..-1] == 'Z') {
-                                //Java 6 doesn't support 'Z'
-                                val = "${val[0..-2]}UTC"
-                                parsedDate = parseSdf.parse("${val[0..-2]}UTC")
-                            }
-                            else {
-                                throw e
-                            }
-                        }
-                        catch (ParseException e2) {
-                            //throw original exception
-                            throw e
-                        }
+                    if (val[-1..-1] == 'Z') {
+                        //Java 6 doesn't support 'Z'
+                        val = "${val[0..-2]}UTC"
                     }
 
                     //TODO Ensure that using system-local timezone is correct
                     //targetSdf.setCalendar Calendar.getInstance(new SimpleTimeZone(0, "GMT"))
-                    obj[prop] = targetSdf.format(parsedDate)
+                    obj[prop] = targetSdf.format(parseSdf.parse(val))
                 }
             }
         }

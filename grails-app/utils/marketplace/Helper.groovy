@@ -99,26 +99,13 @@ class Helper {
         DateFormat df = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT,
                 Locale.US)
 
-        try {
-            return df.parse(dateStr)
+        // Workaround for Java6:  ISO8601, which recognizes 'Z' as a timezone,
+        //    is not supported until Java7; so we have to pretend to understand the date
+        if (dateStr[-1..-1] == 'Z') {
+            dateStr = "${dateStr[0..-2]}UTC"
         }
-        catch (ParseException e) {
-            try {
-                // Workaround for Java6:  ISO8601, which recognizes 'Z' as a timezone,
-                //    is not supported until Java7; so we have to pretend to understand the date
-                if (dateStr[-1..-1] == 'Z') {
-                    dateStr = "${dateStr[0..-2]}UTC"
-                    return df.parse(dateStr)
-                }
-                else {
-                    throw e
-                }
-            }
-            catch (ParseException e2) {
-                //throw original exception
-                throw e
-            }
-        }
+
+        return df.parse(dateStr)
     }
 
     /**

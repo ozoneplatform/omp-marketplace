@@ -29,6 +29,7 @@ import static org.grails.jaxrs.support.ProviderUtils.isXmlType
 import static ozone.utils.Utils.collectEntries
 
 import marketplace.Constants
+import marketplace.Helper
 
 @Provider
 @Consumes(['text/x-json', 'application/json'])
@@ -174,6 +175,9 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
             else if (Enum.isAssignableFrom(valueType) && value instanceof String) {
                 valueType.valueOf(value)
             }
+            else if (valueType == Date) {
+                value != null ? Helper.parseExternalDate(value) : null
+            }
             else {
                 value
             }
@@ -182,12 +186,6 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
         GrailsDomainClass grailsClass = grailsApplication.getDomainClass(type.name)
 
         collectEntries(map) { key, value ->
-            if (key == 'createdDate' || key == 'editedDate') {
-                DateFormat auditDateFormat =
-                    new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
-                value = auditDateFormat.parse(value)
-            }
-
             if (key != 'class') {
                 try {
                     //the given property of the parent domain class

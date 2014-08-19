@@ -26,7 +26,7 @@ class ImportTests extends ImportTestBase {
     final String EXT_DELTA_TEST_FILE1 = "resources/marketplaceImportStub-delta1-extWarehs.json"
 
     final DateFormat JSON_DATE_FORMAT =
-        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.US)
+        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
 
 	void setUp() {
         super.setUp()
@@ -132,18 +132,16 @@ class ImportTests extends ImportTestBase {
     void testReencodeDates() {
         def jo = json
         def data = jo.serviceItems[0]
-System.err.println "before reencoding, releaseDate = ${data.releaseDate}"
         [
             "releaseDate",
             "createdDate",
             "editedDate"
         ].each(JSONUtil.reencodeDate.curry("dd MMM yyyy hh:mm:ss a zzz", data, data))
-System.err.println "after reencoding, releaseDate = ${data.releaseDate}"
 
         def releaseDate = JSON_DATE_FORMAT.parse(data.releaseDate)
 
         assert releaseDate ==
-            JSON_DATE_FORMAT.parse("2011-12-11T00:00:00-05")
+            JSON_DATE_FORMAT.parse("2011-12-11T00:00:00GMT-05:00")
     }
 
 
