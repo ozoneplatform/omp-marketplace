@@ -150,4 +150,12 @@ class ImportTask implements Serializable {
         //was successful
         runs.find { it.result }
     }
+
+    public boolean equals(Object other) {
+        other instanceof ImportTask && other.name == this.name
+    }
+
+    public int hashCode() {
+        name.hashCode()
+    }
 }

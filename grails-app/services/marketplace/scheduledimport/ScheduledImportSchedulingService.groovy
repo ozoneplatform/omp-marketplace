@@ -34,32 +34,36 @@ class ScheduledImportSchedulingService {
     public void updateImportTasksFromConfig() {
         def scheduledImportConfig = grailsApplication.config.marketplace.scheduledImports
 
-        if (scheduledImportConfig) {
-            InterfaceConfiguration ompInterface = InterfaceConfiguration.getOmpInterface()
+        InterfaceConfiguration ompInterface = InterfaceConfiguration.getOmpInterface()
 
-            scheduledImportConfig.each { conf ->
-                ImportTask task = ImportTask.findByName(conf.name) ?: new ImportTask()
+        //This collection will ultimately contain only the ImportTasks that are not
+        //currently in the configuration and which should be deleted
+        Collection<ImportTask> toDelete = ImportTask.findAllByInterfaceConfig(ompInterface)
 
-                task.name = conf.name
-                task.enabled = conf.enabled
-                task.url = conf.url
-                task.keystorePath = conf.keyStore?.file ?:
-                    System.getProperty('javax.net.ssl.keyStore')
-                task.keystorePass = conf.keyStore?.password ?:
-                    System.getProperty('javax.net.ssl.keyStorePassword')
-                task.truststorePath = conf.trustStore?.file ?:
-                    System.getProperty('javax.net.ssl.trustStore')
-                task.updateType = conf.partial ? Constants.IMPORT_TYPE_DELTA :
-                    Constants.IMPORT_TYPE_FULL
-                task.interfaceConfig = ompInterface
-                task.setExecInterval(conf.frequency.count as Integer,
-                    conf.frequency.unit as String)
+        scheduledImportConfig?.each { conf ->
+            ImportTask task = ImportTask.findByName(conf.name) ?: new ImportTask()
 
-                task.save(failOnError:true)
-            }
+            task.name = conf.name
+            task.enabled = conf.enabled
+            task.url = conf.url
+            task.keystorePath = conf.keyStore?.file ?:
+                System.getProperty('javax.net.ssl.keyStore')
+            task.keystorePass = conf.keyStore?.password ?:
+                System.getProperty('javax.net.ssl.keyStorePassword')
+            task.truststorePath = conf.trustStore?.file ?:
+                System.getProperty('javax.net.ssl.trustStore')
+            task.updateType = conf.partial ? Constants.IMPORT_TYPE_DELTA :
+                Constants.IMPORT_TYPE_FULL
+            task.interfaceConfig = ompInterface
+            task.setExecInterval(conf.frequency.count as Integer,
+                conf.frequency.unit as String)
 
-            //TODO remove ones that are no longer in the config
+            task.save(failOnError:true)
+            toDelete.remove(task)
         }
+
+        //delete tasks that are no longer in the configuration
+        toDelete.each { it.delete() }
 
         scheduleImportTasks()
     }
