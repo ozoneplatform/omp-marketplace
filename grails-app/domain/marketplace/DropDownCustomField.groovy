@@ -59,6 +59,10 @@ class DropDownCustomField extends CustomField {
         toString()
     }
 
+    void setFieldValueText(String value) {
+        setValue((String)value)
+    }
+
     //this method will only ever be called if there is only one selection
     public void setValue(String newValue) {
         removeAllFromFieldValueList()
@@ -137,7 +141,7 @@ class DropDownCustomField extends CustomField {
     }
 
     FieldValue findFieldValueForString(String strValue) {
-        return FieldValue.findByDisplayTextAndCustomFieldDefinition(strValue, this.customFieldDefinition)
+        FieldValue.findByDisplayTextAndCustomFieldDefinition(strValue, this.customFieldDefinition)
     }
 
     String getFieldValueText() {

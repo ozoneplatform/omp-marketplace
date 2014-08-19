@@ -26,6 +26,10 @@ class TextCustomField extends CustomField {
         return value
     }
 
+    void setFieldValueText(String fieldValueText) {
+        value = fieldValueText
+    }
+
     void scrubCR() {
         if (this.value) {
             this.value = this.value.replaceAll("\r", "")

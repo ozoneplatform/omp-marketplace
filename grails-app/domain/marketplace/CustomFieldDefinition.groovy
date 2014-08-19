@@ -63,7 +63,7 @@ class CustomFieldDefinition implements Serializable {
         tablePerHierarchy false
     }
 
-    String toString() { name }
+    String toString() { "${this.class} : ${name}" }
 
     String prettyPrint() {
         toString()

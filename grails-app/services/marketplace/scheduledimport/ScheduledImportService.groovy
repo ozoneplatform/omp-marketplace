@@ -26,6 +26,7 @@ import marketplace.rest.ImageURLCustomFieldDefinitionRestService
 import marketplace.rest.CheckBoxCustomFieldDefinitionRestService
 
 import marketplace.CustomFieldDefinition
+import marketplace.CustomField
 import marketplace.ServiceItem
 import marketplace.Profile
 import marketplace.Types
@@ -234,7 +235,7 @@ class ScheduledImportService {
      * @param referenceProperty The property on each item in items on which the DTO is attached
      * @param equivalenceField The field the use to resolve references (defaults to uuid)
      */
-    private <T> void resolveReferencesByUuid(Collection items, Class<T> referencedClass,
+    private <T> void resolveReferences(Collection items, Class<T> referencedClass,
             String referenceProperty, String equivalenceField='uuid') {
 
         Map<Object, T> equivalenceFieldMap = [:]
@@ -258,7 +259,7 @@ class ScheduledImportService {
 
     private void importCustomFieldDefinitions(
             Collection<CustomFieldDefinition> customFieldDefs, ImportStatus status) {
-        resolveReferencesByUuid(customFieldDefs, Types, 'types')
+        resolveReferences(customFieldDefs, Types, 'types')
 
         runAndCatchErrors(customFieldDefs, status.customFieldDefs) { customFieldDef ->
             RestService<? extends CustomFieldDefinition> service
@@ -323,15 +324,40 @@ class ScheduledImportService {
         }
     }
 
+    private void resolveCustomFields(Collection<ServiceItem> serviceItems) {
+        //first, resolve the CustomFieldDefs
+        resolveReferences(serviceItems.collect { it.customFields }.flatten(),
+            CustomFieldDefinition, 'customFieldDefinition')
+
+        //now switch to the appropriate subclass for each CustomField
+        serviceItems.each { si ->
+            ListIterator<CustomField> listIter = si.customFields.listIterator()
+
+            while (listIter.hasNext()) {
+                CustomField customField = listIter.next()
+                Class<? extends CustomFieldDefinition> Definition =
+                    customField.customFieldDefinition.styleType.fieldClass
+
+                CustomField newCustomField = Definition.newInstance()
+
+                newCustomField.customFieldDefinition = customField.customFieldDefinition
+                newCustomField.fieldValueText = customField.fieldValueText
+
+                listIter.set(newCustomField)
+            }
+        }
+    }
+
     private void importServiceItems(Collection<ServiceItem> serviceItems, ImportStatus status) {
         //import agencies based on information in the service items
         importAgenciesFromServiceItems(serviceItems, status)
-        resolveReferencesByUuid(serviceItems, Types, 'types')
-        resolveReferencesByUuid(serviceItems, Category, 'categories')
-        resolveReferencesByUuid(serviceItems, State, 'state')
-        resolveReferencesByUuid(serviceItems, Profile, 'owners', 'username')
-        resolveReferencesByUuid(serviceItems.collect { it.customFields }.flatten(),
-            CustomFieldDefinition, 'customFieldDefinition')
+
+        resolveReferences(serviceItems, Types, 'types')
+        resolveReferences(serviceItems, Category, 'categories')
+        resolveReferences(serviceItems, State, 'state')
+        resolveReferences(serviceItems, Profile, 'owners', 'username')
+
+        resolveCustomFields(serviceItems)
 
         importUsingService(ServiceItem, serviceItemRestService, status.serviceItems, serviceItems,
             'uuid', true)
