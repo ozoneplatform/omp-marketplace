@@ -4,8 +4,12 @@ import grails.test.mixin.services.ServiceUnitTestMixin
 import grails.test.mixin.TestMixin
 import grails.test.mixin.TestFor
 
+import org.quartz.SimpleTrigger
+import org.quartz.core.QuartzScheduler
+
 import marketplace.ImportTask
 import marketplace.InterfaceConfiguration
+import marketplace.Constants
 
 import marketplace.testutil.FakeAuditTrailHelper
 
@@ -50,7 +54,15 @@ class ScheduledImportSchedulingServiceUnitTest {
     void setUp() {
         FakeAuditTrailHelper.install()
 
-        InterfaceConfiguration.OMP_INTERFACE.save(flush: true, failOnError: true)
+        //can't re-use the same exact domain object between tests so make and save copies
+        new InterfaceConfiguration(InterfaceConfiguration.OMP_INTERFACE.properties)
+            .save(failOnError: true)
+        new InterfaceConfiguration(InterfaceConfiguration.FILE_IMPORT.properties
+            ).save(failOnError: true)
+
+        assert InterfaceConfiguration.list().size() == 2
+        assert InterfaceConfiguration.ompInterface != null
+        assert InterfaceConfiguration.fileInterface != null
 
         System.properties['javax.net.ssl.keyStore'] = 'standard-keystore.jks'
         System.properties['javax.net.ssl.keyStorePassword'] = 'password'
@@ -58,8 +70,6 @@ class ScheduledImportSchedulingServiceUnitTest {
     }
 
     void tearDown() {
-        InterfaceConfiguration.list().each { it.delete() }
-
         System.properties.remove('javax.net.ssl.keyStore')
         System.properties.remove('javax.net.ssl.keyStorePassword')
         System.properties.remove('javax.net.ssl.trustStore')
@@ -121,5 +131,65 @@ class ScheduledImportSchedulingServiceUnitTest {
         service.updateImportTasksFromConfig()
         assert ImportTask.list() == []
         assert scheduledImportTasksCallCount == 4
+    }
+
+    void testScheduleImportTasks() {
+        def scheduledImportTasks = [new ImportTask(
+            name: 'task 1',
+            execInterval: 1,
+            updateType: Constants.IMPORT_TYPE_DELTA,
+            interfaceConfig: InterfaceConfiguration.ompInterface
+        ), new ImportTask(
+            name: 'task 2',
+            execInterval: 1000,
+            updateType: Constants.IMPORT_TYPE_DELTA,
+            interfaceConfig: InterfaceConfiguration.ompInterface
+        )]
+
+        //add a file import task as well to ensure that it isn't (un)scheduled
+        def tasks = scheduledImportTasks + [new ImportTask(
+            name: 'file import',
+            execInterval: 200,
+            updateType: Constants.IMPORT_TYPE_DELTA,
+            interfaceConfig: InterfaceConfiguration.fileInterface
+        )]
+
+        def deletedKeys = []
+        def scheduledJobDetails = []
+        def scheduledTriggers = []
+
+        service.quartzScheduler = [
+            deleteJob: { key ->
+                deletedKeys << key
+            },
+            scheduleJob: { jobDetail, trigger ->
+                scheduledJobDetails << jobDetail
+                scheduledTriggers << trigger
+            }
+        ]
+
+        tasks.each { it.save(failOnError:true) }
+
+        //this is the call being tested
+        service.scheduleImportTasks()
+
+        assert deletedKeys.size() == 2
+        assert scheduledJobDetails.size() == 2
+        assert scheduledTriggers.size() == 2
+
+        assert deletedKeys.collect { it.name }  == scheduledImportTasks.collect { it.name }
+        [0,1].each { i ->
+            def jobDetail = scheduledJobDetails[i]
+
+            assert jobDetail.jobClass == ImportJob
+            assert jobDetail.key.name == tasks[i].name
+            assert jobDetail.jobDataMap[Constants.JOB_ID_KEY] == tasks[i].id
+
+            def trigger = scheduledTriggers[i]
+
+            assert trigger instanceof SimpleTrigger
+            assert trigger.repeatInterval == 1000  * 60 * tasks[i].execInterval
+            assert trigger.repeatCount == SimpleTrigger.REPEAT_INDEFINITELY
+        }
     }
 }

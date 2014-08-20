@@ -21,7 +21,6 @@ import marketplace.Constants
  */
 class ScheduledImportSchedulingService {
     GrailsApplication grailsApplication
-    ScheduledImportService scheduledImportService
     def quartzScheduler
 
     private static final String JOB_GROUP = 'ompImport'
