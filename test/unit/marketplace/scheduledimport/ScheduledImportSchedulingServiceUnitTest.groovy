@@ -142,6 +142,7 @@ class ScheduledImportSchedulingServiceUnitTest {
         ), new ImportTask(
             name: 'task 2',
             execInterval: 1000,
+            enabled: false,
             updateType: Constants.IMPORT_TYPE_DELTA,
             interfaceConfig: InterfaceConfiguration.ompInterface
         )]
@@ -174,11 +175,13 @@ class ScheduledImportSchedulingServiceUnitTest {
         service.scheduleImportTasks()
 
         assert deletedKeys.size() == 2
-        assert scheduledJobDetails.size() == 2
-        assert scheduledTriggers.size() == 2
+
+        //only the first job should be scheduled since the other one is disabled
+        assert scheduledJobDetails.size() == 1
+        assert scheduledTriggers.size() == 1
 
         assert deletedKeys.collect { it.name }  == scheduledImportTasks.collect { it.name }
-        [0,1].each { i ->
+        [0].each { i ->
             def jobDetail = scheduledJobDetails[i]
 
             assert jobDetail.jobClass == ImportJob

@@ -22,6 +22,7 @@ import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
 import org.apache.http.conn.ssl.SSLContexts
+import org.apache.http.conn.ssl.SSLContextBuilder
 import org.apache.http.client.methods.HttpGet
 
 import marketplace.ImportTask
@@ -41,45 +42,56 @@ class ScheduledImportHttpService {
     CustomDomainObjectReader customDomainObjectReader
     def mp_RESTInterceptorService
 
-    private CloseableHttpClient createHttpsClient(ImportTask task) {
-        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        char[] passwordArray = task.keystorePass.toCharArray()
+    protected CloseableHttpClient createHttpsClient(ImportTask task) {
+        KeyStore trustStore
+        KeyStore keyStore
+        char[] passwordArray = task.keystorePass?.toCharArray()
 
-        FileInputStream trustStoreStream =
-            new FileInputStream(new File((String)task.truststorePath));
-        FileInputStream keyStoreStream =
-            new FileInputStream(new File((String)task.keystorePath));
+        if (task.truststorePath) {
+            def trustStoreStream
 
-        try {
-            trustStore.load(trustStoreStream, null);
-            keyStore.load(keyStoreStream, passwordArray)
-        } finally {
-            trustStoreStream.close();
-            keyStoreStream.close();
+            try {
+                trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                trustStoreStream = new FileInputStream(new File((String)task.truststorePath));
+                trustStore.load(trustStoreStream, null);
+            } finally {
+                trustStoreStream?.close();
+            }
         }
 
-        SSLContext sslcontext = SSLContexts.custom()
-            .loadTrustMaterial(trustStore)
-            .loadKeyMaterial(keyStore, passwordArray)
-            .build();
+        if (task.keystorePath) {
+            def keyStoreStream
 
-        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslcontext)
+            try {
+                keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                keyStoreStream = new FileInputStream(new File((String)task.keystorePath));
+                keyStore.load(keyStoreStream, null);
+            } finally {
+                keyStoreStream?.close();
+            }
+        }
+
+        SSLContextBuilder sslBuilder = SSLContexts.custom()
+
+        if (trustStore) {
+            sslBuilder.loadTrustMaterial(trustStore)
+        }
+
+        if (keyStore) {
+            sslBuilder.loadKeyMaterial(keyStore, passwordArray)
+        }
+
+        SSLContext sslcontext = sslBuilder.build();
 
         return HttpClients.custom()
-                .setSSLSocketFactory(socketFactory)
+                .setSSLContext(sslcontext)
                 .build();
     }
-
-    private CloseableHttpClient createHttpClient(ImportTask task) {
-        HttpClients.createDefault()
-    }
-
 
     /**
      * @return the URL to use to fetch import data for this ImportTask
      */
-    private URI getRemoteUri(ImportTask task) {
+    protected URI getRemoteUri(ImportTask task) {
         URIBuilder uriBuilder = new URIBuilder(task.url)
         Date lastRunDate = task.lastSuccessfulRunResult?.runDate
 
@@ -102,8 +114,7 @@ class ScheduledImportHttpService {
     }
 
     public ScheduledImportData retrieveRemoteImportData(ImportTask task) throws IOException {
-        CloseableHttpClient client = task.useClientAuthentication() ? createHttpsClient(task) :
-            createHttpClient(task)
+        CloseableHttpClient client = createHttpsClient(task)
 
         try {
             HttpGet httpget = new HttpGet(getRemoteUri(task))
