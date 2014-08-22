@@ -36,6 +36,7 @@ class Constants {
     public static final String OPT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
     public static final String EXTERNAL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
     public static final String EXTERNAL_DATE_PARSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssz"
+    public static final String RELEASE_DATE_FORMAT_STRING= 'MM/dd/yyyy'
 
     public static final def APPROVAL_STATUSES = ["IN_PROGRESS": "In Progress", "PENDING": "Pending", "APPROVED": "Approved", "REJECTED": "Rejected"]
 

@@ -14,9 +14,8 @@ import gorm.AuditStamp
 @AuditStamp
 class ServiceItem implements Serializable {
 
-    public static final String RELEASE_DATE_FORMAT_STRING= 'MM/dd/yyyy'
     private final DateFormat RELEASE_DATE_FORMAT =
-        new SimpleDateFormat(RELEASE_DATE_FORMAT_STRING)
+        new SimpleDateFormat(Constants.RELEASE_DATE_FORMAT_STRING)
 
     //these two fields are used by the RestService to determine
     //how to handle marshalling of this domain

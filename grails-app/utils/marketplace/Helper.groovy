@@ -105,7 +105,20 @@ class Helper {
             dateStr = "${dateStr[0..-2]}UTC"
         }
 
-        return df.parse(dateStr)
+        try {
+            return df.parse(dateStr)
+        }
+        catch (ParseException e) {
+            //attempt to parse as simple date (with no time)
+            df = new SimpleDateFormat(Constants.RELEASE_DATE_FORMAT_STRING, Locale.US)
+
+            try {
+                return df.parse(dateStr)
+            }
+            catch (ParseException e2) {
+                throw e
+            }
+        }
     }
 
     /**

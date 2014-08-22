@@ -176,7 +176,8 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
                 valueType.valueOf(value)
             }
             else if (valueType == Date) {
-                value != null ? Helper.parseExternalDate(value) : null
+                !(value == null || value.isAllWhitespace()) ?
+                    Helper.parseExternalDate(value) : null
             }
             else {
                 value

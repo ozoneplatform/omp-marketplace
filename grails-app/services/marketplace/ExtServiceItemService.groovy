@@ -371,7 +371,7 @@ class ExtServiceItemService {
                         throw new ValidationException(message: "Release Date sent " +
                             "(${json?.releaseDate}) " +
                             "must have time format of ${Constants.OPT_DATE_FORMAT} or " +
-                            "${ServiceItem.RELEASE_DATE_FORMAT_STRING}"
+                            "${Constants.RELEASE_DATE_FORMAT_STRING}"
                         )
                     }
                 }
