@@ -238,6 +238,35 @@ class ScheduledImportServiceUnitTest {
         ]
     )
 
+    //simulate an update by setting the editedBy dates on various items to be the current time.
+    //This function is intended to be run after performing the create
+    private void makeUpdate() {
+        [
+            'profiles',
+            'types',
+            'categories',
+            'states',
+            'customFieldDefs',
+            'serviceItems'
+        ].each { prop ->
+            //only update odd-indexed items
+            importData[prop].eachWithIndex { item, i -> if (i % 2) item.editedDate = new Date() }
+        }
+    }
+
+    private void resetEditedDates() {
+        [
+            'profiles',
+            'types',
+            'categories',
+            'states',
+            'customFieldDefs',
+            'serviceItems'
+        ].each { prop ->
+            importData[prop].each { it.editedDate = null }
+        }
+    }
+
     private mockImportMethods(Collection<String> except) {
         def doNothing = { Collection c, ImportStatus s -> }
 
@@ -280,9 +309,7 @@ class ScheduledImportServiceUnitTest {
             def mock = mockFor(cls)
             mock.demand.createFromDto(0..100) { dto, skipValidation ->
 
-                if (!delegate.metaClass.hasProperty('created')) {
-                    delegate.metaClass.created = []
-                }
+                dto.id = 10
 
                 created << dto
                 updateLists(dto)
@@ -292,17 +319,16 @@ class ScheduledImportServiceUnitTest {
             mock.demand.updateById(0..100) { id, dto, skipValidation ->
                 assert id == dto.id
 
-                if (!delegate.metaClass.hasProperty('updated')) {
-                    delegate.metaClass.updated = []
-                }
-
                 updated << dto
                 updateLists(dto)
+
 
                 return dto
             }
 
             service[property] = mock.createMock()
+            service[property].metaClass.created = []
+            service[property].metaClass.updated = []
         }
     }
 
@@ -369,6 +395,8 @@ class ScheduledImportServiceUnitTest {
             interfaceConfig: interfaceConfig
         )
 
+        resetEditedDates()
+
         service.scheduledImportHttpService = mockHttpService()
         mockRestServices()
         mockListMethods()
@@ -413,6 +441,25 @@ class ScheduledImportServiceUnitTest {
         assert usernames.contains('testAdmin1')
         assert usernames.contains('testUser1')
         assert !usernames.contains('System')    //System user does not come through in import
+
+        makeUpdate()
+
+        //since the way this is mocked out results in the importData objects actually being the
+        //"persisted" objects, changing the import's editedDate also changes it in the persisted
+        //object.  This method ensures that the updated editedDates are recognized as updated
+        Profile.metaClass.'static'.findByUsername = { username ->
+            def original = profileList.find { it.username == username }
+            def copy = new Profile(original.properties)
+            copy.editedDate = null
+
+            return copy
+        }
+
+        service.executeScheduledImport(task)
+        profiles = service.profileRestService.updated
+
+        assert profiles.size() == 1
+        assert profiles[0].username == importData.profiles[1].username
     }
 
     void testImportTypes() {
@@ -437,6 +484,26 @@ class ScheduledImportServiceUnitTest {
 
         //images are stripped out
         assert types.find { it.image != null } == null
+
+
+        makeUpdate()
+
+        //since the way this is mocked out results in the importData objects actually being the
+        //"persisted" objects, changing the import's editedDate also changes it in the persisted
+        //object.  This method ensures that the updated editedDates are recognized as updated
+        Types.metaClass.'static'.findByUuid = { uuid ->
+            def original = typesList.find { it.uuid == uuid }
+            def copy = new Types(original.properties)
+            copy.editedDate = null
+
+            return copy
+        }
+
+        service.executeScheduledImport(task)
+        types = service.typeRestService.updated
+
+        assert types.size() == 1
+        assert types[0].uuid == importData.types[1].uuid
     }
 
     void testImportCategories() {
@@ -458,6 +525,26 @@ class ScheduledImportServiceUnitTest {
         assert categories[1].is(importData.categories[1])
         assert categories[1].createdBy.is(admin)
         assert categories[1].editedBy.is(admin)
+
+
+        makeUpdate()
+
+        //since the way this is mocked out results in the importData objects actually being the
+        //"persisted" objects, changing the import's editedDate also changes it in the persisted
+        //object.  This method ensures that the updated editedDates are recognized as updated
+        Category.metaClass.'static'.findByUuid = { uuid ->
+            def original = categoryList.find { it.uuid == uuid }
+            def copy = new Category(original.properties)
+            copy.editedDate = null
+
+            return copy
+        }
+
+        service.executeScheduledImport(task)
+        categories = service.categoryRestService.updated
+
+        assert categories.size() == 1
+        assert categories[0].uuid == importData.categories[1].uuid
     }
 
     void testImportStates() {
@@ -472,6 +559,26 @@ class ScheduledImportServiceUnitTest {
         assert states.size() == 2
         assert states[0].is(importData.states[0])
         assert states[1].is(importData.states[1])
+
+
+        makeUpdate()
+
+        //since the way this is mocked out results in the importData objects actually being the
+        //"persisted" objects, changing the import's editedDate also changes it in the persisted
+        //object.  This method ensures that the updated editedDates are recognized as updated
+        State.metaClass.'static'.findByUuid = { uuid ->
+            def original = stateList.find { it.uuid == uuid }
+            def copy = new State(original.properties)
+            copy.editedDate = null
+
+            return copy
+        }
+
+        service.executeScheduledImport(task)
+        states = service.stateRestService.updated
+
+        assert states.size() == 1
+        assert states[0].uuid == importData.states[1].uuid
     }
 
     void testImportCustomFields() {
@@ -529,6 +636,42 @@ class ScheduledImportServiceUnitTest {
         assert dropDownCustomFieldDefinitions[0].createdBy.is(admin)
         assert dropDownCustomFieldDefinitions[0].editedBy.is(admin)
         assert dropDownCustomFieldDefinitions[0].types == []
+
+
+        makeUpdate()
+
+        //since the way this is mocked out results in the importData objects actually being the
+        //"persisted" objects, changing the import's editedDate also changes it in the persisted
+        //object.  This method ensures that the updated editedDates are recognized as updated
+        CustomFieldDefinition.metaClass.'static'.findByUuid = { uuid ->
+            def original = customFieldDefinitionList.find { it.uuid == uuid }
+            def cls = original.class
+
+            def copy = cls.metaClass.invokeConstructor(original.properties)
+            copy.editedDate = null
+
+            return copy
+        }
+
+        service.executeScheduledImport(task)
+
+        textCustomFieldDefinitions = service.textCustomFieldDefinitionRestService.updated
+
+        textAreaCustomFieldDefinitions = service.textAreaCustomFieldDefinitionRestService.updated
+
+        checkBoxCustomFieldDefinitions = service.checkBoxCustomFieldDefinitionRestService.updated
+
+        imageURLCustomFieldDefinitions = service.imageURLCustomFieldDefinitionRestService.updated
+
+        dropDownCustomFieldDefinitions = service.dropDownCustomFieldDefinitionRestService.updated
+
+        def customFieldDefinitions = textCustomFieldDefinitions +
+            textAreaCustomFieldDefinitions + checkBoxCustomFieldDefinitions +
+            imageURLCustomFieldDefinitions + dropDownCustomFieldDefinitions
+
+        assert customFieldDefinitions.size() == 2
+        assert customFieldDefinitions.contains(importData.customFieldDefs[1])
+        assert customFieldDefinitions.contains(importData.customFieldDefs[3])
     }
 
     void testImportServiceItems() {
@@ -615,6 +758,26 @@ class ScheduledImportServiceUnitTest {
         assert serviceItems[1].owners.contains(profiles.find {
             it.username == 'testAdmin1'
         })
+
+
+        makeUpdate()
+
+        //since the way this is mocked out results in the importData objects actually being the
+        //"persisted" objects, changing the import's editedDate also changes it in the persisted
+        //object.  This method ensures that the updated editedDates are recognized as updated
+        ServiceItem.metaClass.'static'.findByUuid = { uuid ->
+            def original = serviceItemList.find { it.uuid == uuid }
+            def copy = new ServiceItem(original.properties)
+            copy.editedDate = null
+
+            return copy
+        }
+
+        service.executeScheduledImport(task)
+        serviceItems = service.serviceItemRestService.updated
+
+        assert serviceItems.size() == 1
+        assert serviceItems[0].uuid == importData.serviceItems[1].uuid
     }
 
     void testImportRelationships() {

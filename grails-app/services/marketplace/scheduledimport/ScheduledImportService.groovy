@@ -387,7 +387,13 @@ class ScheduledImportService {
                     si.addToRelationships(relationship)
                 }
 
-                relationship.relatedItems.addAll(relationshipDto.relatedItems)
+                //don't use resolveReferences to resolve related items; that would pull
+                //all ServiceItems into memory
+                Collection<ServiceItem> relatedItems = relationshipDto.relatedItems.collect {
+                    ServiceItem.findByUuid(it.uuid)
+                }
+
+                relationship.relatedItems.addAll(relatedItems)
             }
         }
     }
