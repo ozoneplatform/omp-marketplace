@@ -1,5 +1,7 @@
 package marketplace.scheduledimport
 
+import grails.validation.ValidationException
+
 import grails.test.mixin.services.ServiceUnitTestMixin
 import grails.test.mixin.TestMixin
 import grails.test.mixin.TestFor
@@ -926,6 +928,148 @@ class ScheduledImportServiceUnitTest {
         assert importStatus.agencies.notUpdated == 1
 
         result = task.lastRunResult
+        assert result.message == importStatus.summaryMessage
+    }
+
+    void testExceptions() {
+        ImportStatus importStatus = new ImportStatus()
+
+        //instead of a new importstatus return the one we have here in the test
+        ImportStatus.metaClass.constructor = { importStatus }
+
+        ServiceItem.metaClass.'static'.findByUuid = { uuid ->
+            serviceItemList.find { it.uuid == uuid }
+        }
+
+        service.categoryRestService.metaClass.createFromDto = { dto, skipValidation ->
+            throw new Exception("Category exception")
+        }
+
+        service.typeRestService.metaClass.createFromDto = { dto, skipValidation ->
+            throw new ValidationException("Types exception")
+        }
+
+        service.stateRestService.metaClass.createFromDto = { dto, skipValidation ->
+            throw new Exception("State exception")
+        }
+
+        service.profileRestService.metaClass.createFromDto = { dto, skipValidation ->
+            throw new Exception("Profile exception")
+        }
+
+        service.serviceItemRestService.metaClass.createFromDto = { dto, skipValidation ->
+            throw new IllegalArgumentException("ServiceItem exception")
+        }
+
+        //relationships will fail since serviceItems are missing
+
+        service.executeScheduledImport(task)
+
+        assert importStatus.success == false
+
+        assert importStatus.categories.created == 0
+        assert importStatus.categories.failed == 2
+        assert importStatus.categories.updated == 0
+        assert importStatus.categories.notUpdated == 0
+
+        assert importStatus.types.created == 0
+        assert importStatus.types.failed == 2
+        assert importStatus.types.updated == 0
+        assert importStatus.types.notUpdated == 0
+
+        assert importStatus.states.created == 0
+        assert importStatus.states.failed == 2
+        assert importStatus.states.updated == 0
+        assert importStatus.states.notUpdated == 0
+
+        //we aren't currently testing customFieldDef failures
+        assert importStatus.customFieldDefs.created == 5
+        assert importStatus.customFieldDefs.failed == 0
+        assert importStatus.customFieldDefs.updated == 0
+        assert importStatus.customFieldDefs.notUpdated == 0
+
+        assert importStatus.profiles.created == 0
+        assert importStatus.profiles.failed == 2
+        assert importStatus.profiles.updated == 0
+        assert importStatus.profiles.notUpdated == 0
+
+        assert importStatus.serviceItems.created == 0
+        assert importStatus.serviceItems.failed == 2
+        assert importStatus.serviceItems.updated == 0
+        assert importStatus.serviceItems.notUpdated == 0
+
+        assert importStatus.relationships.created == 0
+        assert importStatus.relationships.failed == 1
+        assert importStatus.relationships.updated == 0
+        assert importStatus.relationships.notUpdated == 0
+
+        assert importStatus.agencies.created == 1
+        assert importStatus.agencies.failed == 0
+        assert importStatus.agencies.updated == 0
+        assert importStatus.agencies.notUpdated == 0
+
+        ImportTaskResult result = task.lastRunResult
+        assert result.message == importStatus.summaryMessage
+    }
+
+    void testHttpServiceException() {
+        ImportStatus importStatus = new ImportStatus()
+
+        //instead of a new importstatus return the one we have here in the test
+        ImportStatus.metaClass.constructor = { importStatus }
+
+        def exceptionMessage = "Could not complete request"
+
+        service.scheduledImportHttpService.metaClass.retrieveRemoteImportData = { ImportTask t ->
+            throw new IOException(exceptionMessage)
+        }
+
+        service.executeScheduledImport(task)
+
+        assert importStatus.success == false
+        assert importStatus.messages[0].contains(exceptionMessage)
+
+        assert importStatus.categories.created == 0
+        assert importStatus.categories.failed == 0
+        assert importStatus.categories.updated == 0
+        assert importStatus.categories.notUpdated == 0
+
+        assert importStatus.types.created == 0
+        assert importStatus.types.failed == 0
+        assert importStatus.types.updated == 0
+        assert importStatus.types.notUpdated == 0
+
+        assert importStatus.states.created == 0
+        assert importStatus.states.failed == 0
+        assert importStatus.states.updated == 0
+        assert importStatus.states.notUpdated == 0
+
+        assert importStatus.customFieldDefs.created == 0
+        assert importStatus.customFieldDefs.failed == 0
+        assert importStatus.customFieldDefs.updated == 0
+        assert importStatus.customFieldDefs.notUpdated == 0
+
+        assert importStatus.profiles.created == 0
+        assert importStatus.profiles.failed == 0
+        assert importStatus.profiles.updated == 0
+        assert importStatus.profiles.notUpdated == 0
+
+        assert importStatus.serviceItems.created == 0
+        assert importStatus.serviceItems.failed == 0
+        assert importStatus.serviceItems.updated == 0
+        assert importStatus.serviceItems.notUpdated == 0
+
+        assert importStatus.relationships.created == 0
+        assert importStatus.relationships.failed == 0
+        assert importStatus.relationships.updated == 0
+        assert importStatus.relationships.notUpdated == 0
+
+        assert importStatus.agencies.created == 0
+        assert importStatus.agencies.failed == 0
+        assert importStatus.agencies.updated == 0
+        assert importStatus.agencies.notUpdated == 0
+
+        ImportTaskResult result = task.lastRunResult
         assert result.message == importStatus.summaryMessage
     }
 }

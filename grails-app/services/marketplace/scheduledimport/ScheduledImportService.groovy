@@ -395,7 +395,13 @@ class ScheduledImportService {
                 //don't use resolveReferences to resolve related items; that would pull
                 //all ServiceItems into memory
                 Collection<ServiceItem> relatedItems = relationshipDto.relatedItems.collect {
-                    ServiceItem.findByUuid(it.uuid)
+                    ServiceItem item = ServiceItem.findByUuid(it.uuid)
+                    if (!item) {
+                        throw new IllegalArgumentException(
+                            "Non-existant Related Item with uuid $it.uuid")
+                    }
+
+                    return item
                 }
 
                 relatedItems.each { relatedItem ->
@@ -407,6 +413,9 @@ class ScheduledImportService {
 
                 return retval
             }
+            else
+                throw new IllegalArgumentException(
+                    "Non-existant Owning Listing with uuid $si.relationshipDto.owningEntity.uuid")
         }
     }
 
