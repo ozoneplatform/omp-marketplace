@@ -332,8 +332,9 @@ class ScheduledImportServiceUnitTest {
         }
     }
 
+    //A very simple "persistence" mechanism for relevant classes
     List profileList, categoryList, typesList, stateList, customFieldDefinitionList,
-        fieldValueList, serviceItemList
+        fieldValueList, serviceItemList, agencyList
 
     //The resolution mechanism relies on the Item's list method, so mock it to something we
     //control
@@ -345,14 +346,102 @@ class ScheduledImportServiceUnitTest {
         customFieldDefinitionList = []
         fieldValueList = []
         serviceItemList = []
+        agencyList = []
 
-        Profile.metaClass.'static'.list = {
-            profileList
-        }
+        Profile.metaClass.'static'.list = { profileList }
         Category.metaClass.'static'.list = { categoryList }
         Types.metaClass.'static'.list = { typesList }
         State.metaClass.'static'.list = { stateList }
         CustomFieldDefinition.metaClass.'static'.list = { customFieldDefinitionList }
+        Agency.metaClass.'static'.list = { agencyList }
+    }
+
+    private mockFindByMethods() {
+        Agency.metaClass.'static'.findByTitle = { title ->
+            def original = agencyList.find { it.title == title }
+            if (original) {
+                def copy = new Agency(original.properties)
+                copy.editedDate = null
+
+                return copy
+            }
+            else {
+                return null
+            }
+        }
+        Profile.metaClass.'static'.findByUsername = { username ->
+            def original = profileList.find { it.username == username }
+            if (original) {
+                def copy = new Profile(original.properties)
+                copy.editedDate = null
+
+                return copy
+            }
+            else {
+                return null
+            }
+        }
+        Types.metaClass.'static'.findByUuid = { uuid ->
+            def original = typesList.find { it.uuid == uuid }
+            if (original) {
+                def copy = new Types(original.properties)
+                copy.editedDate = null
+
+                return copy
+            }
+            else {
+                return null
+            }
+        }
+        Category.metaClass.'static'.findByUuid = { uuid ->
+            def original = categoryList.find { it.uuid == uuid }
+            if (original) {
+                def copy = new Category(original.properties)
+                copy.editedDate = null
+
+                return copy
+            }
+            else {
+                return null
+            }
+        }
+        State.metaClass.'static'.findByUuid = { uuid ->
+            def original = stateList.find { it.uuid == uuid }
+            if (original) {
+                def copy = new State(original.properties)
+                copy.editedDate = null
+
+                return copy
+            }
+            else {
+                return null
+            }
+        }
+        CustomFieldDefinition.metaClass.'static'.findByUuid = { uuid ->
+            def original = customFieldDefinitionList.find { it.uuid == uuid }
+            if (original) {
+                def cls = original.class
+                def copy = cls.metaClass.invokeConstructor(original.properties)
+                copy.editedDate = null
+
+                return copy
+            }
+            else {
+                return null
+            }
+        }
+        ServiceItem.metaClass.'static'.findByUuid = { uuid ->
+            def original = serviceItemList.find { it.uuid == uuid }
+            if (original) {
+                def copy = new ServiceItem(original.properties)
+                copy.editedDate = null
+
+                return copy
+            }
+            else {
+                return null
+            }
+        }
     }
 
     //add an object to the appropriate mocked list
@@ -376,6 +465,9 @@ class ScheduledImportServiceUnitTest {
         }
         else if (obj instanceof ServiceItem) {
             list = serviceItemList
+        }
+        else if (obj instanceof Agency) {
+            list = agencyList
         }
 
         list?.add(obj)
@@ -443,17 +535,7 @@ class ScheduledImportServiceUnitTest {
         assert !usernames.contains('System')    //System user does not come through in import
 
         makeUpdate()
-
-        //since the way this is mocked out results in the importData objects actually being the
-        //"persisted" objects, changing the import's editedDate also changes it in the persisted
-        //object.  This method ensures that the updated editedDates are recognized as updated
-        Profile.metaClass.'static'.findByUsername = { username ->
-            def original = profileList.find { it.username == username }
-            def copy = new Profile(original.properties)
-            copy.editedDate = null
-
-            return copy
-        }
+        mockFindByMethods()
 
         service.executeScheduledImport(task)
         profiles = service.profileRestService.updated
@@ -487,17 +569,7 @@ class ScheduledImportServiceUnitTest {
 
 
         makeUpdate()
-
-        //since the way this is mocked out results in the importData objects actually being the
-        //"persisted" objects, changing the import's editedDate also changes it in the persisted
-        //object.  This method ensures that the updated editedDates are recognized as updated
-        Types.metaClass.'static'.findByUuid = { uuid ->
-            def original = typesList.find { it.uuid == uuid }
-            def copy = new Types(original.properties)
-            copy.editedDate = null
-
-            return copy
-        }
+        mockFindByMethods()
 
         service.executeScheduledImport(task)
         types = service.typeRestService.updated
@@ -528,17 +600,7 @@ class ScheduledImportServiceUnitTest {
 
 
         makeUpdate()
-
-        //since the way this is mocked out results in the importData objects actually being the
-        //"persisted" objects, changing the import's editedDate also changes it in the persisted
-        //object.  This method ensures that the updated editedDates are recognized as updated
-        Category.metaClass.'static'.findByUuid = { uuid ->
-            def original = categoryList.find { it.uuid == uuid }
-            def copy = new Category(original.properties)
-            copy.editedDate = null
-
-            return copy
-        }
+        mockFindByMethods()
 
         service.executeScheduledImport(task)
         categories = service.categoryRestService.updated
@@ -562,17 +624,7 @@ class ScheduledImportServiceUnitTest {
 
 
         makeUpdate()
-
-        //since the way this is mocked out results in the importData objects actually being the
-        //"persisted" objects, changing the import's editedDate also changes it in the persisted
-        //object.  This method ensures that the updated editedDates are recognized as updated
-        State.metaClass.'static'.findByUuid = { uuid ->
-            def original = stateList.find { it.uuid == uuid }
-            def copy = new State(original.properties)
-            copy.editedDate = null
-
-            return copy
-        }
+        mockFindByMethods()
 
         service.executeScheduledImport(task)
         states = service.stateRestService.updated
@@ -639,19 +691,7 @@ class ScheduledImportServiceUnitTest {
 
 
         makeUpdate()
-
-        //since the way this is mocked out results in the importData objects actually being the
-        //"persisted" objects, changing the import's editedDate also changes it in the persisted
-        //object.  This method ensures that the updated editedDates are recognized as updated
-        CustomFieldDefinition.metaClass.'static'.findByUuid = { uuid ->
-            def original = customFieldDefinitionList.find { it.uuid == uuid }
-            def cls = original.class
-
-            def copy = cls.metaClass.invokeConstructor(original.properties)
-            copy.editedDate = null
-
-            return copy
-        }
+        mockFindByMethods()
 
         service.executeScheduledImport(task)
 
@@ -761,17 +801,7 @@ class ScheduledImportServiceUnitTest {
 
 
         makeUpdate()
-
-        //since the way this is mocked out results in the importData objects actually being the
-        //"persisted" objects, changing the import's editedDate also changes it in the persisted
-        //object.  This method ensures that the updated editedDates are recognized as updated
-        ServiceItem.metaClass.'static'.findByUuid = { uuid ->
-            def original = serviceItemList.find { it.uuid == uuid }
-            def copy = new ServiceItem(original.properties)
-            copy.editedDate = null
-
-            return copy
-        }
+        mockFindByMethods()
 
         service.executeScheduledImport(task)
         serviceItems = service.serviceItemRestService.updated
@@ -799,5 +829,103 @@ class ScheduledImportServiceUnitTest {
         assert parentItem.relationships[0].relatedItems[0] == serviceItems.find {
             it.uuid == '497df2c6-ffd7-49be-a7ab-000d9ec1ddf8'
         }
+    }
+
+    void testImportStatus() {
+        ImportStatus importStatus = new ImportStatus()
+
+        //for use in the update phase of the test
+        ImportStatus anotherImportStatus = new ImportStatus()
+
+        //instead of a new importstatus return the one we have here in the test
+        ImportStatus.metaClass.constructor = { importStatus }
+
+        ServiceItem.metaClass.'static'.findByUuid = { uuid ->
+            serviceItemList.find { it.uuid == uuid }
+        }
+
+        service.executeScheduledImport(task)
+
+        assert importStatus.success
+
+        assert importStatus.categories.created == 2
+        assert importStatus.categories.updated == 0
+        assert importStatus.categories.notUpdated == 0
+
+        assert importStatus.types.created == 2
+        assert importStatus.types.updated == 0
+        assert importStatus.types.notUpdated == 0
+
+        assert importStatus.states.created == 2
+        assert importStatus.states.updated == 0
+        assert importStatus.states.notUpdated == 0
+
+        assert importStatus.customFieldDefs.created == 5
+        assert importStatus.customFieldDefs.updated == 0
+        assert importStatus.customFieldDefs.notUpdated == 0
+
+        assert importStatus.profiles.created == 2
+        assert importStatus.profiles.updated == 0
+        assert importStatus.profiles.notUpdated == 0
+
+        assert importStatus.serviceItems.created == 2
+        assert importStatus.serviceItems.updated == 0
+        assert importStatus.serviceItems.notUpdated == 0
+
+        assert importStatus.relationships.created == 1
+        assert importStatus.relationships.updated == 0
+        assert importStatus.relationships.notUpdated == 0
+
+        assert importStatus.agencies.created == 1
+        assert importStatus.agencies.updated == 0
+        assert importStatus.agencies.notUpdated == 0
+
+        ImportTaskResult result = task.lastRunResult
+        assert result.message == importStatus.summaryMessage
+
+
+        makeUpdate()
+        mockFindByMethods()
+
+        importStatus = anotherImportStatus
+
+        service.executeScheduledImport(task)
+
+        assert importStatus.success
+
+        assert importStatus.categories.created == 0
+        assert importStatus.categories.updated == 1
+        assert importStatus.categories.notUpdated == 1
+
+        assert importStatus.types.created == 0
+        assert importStatus.types.updated == 1
+        assert importStatus.types.notUpdated == 1
+
+        assert importStatus.states.created == 0
+        assert importStatus.states.updated == 1
+        assert importStatus.states.notUpdated == 1
+
+        assert importStatus.customFieldDefs.created == 0
+        assert importStatus.customFieldDefs.updated == 2
+        assert importStatus.customFieldDefs.notUpdated == 3
+
+        assert importStatus.profiles.created == 0
+        assert importStatus.profiles.updated == 1
+        assert importStatus.profiles.notUpdated == 1
+
+        assert importStatus.serviceItems.created == 0
+        assert importStatus.serviceItems.updated == 1
+        assert importStatus.serviceItems.notUpdated == 1
+
+        assert importStatus.relationships.created == 0
+        assert importStatus.relationships.updated == 1
+        assert importStatus.relationships.notUpdated == 0
+
+        assert importStatus.agencies.created == 0
+        assert importStatus.agencies.updated == 0
+        assert importStatus.agencies.notUpdated == 1
+
+        result = task.lastRunResult
+        assert result.message == importStatus.summaryMessage
     }
 }

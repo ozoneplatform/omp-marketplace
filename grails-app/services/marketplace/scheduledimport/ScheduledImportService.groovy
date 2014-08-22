@@ -41,6 +41,7 @@ import marketplace.ImportStatus
 import marketplace.ImportTaskResult
 import marketplace.Constants
 import ozone.marketplace.enums.RelationshipType
+import static ozone.utils.Utils.singleOrCollectionDo
 
 
 /**
@@ -130,17 +131,20 @@ class ScheduledImportService {
     private void runAndCatchErrors(Collection items, ImportStatus.Summary summary, Closure fn) {
         items.collect {
             try {
-                CreationStatus cs = fn(it)
-                switch (cs) {
-                    case CreationStatus.NOT_UPDATED:
-                        summary.notUpdated++
-                        break
-                    case CreationStatus.UPDATED:
-                        summary.updated++
-                        break
-                    case CreationStatus.CREATED:
-                        summary.created++
-                        break
+                def creationStatus = fn(it)
+
+                singleOrCollectionDo(creationStatus) { cs ->
+                    switch (cs) {
+                        case CreationStatus.NOT_UPDATED:
+                            summary.notUpdated++
+                            break
+                        case CreationStatus.UPDATED:
+                            summary.updated++
+                            break
+                        case CreationStatus.CREATED:
+                            summary.created++
+                            break
+                    }
                 }
             }
             catch (ValidationException ve) {
@@ -375,11 +379,12 @@ class ScheduledImportService {
     private void importRelationships(Collection<Relationship> relationships,
             ImportStatus status) {
         runAndCatchErrors(relationships, status.relationships) { relationshipDto ->
+            Collection<CreationStatus> retval = []
             ServiceItem si = ServiceItem.findByUuid(relationshipDto.owningEntity.uuid)
 
             if (si) {
                 Relationship relationship = si.relationships.find {
-                    relationshipType == RelationshipType.REQUIRE
+                    it.relationshipType == RelationshipType.REQUIRE
                 }
 
                 if (!relationship) {
@@ -393,7 +398,14 @@ class ScheduledImportService {
                     ServiceItem.findByUuid(it.uuid)
                 }
 
-                relationship.relatedItems.addAll(relatedItems)
+                relatedItems.each { relatedItem ->
+                    retval << (relationship.relatedItems.contains(relatedItem) ?
+                        CreationStatus.UPDATED : CreationStatus.CREATED)
+
+                    relationship.addToRelatedItems(relatedItem)
+                }
+
+                return retval
             }
         }
     }
