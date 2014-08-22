@@ -6,8 +6,6 @@ import org.springframework.validation.Errors
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.annotation.Propagation
 
-import org.hibernate.SessionFactory
-
 import grails.validation.ValidationException
 
 import marketplace.ImportTask
@@ -71,8 +69,6 @@ class ScheduledImportService {
     TextAreaCustomFieldDefinitionRestService textAreaCustomFieldDefinitionRestService
     ImageURLCustomFieldDefinitionRestService imageURLCustomFieldDefinitionRestService
     CheckBoxCustomFieldDefinitionRestService checkBoxCustomFieldDefinitionRestService
-
-    SessionFactory sessionFactory
 
     /**
      * Executes the import task with the corresponding id
@@ -214,16 +210,19 @@ class ScheduledImportService {
     }
 
     private void importCategories(Collection<Category> data, ImportStatus status) {
+        resolveCreatedAndEditedBy(data)
         importUsingService(Category, categoryRestService, status.categories, data)
     }
 
     private void importTypes(Collection<Types> data, ImportStatus status) {
         removeImagesFromTypes(data)
+        resolveCreatedAndEditedBy(data)
 
         importUsingService(Types, typeRestService, status.types, data)
     }
 
     private void importStates(Collection<State> data, ImportStatus status) {
+        resolveCreatedAndEditedBy(data)
         importUsingService(State, stateRestService, status.states, data)
     }
 
@@ -257,9 +256,15 @@ class ScheduledImportService {
         }
     }
 
+    private void resolveCreatedAndEditedBy(Collection items) {
+        resolveReferences(items, Profile, 'createdBy', 'username')
+        resolveReferences(items, Profile, 'editedBy', 'username')
+    }
+
     private void importCustomFieldDefinitions(
             Collection<CustomFieldDefinition> customFieldDefs, ImportStatus status) {
         resolveReferences(customFieldDefs, Types, 'types')
+        resolveCreatedAndEditedBy(customFieldDefs)
 
         runAndCatchErrors(customFieldDefs, status.customFieldDefs) { customFieldDef ->
             RestService<? extends CustomFieldDefinition> service
@@ -297,43 +302,47 @@ class ScheduledImportService {
 
         runAndCatchErrors(serviceItems, status.agencies) { si ->
             Agency dto = si.agency
-            Agency existing =
-                Agency.findByTitle(dto.title)
+            if (dto) {
+                Agency existing =
+                    Agency.findByTitle(dto.title)
 
-            if (existing != null) {
-                if (existing.editedDate < dto.editedDate) {
-                    dto.id = existing.id
-                    si.agency = agencyRestService.updateById(existing.id, dto)
-                    agenciesAlreadySeen << si.agency
-                    return CreationStatus.UPDATED
+                if (existing != null) {
+                    if (existing.editedDate < dto.editedDate) {
+                        dto.id = existing.id
+                        si.agency = agencyRestService.updateById(existing.id, dto, false)
+                        agenciesAlreadySeen << si.agency
+                        return CreationStatus.UPDATED
+                    }
+                    else {
+                        si.agency = existing
+
+                        //do not increase the NOT_UPDATED count if its an agency that was
+                        //in fact created or updated on an earlier listing in this same import
+                        return agenciesAlreadySeen.contains(existing) ? null :
+                            CreationStatus.NOT_UPDATED
+                    }
                 }
                 else {
-                    si.agency = existing
-
-                    //do not increase the NOT_UPDATED count if its an agency that was
-                    //in fact created or updated on an earlier listing in this same import
-                    return agenciesAlreadySeen.contains(existing) ? null :
-                        CreationStatus.NOT_UPDATED
+                    si.agency = agencyRestService.createFromDto(dto, false)
+                    agenciesAlreadySeen << si.agency
+                    return CreationStatus.CREATED
                 }
-            }
-            else {
-                si.agency = agencyRestService.createFromDto(dto)
-                agenciesAlreadySeen << si.agency
-                return CreationStatus.CREATED
             }
         }
     }
 
     private void resolveCustomFields(Collection<ServiceItem> serviceItems) {
+        resolveCreatedAndEditedBy(serviceItems)
+
         //first, resolve the CustomFieldDefs
-        resolveReferences(serviceItems.collect { it.customFields }.flatten(),
+        resolveReferences(serviceItems.collect { it.customFields }.flatten() - null,
             CustomFieldDefinition, 'customFieldDefinition')
 
         //now switch to the appropriate subclass for each CustomField
         serviceItems.each { si ->
-            ListIterator<CustomField> listIter = si.customFields.listIterator()
+            ListIterator<CustomField> listIter = si.customFields?.listIterator()
 
-            while (listIter.hasNext()) {
+            while (listIter?.hasNext()) {
                 CustomField customField = listIter.next()
                 Class<? extends CustomFieldDefinition> Definition =
                     customField.customFieldDefinition.styleType.fieldClass
@@ -366,7 +375,7 @@ class ScheduledImportService {
     private void importRelationships(Collection<Relationship> relationships,
             ImportStatus status) {
         runAndCatchErrors(relationships, status.relationships) { relationshipDto ->
-            ServiceItem si = ServiceItem.findByUuid(relationshipDto.owningEntity)
+            ServiceItem si = ServiceItem.findByUuid(relationshipDto.owningEntity.uuid)
 
             if (si) {
                 Relationship relationship = si.relationships.find {

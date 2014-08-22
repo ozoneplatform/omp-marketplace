@@ -11,7 +11,7 @@ class Relationship implements Serializable {
     static modifiableReferenceProperties = []
 
 
-    List<ServiceItem> relatedItems
+    List<ServiceItem> relatedItems = []
     RelationshipType relationshipType = RelationshipType.REQUIRE
 
     static hasMany = [relatedItems: ServiceItem]

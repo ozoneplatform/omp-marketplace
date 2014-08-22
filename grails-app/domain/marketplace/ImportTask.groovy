@@ -21,6 +21,7 @@ class ImportTask implements Serializable {
 
     static transients = ['inHours', 'inDays', 'json', 'remoteImport', 'lastSuccessfulRunResult']
     static hasMany = [runs: ImportTaskResult]
+    SortedSet runs = new TreeSet()
 
     static constraints = {
         name(blank: false, nullable: false, unique: true, maxSize: 50)

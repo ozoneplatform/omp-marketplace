@@ -84,7 +84,7 @@ class ScheduledImportHttpService {
         SSLContext sslcontext = sslBuilder.build();
 
         return HttpClients.custom()
-                .setSSLContext(sslcontext)
+                .setSslcontext(sslcontext)
                 .build();
     }
 
