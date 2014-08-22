@@ -123,7 +123,7 @@ class ScheduledImportHttpServiceUnitTest {
 
         mockFor(HttpClients)
         HttpClients.metaClass.'static'.custom = { [
-            setSSLContext: {
+            setSslcontext: {
                 ctx -> clientSslContext = ctx
 
                 return HttpClients.custom()
