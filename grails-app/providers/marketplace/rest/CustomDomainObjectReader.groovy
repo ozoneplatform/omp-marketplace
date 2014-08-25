@@ -173,7 +173,15 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
             }
             //instantiate enums
             else if (Enum.isAssignableFrom(valueType) && value instanceof String) {
-                valueType.valueOf(value)
+                try {
+                    valueType.valueOf(value)
+                }
+                catch (IllegalArgumentException e) {
+                    //toUpperCase needed for backwards compat with things like import, where
+                    //the description is passed instead of the enum constant.  Luckily the
+                    //description is just the enum constant in capitalized-lower-case
+                    valueType.valueOf(value.toUpperCase())
+                }
             }
             else if (valueType == Date) {
                 !(value == null || value.isAllWhitespace()) ?
