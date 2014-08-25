@@ -378,44 +378,50 @@ class ScheduledImportService {
 
     private void importRelationships(Collection<Relationship> relationships,
             ImportStatus status) {
-        runAndCatchErrors(relationships, status.relationships) { relationshipDto ->
-            Collection<CreationStatus> retval = []
-            ServiceItem si = ServiceItem.findByUuid(relationshipDto.owningEntity.uuid)
 
-            if (si) {
-                Relationship relationship = si.relationships.find {
-                    it.relationshipType == RelationshipType.REQUIRE
-                }
+        Relationship.withTransaction {
+            runAndCatchErrors(relationships, status.relationships) { relationshipDto ->
+                Collection<CreationStatus> retval = []
+                ServiceItem si = ServiceItem.findByUuid(relationshipDto.owningEntity.uuid)
 
-                if (!relationship) {
-                    relationship = new Relationship()
-                    si.addToRelationships(relationship)
-                }
-
-                //don't use resolveReferences to resolve related items; that would pull
-                //all ServiceItems into memory
-                Collection<ServiceItem> relatedItems = relationshipDto.relatedItems.collect {
-                    ServiceItem item = ServiceItem.findByUuid(it.uuid)
-                    if (!item) {
-                        throw new IllegalArgumentException(
-                            "Non-existant Related Item with uuid $it.uuid")
+                if (si) {
+                    Relationship relationship = si.relationships.find {
+                        it.relationshipType == RelationshipType.REQUIRE
                     }
 
-                    return item
+                    if (!relationship) {
+                        relationship = new Relationship()
+                        si.addToRelationships(relationship)
+                    }
+
+                    //prevents "collection was not processed by flush()" exception from findByUuid below
+                    Relationship.withSession { it.flush() }
+
+                    //don't use resolveReferences to resolve related items; that would pull
+                    //all ServiceItems into memory
+                    Collection<ServiceItem> relatedItems = relationshipDto.relatedItems.collect {
+                        ServiceItem item = ServiceItem.findByUuid(it.uuid)
+                        if (!item) {
+                            throw new IllegalArgumentException(
+                                "Non-existant Related Item with uuid $it.uuid")
+                        }
+
+                        return item
+                    }
+
+                    relatedItems.each { relatedItem ->
+                        retval << (relationship.relatedItems.contains(relatedItem) ?
+                            CreationStatus.UPDATED : CreationStatus.CREATED)
+
+                        relationship.addToRelatedItems(relatedItem)
+                    }
+
+                    return retval
                 }
-
-                relatedItems.each { relatedItem ->
-                    retval << (relationship.relatedItems.contains(relatedItem) ?
-                        CreationStatus.UPDATED : CreationStatus.CREATED)
-
-                    relationship.addToRelatedItems(relatedItem)
-                }
-
-                return retval
+                else
+                    throw new IllegalArgumentException("Non-existant Owning Listing with uuid " +
+                        relationshipDto.owningEntity.uuid)
             }
-            else
-                throw new IllegalArgumentException(
-                    "Non-existant Owning Listing with uuid $si.relationshipDto.owningEntity.uuid")
         }
     }
 
