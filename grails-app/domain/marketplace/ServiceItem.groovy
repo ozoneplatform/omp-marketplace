@@ -377,22 +377,26 @@ class ServiceItem implements Serializable {
      * Legacy compat method
      */
     public void setAgencyIcon(String agencyIcon) {
-        if (!agency) {
-            agency = new Agency()
-        }
+        if (agencyIcon) {
+            if (!agency) {
+                agency = new Agency()
+            }
 
-        agency.iconUrl = agencyIcon
+            agency.iconUrl = agencyIcon
+        }
     }
 
     /**
      * Legacy compat method
      */
     public void setAgency(String agencyName) {
-        if (!agency) {
-            agency = new Agency()
-        }
+        if (agencyName) {
+            if (!agency) {
+                agency = new Agency()
+            }
 
-        agency.title = agencyName
+            agency.title = agencyName
+        }
     }
     public void setAgency(Agency agency) {
         this.agency = agency
