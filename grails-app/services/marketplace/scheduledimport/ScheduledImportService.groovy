@@ -5,11 +5,13 @@ import java.lang.reflect.UndeclaredThrowableException
 import org.springframework.validation.Errors
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.annotation.Propagation
+import org.springframework.security.core.context.SecurityContextHolder as SCH
 
 import grails.validation.ValidationException
 
 import marketplace.ImportTask
 
+import marketplace.AccountService
 import marketplace.rest.RestService
 import marketplace.rest.ProfileRestService
 import marketplace.rest.CategoryRestService
@@ -58,6 +60,7 @@ class ScheduledImportService {
 
     ScheduledImportHttpService scheduledImportHttpService
 
+    AccountService accountService
     ProfileRestService profileRestService
     CategoryRestService categoryRestService
     TypeRestService typeRestService
@@ -85,6 +88,8 @@ class ScheduledImportService {
 
         log.info "Executing scheduled import [${task.name}]"
         ImportStatus importStatus = new ImportStatus()
+
+        accountService.loginSystemUser()
 
         ScheduledImportData importData
         try {
@@ -115,8 +120,8 @@ class ScheduledImportService {
 
         recordImportResult(task, importStatus)
 
-
         task.save(failOnError:true, flush:true)
+        SCH.clearContext()
     }
 
     private void removeImagesFromTypes(Collection<Types> types) {

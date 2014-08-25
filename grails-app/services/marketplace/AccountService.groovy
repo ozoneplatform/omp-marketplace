@@ -10,6 +10,10 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.core.context.SecurityContextImpl
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 
 import ozone.utils.User
 
@@ -252,5 +256,29 @@ class AccountService extends OzoneService {
         if (!isAdmin()) {
             throw new AccessDeniedException(msg)
         }
+    }
+
+    public void loginSystemUser() {
+        if (!SCH.context) {
+            SCH.context = new SecurityContextImpl()
+        }
+
+        if (SCH.context.authentication) {
+            throw new IllegalStateException(
+                "Cannot log in System user, authentication already exists")
+        }
+
+        //spring security requires a password for the User object, so fake one
+        String password = 'password'
+        Collection<GrantedAuthority> authorities = [
+            new SimpleGrantedAuthority('ROLE_ADMIN'),
+            new SimpleGrantedAuthority('ROLE_USER')
+        ]
+
+        UserDetails user = new org.springframework.security.core.userdetails.User(
+            Profile.SYSTEM_USER_NAME, password, authorities)
+
+        SCH.context.authentication =
+            new PreAuthenticatedAuthenticationToken(user, password, authorities)
     }
 }
