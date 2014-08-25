@@ -32,6 +32,7 @@ import marketplace.InterfaceConfiguration
 import marketplace.Constants
 import ozone.marketplace.enums.RelationshipType
 
+import marketplace.AccountService
 import marketplace.rest.ProfileRestService
 import marketplace.rest.CategoryRestService
 import marketplace.rest.TypeRestService
@@ -492,6 +493,9 @@ class ScheduledImportServiceUnitTest {
         resetEditedDates()
 
         service.scheduledImportHttpService = mockHttpService()
+        service.accountService = [
+            loginSystemUser: {}
+        ] as AccountService
         mockRestServices()
         mockListMethods()
 
