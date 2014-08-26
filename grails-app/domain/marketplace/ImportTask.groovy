@@ -40,6 +40,8 @@ class ImportTask implements Serializable {
         batchSize 50
         sort name: "asc"
         interfaceConfig lazy: false
+
+        //note: since runs is a sorted set, It sorts by compareTo and thus I don't think this mapping does anything
         runs sort: "runDate", order: "desc"
     }
 
@@ -147,9 +149,9 @@ class ImportTask implements Serializable {
     }
 
     public ImportTaskResult getLastSuccessfulRunResult() {
-        //runs are sorted by most recent, so just find the first one that
-        //was successful
-        runs.find { it.result }
+        //runs are sorted by least recent (due to being a SortedSet and their impl of compareTo),
+        //so just find the last one that was successful
+        runs?.size() ? runs.grep { it.result }[-1] : null
     }
 
     public boolean equals(Object other) {
