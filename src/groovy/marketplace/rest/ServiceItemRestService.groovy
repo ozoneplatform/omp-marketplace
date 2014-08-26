@@ -214,6 +214,10 @@ class ServiceItemRestService extends RestService<ServiceItem> {
         }
 
         updateRelationshipsServiceItemActivity(updated, original)
+
+        //this save prevents occasional TransientObjectExceptions in syncServiceItemWithOwf
+        save(updated)
+
         syncServiceItemWithOwf(updated)
 
     }
