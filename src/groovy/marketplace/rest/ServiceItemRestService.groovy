@@ -239,10 +239,7 @@ class ServiceItemRestService extends RestService<ServiceItem> {
                 case Constants.APPROVAL_STATUSES['APPROVED']:
                     doApprove(updated)
                     break
-                default:
-                    //should never happen assuming validateApprovalStatus has been run
-                    throw new IllegalStateException("Unexpected approvalStatus transition in " +
-                        "updateApprovalStatus: $oldApprovalStatus -> $newApprovalStatus")
+                //other cases are possible during import. Do nothing
             }
         }
     }
