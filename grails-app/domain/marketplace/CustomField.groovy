@@ -37,8 +37,8 @@ class CustomField implements Serializable {
         return value
     }
 
-    public void setValue(String value) {
-        this.value = value
+    public void setValue(def value) {
+        this.value = value == null ? null : value.toString()
     }
 
     boolean isEmpty() {
