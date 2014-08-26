@@ -403,6 +403,24 @@ class ServiceItem implements Serializable {
     }
 
     /**
+     * Screenshot legacy screenshots format
+     */
+    public void setScreenshot1Url(String url) {
+        if (!screenshots) {
+            screenshots = []
+        }
+
+        screenshots[0] = new Screenshot(smallImageUrl: url)
+    }
+    public void setScreenshot2Url(String url) {
+        if (!screenshots) {
+            screenshots = []
+        }
+
+        screenshots[1] = new Screenshot(smallImageUrl: url)
+    }
+
+    /**
      * Service Item screenshots are now stored internally as separate objects.
      * However, for compatibility, the import/export format still needs to have
      * the old format
