@@ -60,7 +60,10 @@ class DropDownCustomField extends CustomField {
     }
 
     void setFieldValueText(String value) {
-        setValue((String)value)
+        //if it is a multiselect field, split on commas.
+        //this method may either call setValue(String) or setValue(String[])
+        def val = customFieldDefinition.isMultiSelect ? value.split(',') as String[] : value
+        setValue(val)
     }
 
     //this method will only ever be called if there is only one selection
@@ -119,6 +122,9 @@ class DropDownCustomField extends CustomField {
                 value = val
             }
         }
+        else {
+            value?.refresh()
+        }
 
         if (fieldValueList) {
             def listIter = fieldValueList.listIterator()
@@ -135,6 +141,9 @@ class DropDownCustomField extends CustomField {
                     else {
                         listIter.set(val)
                     }
+                }
+                else {
+                    currValue?.refresh()
                 }
             }
         }

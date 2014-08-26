@@ -181,8 +181,8 @@ class ScheduledImportService {
             RestService<T> service, ImportStatus.Summary summary, Collection<T> items,
             String equivalenceField='uuid', boolean skipValidation=false) {
 
-        runAndCatchErrors(items, summary) {
-            importOneUsingService(dtoClass, service, it, equivalenceField, skipValidation)
+        runAndCatchErrors(items, summary) { item ->
+            importOneUsingService(dtoClass, service, item, equivalenceField, skipValidation)
         }
     }
 
@@ -340,7 +340,9 @@ class ScheduledImportService {
         }
     }
 
-    private void resolveCustomFields(Collection<ServiceItem> serviceItems) {
+    private Collection<ServiceItem> resolveCustomFields(Collection<ServiceItem> serviceItems,
+            ImportStatus.Summary summary) {
+
         resolveCreatedAndEditedBy(serviceItems)
 
         //first, resolve the CustomFieldDefs
@@ -348,22 +350,41 @@ class ScheduledImportService {
             CustomFieldDefinition, 'customFieldDefinition')
 
         //now switch to the appropriate subclass for each CustomField
-        serviceItems.each { si ->
+        return serviceItems.collect { si ->
             ListIterator<CustomField> listIter = si.customFields?.listIterator()
 
-            while (listIter?.hasNext()) {
-                CustomField customField = listIter.next()
-                Class<? extends CustomFieldDefinition> Definition =
-                    customField.customFieldDefinition.styleType.fieldClass
+            try {
+                while (listIter?.hasNext()) {
+                    CustomField customField = listIter.next()
+                    Class<? extends CustomField> fieldClass =
+                        customField.customFieldDefinition.styleType.fieldClass
 
-                CustomField newCustomField = Definition.newInstance()
+                    CustomField newCustomField = fieldClass.newInstance()
 
-                newCustomField.customFieldDefinition = customField.customFieldDefinition
-                newCustomField.fieldValueText = customField.fieldValueText
+                    newCustomField.customFieldDefinition = customField.customFieldDefinition
+                    newCustomField.fieldValueText = customField.fieldValueText
 
-                listIter.set(newCustomField)
+                    listIter.set(newCustomField)
+               }
             }
-        }
+            catch (ValidationException ve) {
+                summary.messages << "Validation Error when resolving custom fields on $si: $ve"
+                summary.failed++
+
+                log.error "Validation Error when resolving custom fields on $si", e
+
+                return null
+            }
+            catch (Exception e) {
+                summary.messages << "Error ${exceptionToMessage(e)} when importing $si"
+                summary.failed++
+
+                log.error "Unexpected exception during import", e
+
+                return null
+            }
+            return si
+        } - null
     }
 
     private void importServiceItems(Collection<ServiceItem> serviceItems, ImportStatus status) {
@@ -375,7 +396,7 @@ class ScheduledImportService {
         resolveReferences(serviceItems, State, 'state')
         resolveReferences(serviceItems, Profile, 'owners', 'username')
 
-        resolveCustomFields(serviceItems)
+        serviceItems = resolveCustomFields(serviceItems, status.serviceItems)
 
         importUsingService(ServiceItem, serviceItemRestService, status.serviceItems, serviceItems,
             'uuid', true)
