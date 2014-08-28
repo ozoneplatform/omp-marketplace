@@ -112,18 +112,24 @@ class DropDownCustomField extends CustomField {
      * DTOs
      */
     void marshallAllFieldValues() {
-        if (value && value.customFieldDefinition == null) {
-            def val = findFieldValueForString(value.displayText)
-            if (!val) {
-                throw new IllegalArgumentException(
-                    "Invalid DropDownCustomField value ${value.displayText}")
+        if (value) {
+            if (value instanceof String) {
+                value = new FieldValue(displayText: value)
+            }
+
+            if (value.customFieldDefinition == null) {
+                def val = findFieldValueForString(value.displayText)
+                if (!val) {
+                    throw new IllegalArgumentException(
+                        "Invalid DropDownCustomField value ${value.displayText}")
+                }
+                else {
+                    value = val
+                }
             }
             else {
-                value = val
+                value?.refresh()
             }
-        }
-        else {
-            value?.refresh()
         }
 
         if (fieldValueList) {
@@ -132,6 +138,11 @@ class DropDownCustomField extends CustomField {
 
             while (listIter.hasNext()) {
                 currValue = listIter.next()
+
+                if (currValue instanceof String) {
+                    currValue = new FieldValue(displayText: currValue)
+                }
+
                 if (currValue.customFieldDefinition == null) {
                     def val = findFieldValueForString(currValue.displayText)
                     if (!val) {
