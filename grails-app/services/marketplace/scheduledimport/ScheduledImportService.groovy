@@ -107,7 +107,7 @@ class ScheduledImportService {
             importTypes(importData.types, importStatus)
             importStates(importData.states, importStatus)
             importCustomFieldDefinitions(importData.customFieldDefs, importStatus)
-            importServiceItems(importData.serviceItems, importStatus)
+            importServiceItems(importData.serviceItems, importData.relationships, importStatus)
             importRelationships(importData.relationships, importStatus)
         }
 
@@ -387,7 +387,50 @@ class ScheduledImportService {
         } - null
     }
 
-    private void importServiceItems(Collection<ServiceItem> serviceItems, ImportStatus status) {
+    /**
+     * This method adds DTOs for any relationships that were already on this serviceItem, which
+     * still should be.  This prevents spurious "no longer requires" entries in the changelog
+     */
+    private void resolveExistingRelationships(Collection<ServiceItem> serviceItems,
+            Collection<Relationship> relationships) {
+        serviceItems.each { si ->
+
+            //the existing copy of this service item in the database
+            ServiceItem existingServiceItem = ServiceItem.findByUuid(si.uuid)
+
+            if (existingServiceItem) {
+                //the uuids of all listings required by this one
+                Collection<String> existingRelatedUuids = existingServiceItem.relationships
+                    .grep { it.relationshipType == RelationshipType.REQUIRE }
+                    .collect { it.relatedItems }.flatten()
+                    .collect { it.uuid }
+
+                //the service item DTOs for this service item, from the relationships section
+                //of the import
+                Collection<ServiceItem> related = relationships.grep {
+                    it.owningEntity.uuid == si.uuid
+                }.collect { it.relatedItems }.flatten()
+
+                //the relationship object on this service item DTO to add to
+                Relationship relationshipToAddTo = si.relationships.find {
+                    it.relationshipType == RelationshipType.REQUIRE
+                }
+
+                if (!relationshipToAddTo) {
+                    relationshipToAddTo = new Relationship()
+                    si.addToRelationships(relationshipToAddTo)
+                }
+
+                //add a service item DTO for each relationship that is both in the
+                //import and already existing
+                relationshipToAddTo.relatedItems.addAll(
+                    related.grep { it.uuid in existingRelatedUuids })
+            }
+        }
+    }
+
+    private void importServiceItems(Collection<ServiceItem> serviceItems,
+            Collection<Relationship> relationships, ImportStatus status) {
         //import agencies based on information in the service items
         importAgenciesFromServiceItems(serviceItems, status)
 
@@ -396,7 +439,11 @@ class ScheduledImportService {
         resolveReferences(serviceItems, State, 'state')
         resolveReferences(serviceItems, Profile, 'owners', 'username')
 
+        //if any serviceItems have errors in resolveCustomFields, they are removed
+        //from the returned list
         serviceItems = resolveCustomFields(serviceItems, status.serviceItems)
+
+        resolveExistingRelationships(serviceItems, relationships)
 
         importUsingService(ServiceItem, serviceItemRestService, status.serviceItems, serviceItems,
             'uuid', true)

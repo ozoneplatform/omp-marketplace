@@ -51,7 +51,7 @@ class Relationship implements Serializable {
             relatedItems.clear()
         }
 
-        relatedItems += serviceItems
+        relatedItems += serviceItems.collect { new ServiceItem(it) }
     }
 
     public void setServiceItem(ServiceItem owningEntity) {

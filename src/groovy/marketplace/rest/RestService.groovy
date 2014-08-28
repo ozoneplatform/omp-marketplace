@@ -246,7 +246,7 @@ abstract class RestService<T> {
          */
         def getSubObjectFromDb = { obj ->
             if (obj) {
-                def retval = obj.class.get(obj.id)
+                def retval = obj.getClass().get(obj.id)
                 if (retval == null) {
                     throw new IllegalArgumentException("Attempted to find non-existant object " +
                         "of type ${obj.class} with id ${obj.id}")
