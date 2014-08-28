@@ -12,6 +12,7 @@ import grails.validation.ValidationException
 import marketplace.ImportTask
 
 import marketplace.AccountService
+import marketplace.AuditLoggingService
 import marketplace.rest.RestService
 import marketplace.rest.ProfileRestService
 import marketplace.rest.CategoryRestService
@@ -61,6 +62,7 @@ class ScheduledImportService {
     ScheduledImportHttpService scheduledImportHttpService
 
     AccountService accountService
+    AuditLoggingService AuditLoggingService
     ProfileRestService profileRestService
     CategoryRestService categoryRestService
     TypeRestService typeRestService
@@ -85,13 +87,14 @@ class ScheduledImportService {
     }
 
     public void executeScheduledImport(ImportTask task) {
-
-        log.info "Executing scheduled import [${task.name}]"
-        ImportStatus importStatus = new ImportStatus()
-
         accountService.loginSystemUser()
 
+        log.info "Executing scheduled import [${task.name}]"
+        auditLoggingService.logImport(task)
+
+        ImportStatus importStatus = new ImportStatus()
         ScheduledImportData importData
+
         try {
             importData = scheduledImportHttpService.retrieveRemoteImportData(task)
         }

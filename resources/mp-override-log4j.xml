@@ -105,6 +105,10 @@
         <level value="info" />
         <appender-ref ref="ozone-async-cef" />
     </logger>
+    <logger name="marketplace.AuditLoggingService" additivity="false">
+        <level value="info" />
+        <appender-ref ref="ozone-async-cef" />
+    </logger>
     <logger name="org.ozoneplatform.auditing" additivity="false">
         <level value="info" />
         <appender-ref ref="ozone-async-cef" />
@@ -112,7 +116,7 @@
     <logger name="grails.app.filters.org.ozoneplatform.auditing" additivity="false">
         <level value="info" />
         <appender-ref ref="ozone-async-cef" />
-    </logger>  
+    </logger>
 
     <!-- All other logs from Ozone secuity can be sent to the regular log
     unless you are worried that the regular logs have too lax of read permissions. -->

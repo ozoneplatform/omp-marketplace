@@ -265,7 +265,8 @@ class AccountService extends OzoneService {
 
         if (SCH.context.authentication) {
             throw new IllegalStateException(
-                "Cannot log in System user, authentication already exists")
+                "Cannot log in System user, authentication already exists: " +
+                SCH.context.authentication.toString())
         }
 
         //spring security requires a password for the User object, so fake one
