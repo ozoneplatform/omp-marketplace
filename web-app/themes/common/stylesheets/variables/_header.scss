@@ -1,0 +1,24 @@
+$logo-color: #F2F2F2 !default;
+
+$user-menu-button-theme: (
+	null,
+	#fff,
+	null
+) !default;
+
+$user-menu-over-button-theme: $default_button_theme !default;
+$user-menu-over-button-radius: 3px !default;
+
+$user-menu-pressed-button-theme: $user-menu-over-button-theme !default;
+$user-menu-pressed-button-radius: $user-menu-over-button-radius !default;
+
+$user-menu-focused-button-theme: $user-menu-over-button-theme !default;
+$user-menu-focused-button-radius: $user-menu-over-button-radius !default;
+
+$search-controls-background: darken($mp-form-field-background-color, 15%) !default;
+
+$nav-bar-background: (#D2D3D3 0%, #C9CACB 50%, #A8AAAB 100%) !default;
+$nav-bar-border-top: 1px solid #B6B8BC !default;
+$nav-bar-border-bottom: 1px solid #3E4B51 !default;
+
+$header-height: 81px;

@@ -1,0 +1,14 @@
+// Base modal
+
+// todo: We need to theme the colors shown here
+
+.modal {
+  background-color: $modalBackground;
+}
+
+// Footer (for actions)
+.modal-footer {
+  border-top: 0;
+  @include border-radius(0 0 0px 0px);
+  @include box-shadow(none);
+}

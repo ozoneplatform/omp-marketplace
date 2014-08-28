@@ -1,0 +1,18 @@
+$mp-grid-header-background-color: adjust-color($neutral-color, $hue: 0deg, $saturation: 0%, $lightness: -16.078%) !default;
+$mp-grid-header-over-background-color: adjust-color(#C0D4ED, $hue: -0.175deg, $saturation: 25.296%, $lightness: -2.549%) !default;
+$mp-grid-header-background-gradient: 'matte' !default;
+$mp-grid-header-over-background-gradient: 'matte' !default;
+$mp-grid-header-color: getHighContrastColor($mp-grid-header-background-color) !default;
+
+$mp-grid-header-over-border-color: adjust-color($mp-grid-header-over-background-color, $hue: -0.175deg, $saturation: 25.296%, $lightness: -2.549%) !default;
+
+//grid rows
+$mp-grid-row-wrap-border-color: #ededed !default;
+
+$mp-grid-row-cell-background: lighten($mp-base-color, 50) !default;
+$mp-grid-row-cell-alt-background: darken($mp-grid-row-cell-background, 6) !default;
+$mp-grid-row-cell-over-background-color: adjust-color($mp-grid-row-cell-background, $hue: 0deg, $saturation: 0%, $lightness: 0.392%) !default;
+$mp-grid-row-cell-selected-background-color: adjust-color($mp-grid-row-cell-background, $hue: 3.188deg, $saturation: 0.542%, $lightness: 7.843%) !default;
+$mp-grid-row-cell-focus-background-color: adjust-color($mp-grid-row-cell-background, $hue: 0deg, $saturation: 0%, $lightness: 0.392%) !default;
+
+$mp-grid-row-cell-color: getHighContrastColor($mp-grid-row-cell-background) !default;

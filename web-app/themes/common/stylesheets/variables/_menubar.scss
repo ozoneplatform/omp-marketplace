@@ -1,0 +1,38 @@
+// Menu positions and width
+$filter-menubar-right-margin: 40px;
+$filter-menu-width: 200px;
+$filter-menu-icon-offset: 5px;
+$filter-menu-padding: 5px;
+$filter-menu-item-height: 33px;
+$filter-menu-item-font-size: 15px;
+$filter-menu-item-line-height: 15px;
+
+// Background colors
+$filter-menu-item-bg: #f2f2f2 !default;
+//
+$filter-menu-item-bg-color: rgba($filter-menu-item-bg, 0.9) !default;
+$filter-menu-item-bg-color-hover: rgba(#e1e1e1, 0.9) !default;
+
+$filter-menu-item-bg-color-ie9: rgba($filter-menu-item-bg, 0.6) !default;
+
+$filter-menu-item-bg-color-ie7: $filter-menu-item-bg !default;
+$filter-menu-item-bg-color-hover-ie7: #e1e1e1 !default;
+
+// Text Colors
+$filter-menu-heading-color: $gray_dark !default;
+$filter-menu-heading-color-hover: $gray_light !default;
+$filter-menu-item-unsel-color: #5e5e5e !default;
+$filter-menu-item-sel-color: $mp-blue !default;
+$filter-menu-item-count-color: #a7a8ab !default;
+
+// Border Colors
+$filter-menu-item-border-top-color: #eaeaea !default;
+$filter-menu-item-border-bottom-color: #bfbebe !default;
+$filter-menu-item-border-side-color: #a7a8ab !default;
+
+// Icons
+$filter-menu-item-unsel-icon: theme-image($theme-name, 'menubar/filter-checkbox_empty-out.png') !default;
+$filter-menu-item-sel-icon:   theme-image($theme-name, 'menubar/filter-checkbox_filled-out.png') !default;
+$filter-menu-item-unsel-hover-icon: theme-image($theme-name, 'menubar/filter-checkbox_empty-over.png') !default;
+$filter-menu-item-sel-hover-icon:   theme-image($theme-name, 'menubar/filter-checkbox_filled-over.png') !default;
+$filter-menubar-arrow-icon: theme-image($theme-name, 'icons/filter_downarrow.png') !default;

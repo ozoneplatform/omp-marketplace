@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+/*
+ * This file contains defined constants that are used within the owf stylesheets. 
+ * There should generally not be a reason for theme creators to modify these values.
+ */
+$mp_css_important: '!important';
+$mp_css_not_important: '';
+
+$mp_frame_is_IE: true;
+$mp_frame_is_not_IE: false;
+
+$mp_incl_non_header_border: true;
+$mp_no_incl_non_header_border: false;
+
+$mp_incl_header_border: true;
+$mp_no_incl_header_border: false;
+
+$mp_full_header_border: true;
+$mp_no_full_header_border: false;
+
+$banner-height: 19px;

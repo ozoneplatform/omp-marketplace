@@ -1,0 +1,6 @@
+$system-window-body-radius: 15px !default;
+$system-window-background-color: $mp-base-color !default;
+
+$system-window-background-color: $system-window-background-color !default;
+
+$system-window-text-color: getHighContrastColor($system-window-background-color) !default;

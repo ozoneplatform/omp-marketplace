@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="stubServer" default="war" basedir=".">
+	<property environment="env"/>
+	
+	<property name="build.dir" value="${basedir}/target" />
+    <property name="lib.dir" value="${basedir}/lib" />
+    <property name="src.dir" value="${basedir}/src" />
+    <property name="web.dir" value="${basedir}/web" />
+    <property name="war.dir" value="${basedir}/target/war" />
+
+  <path id="lib.path">
+    <pathelement path="${lib.dir}/servlet-api-2.5-6.1.11.jar" />
+  </path>
+
+
+	<target name="clean" description="Cleans out the build directory.">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+	<target name="war" depends="clean,compile" description="Creates the WAR file.">
+        <mkdir dir="${war.dir}/WEB-INF" />
+        <copy todir="${war.dir}">
+            <fileset dir="${web.dir}"/>
+        </copy>
+        <copy todir="${war.dir}/WEB-INF/classes">
+            <fileset dir="${build.dir}/classes"/>
+        </copy>
+        <copy todir="${war.dir}/WEB-INF/classes">
+            <fileset dir="${basedir}/../integration/resources">
+                <include name="**/*.json"/>
+            </fileset>
+
+        </copy>
+        <war warfile="${build.dir}/${ant.project.name}.war" 
+             basedir="${war.dir}"
+             webxml="web.xml" 
+             duplicate="preserve">
+		</war>		
+	</target>
+
+    <target name="diagnostics" description="Displays Ant diagnostics.">
+        <diagnostics/>
+    </target>
+
+ <target name="compile" description="Compile the project">
+    <mkdir dir="${build.dir}/classes" />
+    <javac debug="true" destdir="${build.dir}/classes" srcdir="${src.dir}/java"
+	       classpathref="lib.path">
+      <compilerarg value="-Xlint:unchecked" />
+      <compilerarg value="-Xlint:deprecation" />
+    </javac>
+  </target>
+    
+
+</project>

@@ -1,0 +1,30 @@
+$action-menu-background: (#F2F2F2, #E7E7E7) !default;
+$action-menu-box-shadow-color: #25292B !default;
+$action-menu-border: 1px solid #25292B !default;
+
+$action-menu-item-over-background: #C9CACB !default;
+$action-menu-item-color: #25292B !default;
+$action-menu-item-over-color: $action-menu-item-color !default;
+
+$action-menu-separator-background: $action-menu-item-color !default;
+
+$_menu-background-color: #222;
+@if (length($action-menu-background) >= 1) {
+	$_menu-background-color: nth($action-menu-background, 1);
+}
+@else {
+	$_menu-background-color: $action-menu-background;
+}
+
+//backgrounds
+$menu-background-color: $_menu-background-color !default;
+//$menu-item-active-background-image: 'menu/menu-item-active-bg.gif';
+$menu-item-active-background-color: $action-menu-item-over-background !default;
+
+//border
+$menu-item-active-border-color: $action-menu-item-over-background !default;
+$menu-separator-border-color: $action-menu-separator-background !default;
+$menu-separator-background-color: $action-menu-separator-background !default;
+
+//text
+$menu-text-color: $action-menu-item-color !default;

@@ -1,0 +1,43 @@
+
+// ==============================
+// =============== MessageBox Buttons
+// ==============================
+
+// Cancel button icon
+.cancelBtnIcon {
+    background-image: theme-image($theme-name, 'icons/x_red_15x15.png');
+    margin-left: 5px;
+}
+
+// Save button icon
+.saveBtnIcon {
+    background-image: theme-image($theme-name, 'icons/15x15_save.png');
+    margin-left: 4px;
+}
+
+.okCheckBtnIcon, .okSaveBtnIcon {
+    background-image: theme-image($theme-name, 'icons/check_green_15x15.png');
+    margin-left: 10px;
+}
+
+
+// ==============================
+// =============== Add/Remove Buttons
+// ==============================
+
+.moveRight {
+	background-image: theme-image($theme-name, 'icons/add_up.png');
+}
+
+.toolbar-page-button-delimiter {
+    background-image: $toolbar-paging-button-delimiter;
+    width: 3px;
+    height: 26px;
+    display:inline-block;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+}
+
+// ===============================
+// ================== Small Button
+// ===============================

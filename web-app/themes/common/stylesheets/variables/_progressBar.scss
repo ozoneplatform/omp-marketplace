@@ -1,0 +1,9 @@
+$mp-progress-background-color: $mp-base-color !default;
+$mp-progress-border-color: getHighContrastColor($mp-progress-background-color) !default;
+$mp-progress-text-color-back: getHighContrastColor($mp-progress-background-color) !default;
+$mp-progress-bar-background-color: lighten($mp-progress-background-color, 30%) !default;
+
+$mp-rating-progress-background-color: #CCC;
+$mp-rating-progress-bar-background-color: #024255;
+$mp-rating-progress-background-height: 16px;
+$mp-rating-progress-bar-background-height: 16px;

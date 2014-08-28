@@ -1,0 +1,823 @@
+@charset "UTF-8";
+
+@import 'functions/marketplace_functions';
+@import 'compass'; //pull in base functions and mixins provided by the compass framework
+
+/*
+ * This variable is required.  It must be equal to the name property in the
+ * theme.json file
+ */
+$theme-name: 'carbon';
+
+/*****************************************************************
+ * Put yor theme customizations here.  If you have many customizations,
+ * you may want to put them in a separate file which you import here.
+ * The import statements in this file reference stylesheets
+ * from the themes/common folder. You can look at
+ * themes/common/stylesheets/variables/-defaults in order to see what variables
+ * may be changed.
+ */
+
+/*
+* linear background gradient for IE
+*/
+
+// ===============================
+// =============== Theme Variables
+// ===============================
+$mp-gold: #FCBB1B;
+$mp-dkgray: #4d4d4d;
+$mp-ltgray: #A7A8AB;
+$mp-blue: #055d78;
+$mp-ltblue: #3A839A;
+$mp-medgray: #7d7e80;
+$mp-green: #8DC53E;
+
+$carbon-text-color: #E5E5E5;
+$carbon-text-color-hover: #E5E5E5;
+$carbon-title-text-color: #E5E5E5;
+$carbon-title-text-color-hover: #F2F2F2;
+$carbon-line-color: #7D7E80;
+$carbon-see-all-color: #A7A8AB;
+$carbon-see-all-color-hover: #F2F2F2;
+$carbon-read-more-color: #FDDE86;
+$carbon-read-more-color-hover: #F2F2F2;
+
+$mp-color: #F2F2F2;
+
+$heading-color: #FCBB1B;
+$mp-base-color: #4D4D4D;
+$mp-alt-base-color: #AAA;
+$content-area-background-color: #222;
+$meta-info-color: #BFBFBF;
+$affiliated-mp-title-color: #FCBB1B;
+$recent-activity-divider-color: #FCBB1B;
+$mp-toolbar-base-color: #313131;
+$file-import-file-browser-background-color: #212121 !default;
+
+$mp-tip-base-color: #111111;
+$mp-tip-body-color: #E5E5E5;
+
+$warning-color: #ED1C24;
+
+$link-color: #E5E5E5 !default;
+$link-over-color: #F2F2F2;
+
+
+// theme selector
+$theme-screenshots-fieldset-border-color: #555;
+
+//$mp-window-background-color: #212121;
+
+
+$mp-font-size: 12px;
+$mp-tool-width: 17px;
+
+
+$mp-head1-font-size: 24px;
+$mp-head1-line-height: 32px;
+
+$mp-head2-font-size: 20px;
+$mp-head2-line-height: 26px;
+
+$mp-title-font-size: 20px;
+
+/*
+ * The font family of most of the interface
+ */
+$mp-font-family: Verdana, Helvetica, Arial, sans-serif !default;
+
+
+//-----------------
+
+$scheduled-import-window-description-background-color: #313131 !default;
+//$scheduled-import-window-description-background-color: $mp-toolbar-base-color !default;
+
+$scheduled-import-window-description-color: $carbon-text-color !default;
+
+// -------------
+
+$mp-window-background-color: #212121;
+
+$profile-page-contribution-count-color: #aaa;
+
+
+//-- header -----------------------------------------------------------
+$search-controls-background: none;
+$user-menu-button-theme: (
+    null,          // background
+    #e5e5e5,       // text
+    null           // border
+) !default;
+
+$user-menu-over-button-theme: (
+    #212121,
+    #faba1a,
+    null
+);
+$user-menu-over-button-radius: 1px;
+
+//-- sidebar ----------------------------------------------------------
+$mp-sidebar-background-color: #ddd;
+
+$mp-filter-heading-color: $mp-dkgray;
+$mp-filter-dividier-color: $mp-ltgray;
+$mp-filter-type-heading-color: $mp-dkgray;
+
+$mp-filter-item-color: $mp-dkgray;
+$mp-filter-item-over-color: #111;
+$mp-filter-item-selected-color: $mp-blue;
+
+$mp-filter-item-count-color: $mp-medgray;
+$affiliated-mp-sell-all-color: #a7a8ab;
+$affiliated-mp-sell-all-over-color: #cFcFcF;
+
+$listing-manager-background: #858B90;
+$listing-manager-color: #25292B;
+
+$footer-background: #024255;
+$footer-over-color: #ccc;
+
+// -- Component Themes ------------------------------------------------
+$active-component-theme: (
+    $mp-base-color,    //base color
+  (lighten($mp-base-color, 20%), $mp-base-color),   //gradient start/end colors
+    $carbon-text-color, //text color
+    getHighContrastColor($mp-base-color), //outer border color
+    getHighContrastColor($mp-base-color)  //body border color
+) !default;
+
+// -- Button Themes----------------------------------------------------
+$default_button_theme: (
+    (#272727 0%, #4D4D4D 45%, #272727 50%),  // GRADIENT START - END
+#E5E5E5,                                    // TEXT COLOR
+#7D7E80                                      // BORDER COLOR
+);
+
+$over_button_theme: (
+    (#272727 0%, #7D7E80  45%, #272727 50%),
+#E5E5E5,                                    // TEXT COLOR
+#A7A8AB
+);
+
+$pressed_button_theme: (
+    (#272727 0%, #212121 100%),
+#E5E5E5,                                    // TEXT COLOR
+#A7A8AB
+);
+
+$disabled_button_theme: (
+    (#333),
+#787878,                                    // TEXT COLOR
+#333
+);
+
+// -- toolbar themes ----------------------------------------------------
+
+$mp-toolbar-color: $carbon-text-color;
+$mp-custom-toolbar-base-color: #272727;
+$mp-custom-toolbar-color: $carbon-text-color;
+$mp-custom-border-color: #212121;
+$mp-custom-toolbar-border: 1px solid $mp-custom-border-color;
+
+// -- action menu--------------------------------------------------------------
+$action-menu-background: (#222, #111111);
+$action-menu-box-shadow-color: #222;
+$action-menu-border: 1px solid #000;
+
+$action-menu-item-over-background: #212121;
+$action-menu-item-color: #e5e5e5;
+$action-menu-item-over-color: #faba1a;
+
+
+// -- tabs -------------------------------------------------------------
+$mp-tab-base-color: #333;
+$mp-tab-color: #ccc;
+
+$mp-tab-color-over: #fff;
+
+$mp-tab-base-color-active: #444;
+$mp-tab-color-active: #f2f2f2;
+
+// -- form styles -------------------------------------------------------------
+$mp-fieldset-header-color: $mp-gold;
+
+$selectable-item-selected-background-color: #bbb;
+$selectable-item-selected-border-color: #ccc;
+
+$mp-form-field-empty-color: #aaa;
+$mp-form-field-border-color: #888;
+$mp-form-field-background-color: #333;
+$mp-form-field-color: #f2f2f2;
+$mp-form-field-focus-border-color: $mp-gold;
+$mp-form-field-invalid-background-color: #222;
+$mp-form-field-invalid-border-color: #C30;
+$mp-form-trigger-border-bottom-color: $mp-form-field-border-color;
+$mp-form-trigger-border-bottom-color-over: $mp-form-field-focus-border-color;
+$mp-form-trigger-border-bottom-color-focus: $mp-form-field-border-color;
+$mp-form-trigger-border-bottom-color-focus-over: $mp-form-field-focus-border-color;
+$mp-form-trigger-border-bottom-color-pressed: #c76e12;
+
+
+// -- grid -----------------------------------------------------------
+$mp-grid-header-background-color: #212121;
+$mp-grid-header-over-background-color: #000;
+$mp-grid-header-color: #f2f2f2;
+
+//grid rows
+$mp-grid-row-wrap-border-color: #101010;
+
+$mp-grid-row-cell-color: #f2f2f2;
+
+$mp-grid-row-cell-background: #313131;
+$mp-grid-row-cell-alt-background: #313131;
+$mp-grid-row-cell-over-background-color: #313131;
+$mp-grid-row-cell-selected-background-color: #4d4d4d;
+$mp-grid-row-cell-focus-background-color: #313131;
+
+
+// -- dropdown---------------------------------------------------------
+$mp-boundlist-background-color: $mp-grid-row-cell-background;
+$mp-boundlist-border-color: #272727;
+$mp-boundlist-item-over-border-color: #4D4D4D;
+$mp-boundlist-item-selected-border-color: #212121;
+$mp-boundlist-item-over-background-color: #4D4D4D;
+$mp-boundlist-item-selected-background-color: $mp-grid-row-cell-selected-background-color;
+$mp-boundlist-item-color: #E5E5E5 !default;
+$mp-top-border-radius: 0px;
+$mp-bottom-border-radius: 0px;
+
+// -- date picker ---------------------------------------------------------------
+$mp-datepicker-border-color: #666;
+$mp-datepicker-header-background-color: #202020;
+$mp-datepicker-th-background-color: #888;
+$mp-datepicker-item-border-color: $mp-datepicker-th-background-color;
+$mp-datepicker-selected-item-background-color: $mp-datepicker-th-background-color;
+$mp-datepicker-selected-item-border-color: white;
+$mp-datepicker-item-hover-background-color: $mp-datepicker-th-background-color;
+
+$selectable-item-selected-background-color: #aaa;
+$selectable-item-over-border-color: #dddddd;
+$selectable-item-selected-border-color: #999;
+
+//-------------------------
+// FontAwesome Star Colors
+//-------------------------
+
+$star-color:          #ffce56 !default;
+$star-empty-color:    #9E9E9E !default;
+
+//-----------------------------
+// END FontAwesome Star Colors
+//-----------------------------
+
+
+//-------------------------
+// TAGS
+//-------------------------
+
+$tag-color-background:                  #4D4D4D !default;
+$tag-color-corners-background:          #212121 !default;
+$tag-color-text-hover:                  #272727 !default;
+$tag-color-background-hover:            #FABA1A !default;
+$tag-remove-color:                      #7D5D0D !default;
+$tag-list-item-color:                   #FABA1A !default;
+$tag-view-icon-hover:                   #F2F2F2 !default;
+
+//-------------------------
+// END TAGS
+//-------------------------
+
+
+
+// ---- BOOTSTRAP OVERRIDES -------
+// --------------------------------
+
+// Add all overrides to common/stylesheets/bootstrap/_variables.scss here **
+
+// Buttons
+// -------------------------
+
+$btn-default-border:                         #004155;  //#ccc !default;
+
+$btn-primary-bg:              #0A5E78;  //$link-color !default;
+
+// Sprite icons path
+// -------------------------
+$iconSpritePath:          theme-image($theme-name,"glyphicons-halflings.png");
+$iconWhiteSpritePath:     theme-image($theme-name,"glyphicons-halflings-white.png") ;
+
+
+
+
+body {
+  min-width: 768px;
+}
+//MARKETPLACE VARIABLES
+@import 'variables/constants';
+@import 'variables/defaults';
+
+
+/*
+ * Body background color & image
+ */
+$mp-body-page-background-image: theme-image($theme-name, 'body_bkg.png');
+$body-background-gradient-start: #212121;
+$body-background-gradient-end: #4d4d4d;
+
+$mp-body-background-default-color: #E2E2E2;
+
+$footer-background: #212121;
+
+$mp-read-more-color: $carbon-read-more-color;
+$mp-read-more-color-hover: $carbon-read-more-color-hover;
+
+$mp-border-color: $carbon-line-color;
+
+$intents-header-background-color:  #222222;
+
+
+
+
+//$message-box-body-color: #272727 !default;
+//$message-box-text-color: $carbon-text-color !default;
+
+// ============================
+// Application configuration overrides
+// ============================
+
+$appConfig-cell-color: #BFBFBF;
+$appConfig-noedit-cell-color: #7D7D7D;
+$appConfig-section-header-color: $mp-gold;
+$appConfig-divider: #BFBFBF;
+$appConfig-title-color: #F2F2F2;
+$appConfig-description-color: #BFBFBF;
+$appConfig-menu-item-color: #A7A8AB;
+$appConfig-help-color: #A7A8AB;
+$appConfig-description-color: #A7A8AB;
+
+$appConfig-cell-background-active: #4D4D4D;
+$appConfig-cell-border-hover: #BFBFBF;
+
+
+// -- listing block ----------------------------------------------------------
+$mp-author-text-color: #949494;
+$mp-author-over-text-color: lighten($mp-author-text-color, 10%);
+
+$limited-text-area-maxlabel-color: #888;
+
+
+//-- scorecard
+$mp-sc-header-background-color: transparent;
+$sc-weight-label-text-color: #fcbb1b;
+$sc-admin-add-question-text-color: $sc-weight-label-text-color;
+$sc-admin-equalize-button-background-color: $sc-admin-add-question-text-color;
+$sc-admin-equalize-button-text-color: #000000;
+
+$sc-text-color: #f2f2f2;
+$sc-question-color: $sc-text-color;
+$sc-description-color: #cdcdcd;
+$sc-header-color: #fff;
+$sc-header-description-color: #cdcdcd;
+
+$mp-sc-badge-satisfied-color: #FCBB1B;
+$mp-sc-badge-notsatisfied-color: #787878;
+$mp-sc-header-background-color: #202020;
+$mp-sc-background-color: #24282b;
+$mp-sc-border-color: #999;
+
+$mp-sc-grid-header-background-color: #202020;
+$mp-sc-grid-header-over-background-color: #202020;
+$mp-sc-grid-header-color: #fff;
+$mp-sc-grid-header-border-color: #999;
+$mp-sc-grid-header-over-border-color: #999;
+$mp-sc-grid-row-cell-border-color: #000;
+$mp-sc-grid-row-wrap-border-color: #000;
+$mp-sc-grid-row-cell-color: #fff;
+$mp-sc-grid-row-cell-background: #24282b;
+$mp-sc-grid-row-cell-alt-background: #24282b;
+$mp-sc-grid-row-cell-over-background-color: #24282b;
+$mp-sc-grid-row-cell-selected-background-color: #24282b;
+$mp-sc-grid-row-cell-focus-background-color: #24282b;
+
+$sc-admin-scorecard-item-hover-bkgnd: #4D4D4D;
+$sc-admin-scorecard-item-hover-color: #BFBFBF;
+
+
+
+
+
+
+$mp-rating-progress-bar-background-color: #FDDE86;
+
+// =======================================
+//  ================= MenuBar ===========
+
+
+// Changelog ------------------------------
+$change-item-color: $carbon-text-color;
+$change-original-color: #FDDE86;
+$change-new-color: #FCBB1B;
+
+
+// Media ----------------------------------
+$media-tabs-color:  $mp-gold;
+$media-title-color: $mp-gold;
+
+
+$mp-display-more-color: #BFBFBF;
+$mp-display-more-color-hover: #F2F2F2 !important;
+
+//-- Sorting and paging
+$mp-search-results-label-color: #a7a8ab;
+
+
+$mp-agency-text-color: #949494;
+$mp-score-text-color: #BFBFBF;
+
+
+$carousel-heading-color: $mp-gold;
+$carousel-color: #E5E5E5;
+$carousel-link-color: #E5E5E5;
+$carousel-link-color-hover: #F2F2F2;
+$carousel-link-color-visited: #E5E5E5;
+$carousel-link-color-active: #F2F2F2;
+
+// About, create listing modals
+$about-window-mask-background: #555;
+$modal-button-text-color: #E5E5E5;
+
+/*
+* These imports create the marketplace-specific stylesheets, based on the values of the
+* variables that are defined in variables/defaults (which can be overridden in this
+* file).If extensive changes are required, you can delete some of these imports and
+* reimplement them as necessary
+*/
+//MARKETPLACE STYLESHEETS
+@import 'marketplace_all';
+
+// ===============================
+// ======= Background ============
+
+
+
+
+
+.widget-marketContentWrapper-wleftbar {
+  width: 1000px!important;
+}
+
+
+
+// ---------------------------------
+
+.successText{
+  color: #8DC53E!important;
+}
+
+#widget_header, #header {
+  background-image: theme-image($theme-name, 'header_bkg.jpg');
+  background-repeat: repeat-x;
+}
+
+@media (max-width: 939px) {
+  html {
+   .omp_header_logo {
+    position:relative;
+    left:5%;
+   }
+  }
+}
+
+#footer {
+  background-image: theme-image($theme-name, 'footer.png') !important;
+  background-repeat: repeat-x;
+  background-color: transparent;
+
+  width: 100%;
+  padding: $footer-top-bottom-padding 0;
+  bottom:0px;
+  z-index: 0 ;
+
+  clear:both;
+
+
+  #footer_content_center {
+    width: 1000px;
+    margin: 0 auto;
+  }
+
+  .widget_footer_text {
+    text-align: left;
+    font-size: 12px;
+    font-weight:normal;
+    color:#FABA1A;
+    padding: 0px 0px 6px 3px;
+  }
+
+  .widget_footer_featured_subtext {
+    font-size: 10px;
+    color: #A7A8AB;
+    padding: 0px 0px 2px 3px;
+
+  }
+
+  .widget_footer_subtext {
+    font-size: 10px;
+    color: #A7A8AB;
+    padding: 0px 0px 2px 3px;
+
+
+    &:hover {
+      color: #F5F5F5;
+    }
+
+    a {
+      padding-left: 0px;
+      font-size: 10px;
+      color: #A7A8AB;
+    }
+
+    a:hover {
+      color: #F5F5F5;
+    };
+  }
+}
+
+#pending_block {
+
+  .pending_line {
+    display: none;
+  }
+}
+
+#pending_list {
+  .message {
+    color: $mp-color;
+    font-weight:normal;
+    font-size: $mp-font-size;
+    padding-top: 5px;
+    padding-bottom: 20px;
+  }
+}
+
+#activity_hdr, #listings_hdr, .block_hdr, #pending_hdr {
+  font-size:  $mp-head2-font-size;;
+  font-weight: normal;
+  padding-bottom: 10px;
+  color: $heading-color;
+}
+
+.item_title {
+  font-size: $mp-title-font-size;
+  font-weight: normal;
+}
+
+
+td.discover {
+
+  .numRatings_comment_text {
+    display: none;
+  }
+
+  .rating_total_votes_count {
+    top: 0px;
+  }
+}
+.discover_item_title {
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+/*****
+ * ITEMS
+ *********/
+
+
+
+@media (max-width: 939px) {
+  html {
+    .franchise_discover_see_more_text {
+        left: 5%;
+        position:relative;
+      }
+  }
+}
+
+
+/***
+*  Activity
+*/
+
+.activity_line, .listings_line {
+  display: none;
+}
+
+/***
+* Sidebar
+*/
+#left-sidebar, #left-sidebar-guide, #filter-container, #filter-window-body {
+  background-image: theme-image($theme-name, 'sidebar_bkg.png');
+  background-repeat: repeat-y;
+}
+
+#left_sidebar {
+
+  .nav_item {
+
+    .category {
+      font-size: 13px;
+      font-weight: normal;
+      color: $mp-dkgray;
+    }
+
+  }
+}
+
+/***
+ * SHADOW DEFINITION
+ */
+
+.one-center-edge-shadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.one-top-edge-shadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+// Modify the shadow to work on the dark background
+.one-edge-shadow {
+  -webkit-box-shadow: 0 -2px 12px 5px rgba(10,10,10,0.6);
+  -moz-box-shadow: 0 -2px 12px 5px rgba(10,10,10,0.6);
+  box-shadow: 0 -2px 12px 5px rgba(10,10,10,0.6);
+}
+
+
+#omp_main_panel {
+
+  .omp_nuggets_wrapper{
+    padding-top: 2px;
+    padding-bottom: 10px;
+    .omp_nuggets {
+
+
+      .omp-nuggets-text {
+        font-size: 11px;
+      }
+
+
+      .query-filter {
+
+        &.omp-nugget-hover {
+          .omp-nuggets-text {
+            color: #ffffff!important;
+          }
+
+          .remove-region {
+            .remove-x-icon {
+              display:block!important;
+            }
+          }
+        }
+
+        .omp-nuggets-text {
+          color: #e7e6e6!important ;
+        }
+      }
+    }
+  }
+}
+
+
+.listing_detail_title {
+  font-size: 18px;
+}
+
+.listing_profile_detail_extra {
+  padding-bottom: 16px;
+}
+
+.aml_desc {
+  padding-bottom: 10px;
+}
+
+
+.omp_status_text {
+  padding-left: 5px;
+}
+
+
+
+
+//SEARCH AFFILIATED MP HEADER
+.search-results-header {
+  color: $heading-color;
+  font-weight: normal;
+  font-size: $mp-head1-font-size;
+  line-height: $mp-head1-line-height;
+
+  .search-results-header-text {
+    padding-bottom: 12px;
+  }
+}
+
+.affiliated_marketplace_search_results {
+
+  .affiliated-marketplace-search-panel {
+    .affiliated-marketplace-results-panel {
+      .affiliated-marketplace-results-body {
+
+        td.remote-listing  {
+          .remote-listing-wrapper {
+            .remote-listing-title {
+              font-size: 18px;
+              font-weight: normal;
+            }
+          }
+
+        }
+
+      }
+    }
+  }
+}
+
+
+// Search results overrides
+
+// This is only in carbon and cobalt - maybe can refactor or discard
+div.widget_list_item {
+    color: $carbon-text-color !important;
+    .item_title {
+      color: $carbon-title-text-color !important;
+      a {
+        color: $carbon-title-text-color !important;
+      }
+      a:hover {
+        color: $carbon-title-text-color-hover !important;
+      }
+    }
+}
+
+
+// =====================================
+
+
+// Cancel button icon
+.cancelBtnIcon {
+  background-image: theme-image($theme-name, 'icons/x_red_15x15.png');
+  margin-left: 1px;
+}
+
+
+.agency-row-edit{
+    padding-top:10px;
+    padding-bottom:25px;
+}
+
+.agency-title{
+    font-size: 11pt;
+    color: #E5E5E5
+}
+
+
+.admin-text-input{
+    border: 1px solid #4D4D4D;
+    background-color: #212121;
+    padding-left: 3px;
+    padding-top: 4px;
+    color: #E5E5E5;
+}
+
+
+.admin-text-active-input{
+    border: 1px solid #FCBB1B;
+    background-color: #111111;
+    padding-left: 3px;
+    color: #E5E5E5;
+}
+
+
+
+.admin-add-new-link{
+    border-radius: 2px;
+    background-color: #272727;
+    border: 0 none;
+    font-family: monospace;
+    padding: 2px 5px;
+    color: #A7A8AB;
+    font-size: 1em;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.admin-add-new-link:hover {
+    color: #E5E5E5;
+    background-color: #111111;
+}

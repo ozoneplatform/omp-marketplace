@@ -1,0 +1,173 @@
+//-- Get Started carousel on landing page ---
+
+@media (max-width: 939px) {
+  html {
+    div.carousel_getstarted {
+      display:none;
+    }
+  }
+}
+
+div.carousel_getstarted {
+  background: theme-image($theme-name, 'carousel_content/starburst_blur_fade.png') no-repeat center;
+  height: 269px;
+  width: 39%;
+  float: left;
+  position: relative;
+
+  *width: 38%;
+
+  div.carousel_getstarted_text {
+  	background: theme-image($theme-name, 'carousel_content/getstarted_out.png') no-repeat center;
+  	height: 269px;
+	width: 400px;
+	right: 26px;
+    position: relative;
+  }
+
+  div.carousel_getstarted_text:hover {
+  	background: theme-image($theme-name, 'carousel_content/getstarted_over.png') no-repeat center;
+  }
+}
+
+div.carousel_categories {
+  float: left;
+  width: 520px;
+  text-align: left;
+  padding-left: 4px;
+  padding-top: 10px;
+}
+
+
+div.carousel_category_browselink {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 20px;
+  color: $carousel-color;
+  text-align: left;
+  float: left;
+  width: 50%
+}
+
+div.carousel_category_browselink a:link {
+  color: $carousel-link-color;
+  text-decoration:none;
+}
+
+div.carousel_category_browselink a:visited {
+  color: $carousel-link-color-visited;
+  text-decoration:none;
+}
+
+div.carousel_category_browselink a:hover {
+  color: $carousel-link-color-hover;
+  text-decoration:underline;
+}
+
+div.carousel_category_browselink a:active {
+  color: $carousel-link-color-active;
+  text-decoration:underline;
+}
+
+div.carousel_category_browselink img.carousel_category_image{
+  width: 63;
+  height: 63;
+  border: 0;
+  vertical-align: middle
+}
+
+div.carousel_category_browselink span.carousel_category{
+  padding: 0px 0px 0px 2px
+}
+
+//-- End Get Started carousel
+
+//-- listing carousels
+
+.landingPageRows > h1 {
+  float: left;
+  text-indent: 24px;
+  background-repeat: no-repeat;
+  background-position: 0px 5px;
+}
+
+
+@media (max-width: 939px) {
+  html {
+    .landingPageRows > h1.highestRated {
+      left: 6%;
+    }
+
+    .landingPageRows > h1.highestScorecard {
+      left: 6%;
+    }
+
+    .landingPageRows > h1.newArrivals {
+      left: 6%;
+    }
+  }
+}
+
+.landingPageRows > h1.highestRated {
+  background-image: theme-image($theme-name, 'icons/Sort-star_out.png');
+}
+
+.landingPageRows > h1.highestScorecard {
+  background-image: theme-image($theme-name, 'icons/Sort-scorecard_out.png');
+}
+
+.landingPageRows > h1.newArrivals {
+  background-image: theme-image($theme-name, 'icons/Sort-calendar_out.png');
+}
+
+@media (max-width: 939px) {
+  html {
+    .highestRatedCarousel {
+      visibility:hidden;
+      top: 50%;
+      position: absolute;
+    }
+    .highestScorecardCarousel {
+      visibility:hidden;
+      top: 50%;
+      position: absolute;
+    }
+    .recentlyAddedCarousel {
+      visibility:hidden;
+      top: 50%;
+      position: absolute;
+    }
+
+    .miniHighestRatedCarousel {
+      visibility:visible;
+      position: relative;
+    }
+
+    .miniHighestScorecardCarousel {
+      visibility:visible;
+      position: relative;
+    }
+
+    .miniRecentlyAddedCarousel {
+      visibility:visible;
+      position: relative;
+    }
+  }
+}
+
+.miniHighestRatedCarousel {
+  visibility:hidden;
+  bottom: 50%;
+  position: absolute;
+}
+
+.miniHighestScorecardCarousel {
+  visibility:hidden;
+  bottom: 50%;
+  position: absolute;
+}
+
+.miniRecentlyAddedCarousel {
+  visibility:hidden;
+  bottom: 50%;
+  position: absolute;
+}

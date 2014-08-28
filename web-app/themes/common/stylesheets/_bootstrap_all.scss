@@ -1,0 +1,307 @@
+$select2-images-path: "../../common/images/" !default;
+
+@import 'fontawesome/font-awesome';
+@import 'fontawesome/font-awesome-ie7';
+@import "../../../vendor/jquery.magnific-popup/magnific-popup";
+
+// Default color palette variables - can be overridden by themes
+@import "ozone-bootstrap/defaults";
+
+// Core variables and mixins
+@import "bootstrap/variables"; // Modify this for custom colors, font-sizes, etc
+@import "bootstrap/mixins";
+
+
+html.modal-open > body .modal-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 18996;
+}
+
+.free-text-warning {
+    color: $state-error-text !important;
+    text-align: center;
+    font-size: $font-size-h5;
+}
+
+.required-star {
+    color: $state-error-text;
+}
+
+.datepicker.dropdown-menu {
+    z-index: 18998 !important;
+}
+
+.ellipsis {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.arrow {
+    display: inline-block;
+    @include ie7-inline-block();
+
+    width: 0;
+    height: 0;
+
+    &, &.arrow-down {
+        margin-right: 5px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid $text-color;
+    }
+
+    &.arrow-right {
+        margin-right: 0px;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 8px solid $text-color;
+    }
+}
+
+.collapsed {
+    .arrow {
+        @extend .arrow-right;
+    }
+}
+
+.btn {
+    min-width: 72px;
+    min-width: auto\9; // IE 7,8 and 9
+}
+
+.btn-small {
+    min-width: 60px;
+    min-width: auto\9; // IE 7,8 and 9
+}
+
+@import 'bootstrap/reset';
+@import 'reset';
+
+// Bootstrap with .bootstrap-active class prepended and ozone overrides
+@import "bootstrap/bootstrap";
+
+// Bootstrap-select plugin css
+@import "bootstrap-select/bootstrap-select";
+
+// Bootstrap-editable plugin css
+@import "bootstrap-editable/bootstrap-editable";
+@import "datepicker";
+@import "select2";
+
+
+// Add components using Ozone bootstrap here
+@import 'variables/menubar';
+@import 'menubar';
+@import 'list_group';
+@import 'wizard';
+@import 'quickview';
+@import 'store_modal';
+@import 'profile';
+@import 'create_edit_listing';
+@import 'partner_stores';
+@import 'scorecard_questions';
+@import 'bootstrap_about_window';
+@import 'dialog';
+@import 'userMenu';
+@import 'access_alert';
+
+//doesn't actually use bootstrap, but has been moved to this file to avoid per-file selector
+//limits in IE
+@import 'affiliated_search_results';
+
+
+.bootstrap-active {
+    .inline {
+        display: inline;
+    }
+
+    .result-count {
+        font-size: 14px;
+        color: $quickview-faded-color;
+        margin-left: 6px;
+    }
+
+    .no-results {
+        font-size: 2em;
+        color: #999;
+        width: 100%;
+        height: 5em;
+        text-align: center;
+
+        padding-top: 20px;
+    }
+
+    .list-container + .list-container {
+        margin-top: 2em;
+    }
+
+    .label-faded {
+        color: $quickview-faded-color;
+    }
+
+    .admin-home-title {
+        margin-bottom: 0px !important; // !important can be removed after bootstrap-active is removed
+
+        .icon-home {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            color: $quickview-faded-color;
+        }
+        a {
+            padding-left: 6px;
+        }
+
+        + .label-faded {
+            margin-top: 0px;
+        }
+    }
+}
+
+.btn-field-add,
+.btn-field-remove {
+    display: inline-block;
+    @include ie7-inline-block();
+    cursor: pointer;
+
+     > .btn {
+        font-family: monospace;
+        line-height: 14px;
+        padding: 2px 5px;
+        font-size: 1em;
+        min-width: 1px;
+    }
+    > span {
+        margin-left: 5px;
+    }
+}
+.btn-field-remove {
+    padding-top: 5px;
+    position: absolute;
+    right: -23px;
+    top: 0;
+}
+
+/*==========================================================================
+=            Magnific Popup overrides to use font awesome icons            =
+==========================================================================*/
+
+.mfp-bg {
+    z-index: 104200;
+}
+
+.mfp-wrap {
+    z-index: 104204;
+}
+
+.mfp-content {
+    z-index: 104208;
+}
+
+.mfp-icon-chevron-left, .mfp-icon-chevron-right {
+    position: absolute;
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    margin-top: -16px;
+    top: 50%;
+    z-index: 104212;
+    color: #fff;
+    text-shadow: 0px 0px 5px #000;
+
+    &:hover {
+        color: $headings-color;
+    }
+}
+
+.mfp-icon-chevron-left {
+    margin-left: 16px;
+    left: 0px;
+}
+
+.mfp-icon-chevron-right {
+    margin-right: 16px;
+    right: 0px;
+}
+
+/*===============================
+=            select2            =
+=================================*/
+.error .select2-container .select2-choice,
+.error .select2-container .select2-choices {
+    border-color: $state-error-text;
+    color: $state-error-text !important;
+}
+
+.select2-drop-mask {
+    z-index: 18998;
+}
+.select2-drop {
+    z-index: 19000;
+}
+
+.select2-container .select2-choice:hover {
+    text-decoration: none;
+}
+.select2-dropdown-open .select2-choice,
+.select2-container .select2-choice,
+.select2-results .select2-no-results {
+    height: 30px;
+    line-height: 30px;
+    border-radius: 0px;
+}
+
+.select2-results {
+    margin: 0 !important; // important can be removed when bootstrap-active is
+    padding: 0px;
+}
+.select2-results li {
+    line-height: 28px;
+}
+
+.select2-drop,
+.select2-drop.select2-drop-above,
+.select2-container .select2-choice .select2-arrow {
+    border-radius: 0px;
+}
+
+.select2-container-multi .select2-choices .select2-search-choice {
+    line-height: 18px;
+}
+
+
+
+
+/*===================================
+=            Date Picker            =
+===================================*/
+
+.datepicker,
+.datepicker td,
+.datepicker th  {
+    border-radius: 0px;
+}
+
+.input-append.datepicker {
+    padding: 0;
+}
+
+
+
+/*============================
+=            Form            =
+============================*/
+
+form {
+    .array-item {
+        position: relative;
+        margin-bottom: 6px;
+    }
+}

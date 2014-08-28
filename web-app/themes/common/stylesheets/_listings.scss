@@ -1,0 +1,66 @@
+
+
+.listing_profile_service_item_version_text {
+  width: 35px;
+  white-space: nowrap;
+}
+
+.listing_profile_service_item_version{
+  font-style: italic;
+  font-size: $mp-font-size;
+  color: $meta-info-color;
+}
+
+.listing_profile_service_item_type_hdr {
+  font-weight: 700;
+}
+
+img.listing_profile_table_thumbnail {
+  margin-bottom: 5px;
+  width: 96px !important;
+  height: 96px !important;
+}
+
+
+span.listing_profile_table_thumbnail {
+  margin-bottom: 8px;
+  width: 96px;
+  height: 96px;
+}
+
+.listing_profile_service_item_type_div {
+  font-size: 12px;
+  font-style: normal;
+  padding-bottom: 5px;
+  padding-right:30px;
+  float:left;
+}
+
+.listing_profile_service_item_status_div {
+  float: left;
+}
+
+.listing_profile_service_item_rating_div {
+  color: $meta-info-color;
+  outline: medium none;
+  font-size: 10px;
+  font-style: italic;
+  white-space: nowrap;
+  width: 114px;
+}
+
+.listing_profile_detail_div a {
+  text-decoration: none ;
+}
+
+.thumbnail_wrap {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.listing_profile_table_right_td {
+    white-space: nowrap;
+    width: 120px;
+    text-align: right;
+    float:right;
+}

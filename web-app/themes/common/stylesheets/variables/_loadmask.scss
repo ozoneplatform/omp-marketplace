@@ -1,0 +1,17 @@
+$mp-loadmask-opacity: 0.5 !default;
+$mp-loadmask-background: #000 !default;
+
+$mp-loadmask-msg-padding: 2px !default;
+$mp-loadmask-msg-background-color: $mp-alt-base-color !default;
+$mp-loadmask-msg-border-color: $mp-loadmask-msg-background-color !default;
+$mp-loadmask-msg-background-gradient: null !default;
+
+$mp-loadmask-msg-inner-padding: 5px 10px 5px 25px !default;
+$mp-loadmask-msg-inner-icon: 'grid/loading.gif' !default;
+$mp-loadmask-msg-inner-border-color: $mp-loadmask-msg-background-color !default;
+$mp-loadmask-msg-inner-background-color: $mp-loadmask-msg-background-color !default;
+$mp-loadmask-msg-inner-color: getHighContrastColor($mp-loadmask-msg-inner-background-color) !default;
+$mp-loadmask-msg-inner-font-size: ceil($mp-font-size * .9) !default;
+$mp-loadmask-msg-inner-font-weight: normal !default;
+$mp-loadmask-msg-inner-font-family: $mp-font-family !default;
+$mp-loadmask-msg-inner-font: $mp-loadmask-msg-inner-font-weight $mp-loadmask-msg-inner-font-size $mp-loadmask-msg-inner-font-family !default;

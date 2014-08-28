@@ -1,0 +1,10 @@
+$mp-toolbar-base-color: $mp-base-color !default;
+$mp-toolbar-color: getHighContrastColor($mp-toolbar-base-color) !default;
+$mp-toolbar-border: 1px solid $mp-toolbar-base-color !default;
+
+$mp-toolbar-separator-color: #a0a9ad !default;
+
+$mp-custom-toolbar-base-color: $mp-toolbar-base-color !default;
+$mp-custom-toolbar-color: getHighContrastColor($mp-custom-toolbar-base-color) !default;
+$mp-custom-border-color: $mp-toolbar-base-color !default;;
+$mp-custom-toolbar-border: 1px solid $mp-custom-border-color !default;

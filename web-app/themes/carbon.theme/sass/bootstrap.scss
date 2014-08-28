@@ -1,0 +1,83 @@
+// Creates themed Bootstrap css
+
+$theme-name: 'carbon';
+
+// Theme-specific bootstrap variable overrides
+@import "variables/bootstrap-variables";
+
+// Other variable overrides
+// Wizard
+$wizardHeaderBackground:      $gray_dark2;
+
+
+$wizardNavColor:            #C4CBD6;
+$wizardNavColorActive:      $accent_base;
+$wizardNavColorVisited:     $accent_dark1;
+$wizardNavColorVisitedHover: $accent_dark1;
+
+$wizardHeaderBorder:        #111111 ;
+
+$wizardSelectBackground:    $gray_light2 ;
+$wizardSelectBackgroundHover: $gray_light1 ;
+
+$wizardSelectColor:         $gray_light1 ;
+$wizardSelectHoverColor:    $gray_base ;
+
+$wizardSelectBorder:        $gray_base ;
+
+$caretColor:                $gray_base ;
+
+$progressBarBackground:     $accent_dark ;
+$dataExchangeSubHeaderColor: #e5e5e5;
+$wizard-h3-color:             #f2f2f2;
+
+
+
+
+//---------------------
+// QuickView variables
+//---------------------
+
+$quickview-background-color:            #212121;
+$quickview-color:                       #EFEFEF;
+$quickview-border-color:                #373636;
+$quickview-inner-background-color:      #373636;
+$quickview-header-color:                #fcefc0;
+$quickview-faded-color:                 #a2a098;
+$quickview-free-text-warning-color:     red;
+
+//-------------------------
+// END QuickView variables
+//-------------------------
+
+// Quickview-like Modal variables
+$modal-back-background-color: #272727;
+
+@import "bootstrap_all";
+
+
+// Element overrides where we do not have the colors or other values variablized yet
+// For each one, identify the bootstrap .scss file where it originates
+//
+
+.bootstrap-active {
+
+  // From _close.scss
+  .close {
+
+    color: #fff;
+    @include opacity(35);
+    &:hover,
+    &:focus {
+      color: #fff;
+
+      @include opacity(55);
+    }
+  }
+
+}
+
+.list-group > .list-item {
+    border-bottom: 1px solid darken(#7d7e80, 15%);
+}
+

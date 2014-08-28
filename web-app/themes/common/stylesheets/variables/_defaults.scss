@@ -1,0 +1,253 @@
+@charset "UTF-8";
+
+$experimental-support-for-svg: true;
+
+/*
+ * This file contains the default values on a variety of parameters that may be overridden by a given theme
+ */
+$mp-color: #000 !default;
+
+$color: $mp-color !default;
+$neutral-color: #eeeeee;
+
+/*
+ * The color that will be used to generate many major parts of
+ * the theme, such as the borders of active components and buttons
+ */
+$mp-base-color: #1D2D40 !default;
+
+/*
+ * The color that will be used to generate more minor parts of the
+ * theme, such as inactive windows, depressed buttons, and grid-view rows
+ */
+$mp-alt-base-color: #B40010 !default;
+
+/*
+ * The font family of most of the interface
+ */
+$mp-font-family: Helvetica, Verdana, Arial, sans-serif !default;
+
+/*
+ * The font size.  This should be specified in pixels or another absolute unit.
+ * Because of the way that Ext-js uses this value, relative sizes will be compounded
+ * on nested elements, which is almost definetly not what you want
+ */
+$mp-font-size: 12px !default;
+
+$font-size: $mp-font-size;
+$font-family: $mp-font-family;
+
+
+/*
+ * Input text field field height
+ */
+$mp-form-field-height: 22px !default;
+
+
+$mp-window-background-color: #fff !default;
+$mp-window-outer-background-color: adjust-color($mp-base-color, $lightness: 40%) !default;
+
+$mp-head1-font-size: 24px;
+$mp-head1-line-height: 32px;
+
+$mp-head2-font-size: 20px;
+$mp-head2-line-height: 26px;
+
+$mp-head3-font-size: 16px;
+$mp-head3-line-height: 20px;
+
+
+
+/*
+ * Body background color & image
+ */
+$mp-body-page-background-image: theme-image($theme-name, 'stripes_rpt.png');
+$body-background-gradient-start: #e6e7e8;
+$body-background-gradient-end: #ffffff;
+
+$mp-body-background-default-color: #E2E2E2;
+
+$panel-body-background-color: $mp-window-background-color !default;
+
+/*
+ * Styles for selectable items, such as Widgets in Launch Menu and Themes in Theme Switcher window
+ */
+$selectable-item-background-color: $mp-window-background-color !default;
+$selectable-item-over-background-color: #efefef !default;
+$selectable-item-selected-background-color: lighten($mp-base-color, 10) !default;
+
+$selectable-item-border-color: $mp-window-background-color !default;
+$selectable-item-over-border-color: #dddddd !default;
+$selectable-item-selected-border-color: lighten($mp-base-color, 5) !default;
+
+$selectable-item-text-color: getHighContrastColor($selectable-item-background-color) !default;
+$selectable-item-over-text-color: getHighContrastColor($selectable-item-over-background-color) !default;
+$selectable-item-selected-text-color: getHighContrastColor($selectable-item-selected-background-color) !default;
+
+/*
+ * Border colors of tabs in the tab layout
+ */
+$mp-active-tab-border-color: #143E9D !default;
+$mp-over-tab-border-color: #A2B1C5 !default;
+
+/*
+ * The text color of the labels in the mange, customize, and create dashboards windows
+ */
+$mp-manage-window-label-color: getHighContrastColor($mp-window-background-color) !default;
+
+/*
+ * A background color sprite, currently only used in the
+ * dashDropDownMenu to color the active entry in the drop down
+ * TODO: Remove or replace this
+ */
+$mp-color-image: theme-image($theme-name, 'color-bg.png') !default;
+
+/*
+ * Setting this to false will disable the use of gradients in most cases.
+ * Single colors will be used instead
+ */
+$mp-apply-gradient: true !default;
+
+$mp-border-color: #BFBFBF;
+
+/*
+ * The border radius applied to the top corners, and bottom corners,
+ * respectively, of windows and things
+ */
+$mp-top-border-radius: 5px !default;
+$mp-bottom-border-radius: 5px !default;
+
+$mp-tool-width: 15px !default;
+$mp-tool-height: 15px !default;
+
+$warning-color: #ff0000 !default;
+
+$heading-color: #055D78 !default;
+$link-color: #26587C !default;
+$link-over-color: lighten($link-color, 20%) !default;
+$link-disabled-color: #ccc !default;
+
+// For the read more links throughout
+$mp-read-more-color: #055D78;
+$mp-read-more-color-hover:lighten($mp-read-more-color, 20%);
+
+$item-disabled-opacity: 0.5 !default;
+
+$content-area-background-color: #fff !default;
+$meta-info-color: #777 !default;
+
+$mp-approved-color: #005C00;
+
+$limited-text-area-maxlabel-color: #454F55;
+
+// Results count on search page
+$result-count-color: $mp-ltgray;
+
+//-- footer -----------------------------------------------------------
+$footer-background: $mp-alt-base-color !default;
+$footer-color: getHighContrastColor($footer-background) !default;
+$footer-over-color: getHighContrastColor($footer-color) !default;
+
+$footer-top-bottom-padding: 5px !default;
+$footer-height: 120px !default;
+
+
+//-- affiliated results area -----------------------------------------------------------
+$affiliated-mp-title-color: $heading-color !default;
+$affiliated-mp-results-count-color: getHighContrastColor($content-area-background-color) !default;
+$affiliated-mp-sell-all-color: $mp-ltgray !default;
+$affiliated-mp-sell-all-over-color: $mp-dkgray !default;
+
+//-- user profile page -----------------------------------------------------------
+$profile-page-contribution-count-color: #465157 !default;
+
+//-- home page -----------------------------------------------------------
+$recent-activity-divider-color: $heading-color !default;
+
+// -- listing block ----------------------------------------------------------
+$mp-author-text-color: #005C00;
+$mp-author-over-text-color: #1A6A1A;
+
+$mp-display-more-color: #006600;
+$mp-display-more-color-hover: #3300CC !important;
+
+//-- details page ------------------------------------------------------------
+$return-to-search-top: 10%;
+$details-label-color: #7d7e80;
+
+//-- Sorting and paging
+$mp-search-results-label-color: #4d4d4d;
+
+
+//-----------------------
+
+$mp-agency-text-color: #7d7e80;
+$mp-score-text-color: #7d7e80;
+
+
+//-----------------------
+
+//-------------------------
+// FontAwesome Star Colors
+//-------------------------
+
+$star-color:          #ffce56 !default;
+$star-empty-color:    #ccc !default;
+
+//-----------------------------
+// END FontAwesome Star Colors
+//-----------------------------
+
+//----------------
+// Ext Mask Color
+//----------------
+
+$ext-mask-color:        black !default;
+
+//--------------------
+// END Ext Mask Color
+//--------------------
+
+//import more default variables from other files in this directory
+@import 'toolbar';
+@import 'tabs';
+@import 'progressBar';
+@import 'loadmask';
+@import 'buttons';
+@import 'toolTip';
+@import 'grid';
+@import 'dropDownMenu';
+@import 'component';
+@import 'form';
+@import 'picker';
+@import 'messageBox';
+@import 'themeSwitcher';
+@import 'focus';
+@import 'header';
+@import 'sidebar';
+@import 'actionMenu';
+@import 'aboutWindow';
+@import 'dragAndDrop';
+@import 'breadCrumb';
+@import 'scoreCard';
+@import 'tutorial';
+@import 'applicationConfiguration';
+@import 'admin';
+@import 'settingsPanel';
+@import 'landing';
+@import 'systemWindow';
+@import 'intents';
+
+//-- import page -----------------------------------------------------------
+$file-import-file-browser-background-color: $mp-grid-header-background-color !default;
+
+$scheduled-import-window-description-background-color: $mp-toolbar-base-color !default;
+$scheduled-import-window-description-color: getHighContrastColor($scheduled-import-window-description-background-color) !default;
+
+// Changelog
+$change-item-color: $mp-color;
+$change-original-color: #CC0099;
+$change-new-color: #0033CC;
+
+
+$carousel-spinner-color: #a7abab !default;

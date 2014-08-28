@@ -1,0 +1,139 @@
+#partner-stores-container {
+
+    table {
+        .name, .url {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .name {
+            width: 200px;
+        }
+        .url {
+            width: 480px;
+        }
+    }
+
+    img {
+        width: 24px;
+        height: 24px;
+        margin-right: 5px;
+    }
+
+    .edit, .delete {
+        display: inline-block;
+        @include ie7-inline-block();
+        line-height: 14px;
+        padding: 2px 5px;
+        font-size: 1em;
+        min-width: 1px;
+    }
+    .delete {
+        margin-left: 5px;
+    }
+}
+
+#create-edit-partner-store {
+    $modal-width: 500px;
+
+    $label-width: 110px;
+    $controls-margin-left: $label-width + 20px;
+
+    // form width - border - padding - margin left
+    $controls-width: $modal-width - 2px - 30px - $controls-margin-left;
+
+    width: $modal-width;
+    margin-left: -$modal-width/2;
+
+    [class^="icon-"], [class*=" icon-"] {
+        font-size: 14px;
+    }
+
+    .icon-info {
+        color: $quickview-faded-color;
+    }
+
+    .modal-header, .modal-footer {
+        background: $quickview-background-color;
+        border-color: $quickview-background-color;
+    }
+
+    .modal-header {
+        padding-top: 0;
+        padding-bottom: 0;
+        overflow: hidden;
+
+        .modal-title {
+            @include ie7-inline-block();
+
+            > a {
+                margin-left: 4px;
+                color: #fff;
+            }
+        }
+
+        .close {
+            margin-top: 0px;
+            font-size: 36px;
+            line-height: 36px;
+            *font-size: 24px;
+            *line-height: 24px;
+        }
+
+        button {
+            margin-top: 9px;
+        }
+    }
+
+    .form-horizontal {
+        .control-group {
+            margin-bottom: 15px;
+        }
+        .control-label {
+            cursor: text;
+            width: $label-width;
+        }
+        .controls {
+            width: $controls-width;
+            margin-left: $controls-margin-left;
+            *margin-left: 0;
+        }
+
+        label {
+            text-align: left;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            *width: $controls-width - 14px; // subtract padding and border
+        }
+
+        input {
+            height: 30px !important;
+        }
+
+        .auto-width {
+            width: auto !important;
+        }
+
+        label.switch {
+            margin: 0;
+        }
+
+        .input-append {
+            position: relative;
+            input[type="url"], .url {
+                width: $controls-width - 26px; //  // subtract width of addon button, padding and border
+                *width: $controls-width - 26px - 14px;  // subtract padding and border
+            }
+            > .add-on {
+                height: 30px;
+            }
+        }
+
+        .uneditable-input {
+            width: 260px;
+            *width: 246px;
+        }
+    }
+
+}

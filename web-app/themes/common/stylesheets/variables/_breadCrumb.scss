@@ -1,0 +1,41 @@
+// -- breadcrumb ---------------------------------------------------------------
+$breadcrumb-nuggets-beginner-height: 24px;
+$breadcrumb-nuggets-beginner-width: 3px;
+
+$breadcrumb-nuggets-text-height: 24px;
+$breadcrumb-nuggets-text-width: expression(document.body.clientWidth < 42? "42px": "auto" );
+
+$breadcrumb-nuggets-region-ender-height: 24px;
+$breadcrumb-nuggets-region-ender-width: 27px;
+
+$breadcrumb-nuggets-remove-x-icon-height: 13px;
+$breadcrumb-nuggets-remove-x-icon-width: 13px;
+
+//Positions
+
+$breadcrumb-nuggets-text-padding-top: 0px;
+$breadcrumb-nuggets-remove-x-icon-top-pos: 5px;
+
+//backgrounds
+//Query Filter Part
+$breadcrumb-filter-nuggets-beginner-image: 'breadcrumb/bc_blue_left.png';
+$breadcrumb-filter-nuggets-text-image: 'breadcrumb/bc_blue_rpt-x.png';
+$breadcrumb-filter-remove-region-x-image: 'breadcrumb/bc_gray_x.png';
+$breadcrumb-filter-remove-region-ender-image: 'breadcrumb/bc_blue_right.png';
+$breadcrumb-filter-remove-region-ender-with-arrow-image: 'breadcrumb/bc_gray-blue.png';
+
+$breadcrumb-filter-right-image-last: 'breadcrumb/bc_blue_right.png';
+$breadcrumb-filter-right-image-non-last: 'breadcrumb/bc_blue-blue.png';
+
+//Search Query Part
+$breadcrumb-search-nuggets-beginner-image: 'breadcrumb/bc_gray_left.png';
+$breadcrumb-search-nuggets-text-image: 'breadcrumb/bc_gray_rpt-x.png';
+$breadcrumb-search-remove-region-x-image: 'breadcrumb/bc_gray_x.png';
+$breadcrumb-search-remove-region-ender-image: 'breadcrumb/bc_gray_right.png';
+$breadcrumb-search-remove-region-ender-with-arrow-image: 'breadcrumb/bc_gray-gray.png';
+
+$breadcrumb-search-right-image-last: 'breadcrumb/bc_gray_right.png';
+$breadcrumb-search-right-image-last-before-filter: 'breadcrumb/bc_gray-blue.png';
+$breadcrumb-search-right-image-non-last: 'breadcrumb/bc_gray-gray.png';
+
+

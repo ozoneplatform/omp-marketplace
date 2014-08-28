@@ -1,0 +1,34 @@
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: $nav-hover-background-color;
+}
+
+// Give the tabs something to sit on
+.nav-tabs {
+  border-bottom: 1px solid $nav-tab-border-color;
+}
+
+// Actual tabs (as links)
+.nav-tabs > li > a {
+  &:hover,
+  &:focus {
+    border-color: $nav-tab-hover-border-color;
+  }
+}
+
+// Active state, and it's :hover/:focus to override normal :hover/:focus
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover,
+.nav-tabs > .active > a:focus {
+  color: $nav-tab-color;
+  border: 1px solid $nav-tab-border-color;
+  border-bottom-color: transparent;
+}
+
+.nav-tabs > li > a {
+	@include border-radius(0);
+}
+
+.nav-tabs > li {
+	margin-bottom: 0px;
+}

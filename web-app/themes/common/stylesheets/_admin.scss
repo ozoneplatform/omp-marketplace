@@ -1,0 +1,183 @@
+.textAdmin {
+    width:400px;
+    margin-left: 1px;
+}
+
+.nameAdmin {
+	padding-top:1%;
+}
+
+.listing-management {
+    .page-title {
+        margin-top: 1em;
+    }
+    .listing-container {
+        margin-top: 2em;
+    }
+}
+
+.admin_create_field {
+	padding: 15px;
+}
+
+.admin_paginate_buttons {
+    // OP-1446 setting top to 50px moved this control below the footer. Set margin
+    // to control proper spacing after list div
+	margin-top: 15px;
+	left: 42%;
+	position: relative;
+}
+
+.admin_options_box {
+	width: 175px;
+}
+
+.left {
+	float: left;
+}
+
+.admin_page_table {
+	border-collapse: separate;
+	border-spacing: 25px;
+	right: 25px;
+	position: relative;
+}
+
+.step{
+    padding: 5px;
+}
+
+.admin_create {
+    background: theme-image($theme-name, 'skin/database_add.png') center left no-repeat;
+    padding-left: 25px;
+}
+
+.admin_list {
+    background: theme-image($theme-name, 'skin/database_table.png') center left no-repeat;
+	padding-left: 25px;
+}
+
+.admin_page_list_title {
+ 	right: 5px;
+	position: relative;
+}
+
+.admin_page_list {
+	vertical-align: text-top;
+	background-color: transparent !important;
+    border-top-color: $mp-sc-grid-row-cell-border-color !important;
+    border-top-style: solid !important;
+    border-bottom: 0 none !important;
+    border-width:1px;
+    padding: 6px 9px 6px 0px;
+}
+
+.admin_page_link {
+	font-size: 12px;
+	vertical-align: top;
+	padding:5px;
+}
+
+
+.admin_page_label {
+    margin-right: 2em;
+    position: relative;
+    float: left;
+    width: 15%;
+    white-space: normal;
+    white-space: -moz-normal;
+    white-space: break-word;
+    text-align: left;
+}
+
+.admin_page_description {
+
+    position: relative;
+    white-space: normal;
+    white-space: -moz-normal;
+    white-space: break-word;
+    width: 50%;
+    text-align: left;
+    overflow: hidden;
+}
+
+div.admin_row {
+    clear:both;
+    overflow: hidden;
+    margin-top: 3em;
+}
+
+#admin_home {
+    margin-left: 2%;
+    // no padding for link on home page
+    .admin_page_link {
+        padding: 0;
+    }
+}
+
+.admin_home_table {
+    .span2 {
+        line-height: 20px;
+        margin-left: 0px !important;
+    }
+
+    td {
+        padding: 4px 0;
+    }
+
+    .label-faded {
+        margin-left: 24px;
+    }
+
+}
+// Match to header
+@media (max-width: 939px) {
+  html {
+    #admin_home {
+        margin-left: 5%;
+    }
+  }
+}
+
+
+
+//For the new SPA stuff
+.admin-add-new{
+	margin-top : 20px;
+}
+
+.admin-add-new-link{
+	border-radius: 2px;
+	background-color: #d4d4d4;
+	border: 0 none;
+	font-family: monospace;
+	padding: 2px 5px;
+	color: #4d4d4d;
+	font-size: 1em;
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+.admin-add-new-text{
+	font-weight: bold;
+	padding-left: 10px;
+}
+
+
+
+.admin_field_error{
+	font-size: 10px;
+	color: $appConfig-error-color;
+	padding-left:10px;
+	padding-top:3px;
+}
+
+.bootstrap-active .tableNoBorder {
+    td {
+        border-top: 1px solid transparent !important;
+    }
+}
+
+.OMP_DisabledFieldOption {
+    color: #bfbfbf;
+}

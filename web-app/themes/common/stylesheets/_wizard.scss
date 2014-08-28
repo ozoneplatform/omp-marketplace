@@ -1,0 +1,613 @@
+$wizardHeaderBackground:     $gray_light3 !default;
+$wizardNavBackground:        $wizardHeaderBackground !default;
+$wizardNavBackgroundActive:  $modalBackground !default;
+
+$wizardNavColor:              $gray_light !default;
+$wizardNavColorActive:        $comp_base !default;
+$wizardNavColorVisited:       $comp_light1 !default;
+$wizardNavColorVisitedHover:  $comp_base !default;
+
+$wizardHeaderBorder:          $gray_light !default;
+
+$wizardSelectBackground:      $gray_light2 !default;
+$wizardSelectBackgroundHover: $gray_light1 !default;
+
+$wizardSelectColor:         $gray_light1 !default;
+$wizardSelectHoverColor:    $gray_base !default;
+
+$wizardSelectBorder:        $gray_base !default;
+
+$caretColor:                $gray_base !default;
+
+$progressBarBackground:     $comp_dark !default;
+
+// Are these truly subheaders? Should use a standard color for that element in the theme
+// use this for now
+$dataExchangeSubHeaderColor: #7D7E80 !default;
+$wizard-h3-color:             #4d4d4d !default;
+
+// CSS for calling page
+
+.bootstrap-active .import-listings, .data-exchange-log {
+  margin-top: 20px;
+}
+
+.bootstrap-active .btn-file {
+  overflow: hidden;
+  position: relative;
+  vertical-align: middle;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.bootstrap-active .btn-file > input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: 0;
+  @include opacity(0);
+  cursor: pointer;
+}
+
+.ie7 .bootstrap-active .btn-file > input {
+    left: auto;
+}
+
+.bootstrap-active .fileupload .uneditable-input {
+  height: 30px;
+  display: inline-block;
+  *display: inline;
+  margin-bottom: 0px;
+  vertical-align: middle;
+  cursor: text;
+}
+
+.bootstrap-active .fileupload-preview {
+  font-style: italic;
+}
+
+.data-exchange-row {
+  clear:both;
+  overflow: hidden;
+  margin-top: 0;
+  position: relative;
+}
+
+.col-left {
+  margin-right: 2em;
+  position: relative;
+  float: left;
+  width: 50%;
+  white-space: normal;
+  white-space: -moz-normal;
+  white-space: break-word;
+  text-align: left;
+}
+.col-right {
+  position: absolute;
+  bottom: 0;
+  right: 400px;
+}
+
+.export-listings, #marketContent .subheader-description {
+  color: $dataExchangeSubHeaderColor;
+}
+
+p.subheader-description {
+
+    margin-top: 4px ;
+    margin-bottom: 4px ;
+  //color: $dataExchangeSubHeaderColor;
+}
+
+#marketContent h3.import-subheader {
+  color: $wizard-h3-color;
+
+}
+
+#marketContent .data-exchange-subheader, #marketContent .import-subheader {
+  padding-bottom: 0;
+
+}
+
+.file-upload-warning {
+  padding-left: 5px;
+  padding-top: 4px;
+  color: red;
+}
+
+
+// CSS for modal
+
+.wizard-directions {
+  margin-right: 2em;
+  position: relative;
+  float: left;
+  width: 50%;
+  white-space: normal;
+  white-space: -moz-normal;
+  white-space: break-word;
+  text-align: left;
+}
+.wizard-actions {
+  position: relative;
+  white-space: normal;
+  white-space: -moz-normal;
+  white-space: break-word;
+  width: 12%;
+  text-align: right;
+  overflow: hidden;
+}
+
+div.wizard-row {
+  clear:both;
+  overflow: hidden;
+  margin-top: 0;
+}
+
+.wizard {
+  display:none;
+}
+
+.wizard-modal.modal {
+
+  top: 5%;
+  left: 50%;
+  width: 1000px;
+  margin-left: -500px;
+
+}
+
+.wizard-model.model-body {
+  overflow-y:visible;
+}
+
+
+.wizard-modal form {
+  margin:0;
+  padding:0;
+}
+//.wizard-modal.modal {
+//  width:750px;
+//  margin-left:-375px;
+//  top:50%;
+//}
+.wizard-modal-footer.modal-footer {
+  padding: 20px 25px 21px;
+  text-align:right;
+  background-color: $modalBackground;
+  border-top: 1px solid $modalBackground;
+}
+
+.wizard-modal-header.modal-header {
+  border-bottom: 1px solid $wizardHeaderBorder;
+  background-color: $wizardHeaderBackground;
+}
+
+.wizard-card {
+  position:relative;
+  // Position so heading aligns with nav
+  padding: 5px 20px 20px 25px;
+  overflow-y: auto;
+  height: 500px;
+  //display:none;
+  border-top: 0px solid $wizardHeaderBackground;
+  //margin-right: 5px;
+}
+
+.wizard-nav-link > .icon-chevron-right {
+  float: right;
+  margin-top: 12px;
+  margin-right: -6px;
+  opacity: .90;
+  cursor: default;
+}
+
+li.wizard-nav-item.active > .icon-chevron-right {
+  opacity: 1;
+}
+
+li.wizard-nav-item {
+  line-height:40px;
+}
+
+.wizard-modal.modal .nav-list {
+  padding-left: 0;
+  padding-right:0;
+}
+
+.wizard-modal.modal .nav-list > div > li {
+  background-color: $wizardNavBackground;
+  padding: 8px 15px 8px 0px;
+
+}
+
+.wizard-modal.modal .nav-list > div > li > a {
+  background-color: $wizardNavBackground;
+  padding: 8px 15px 8px 20px;
+  cursor: default !important;
+  color: $wizardNavColor;
+  font-size: 16px;
+  text-decoration: none;
+
+  :hover {
+    text-decoration: none !important;
+  }
+}
+
+.wizard-modal.modal .nav-list li.active {
+  background-color: $wizardNavBackgroundActive;
+}
+
+.wizard-modal.modal .nav-list li.active > a {
+  color: $wizardNavColorActive;
+  background-color: $wizardNavBackgroundActive;
+  cursor: default !important;
+
+
+  :hover {
+    text-decoration: none !important;
+    cursor: default !important;
+  }
+}
+
+.wizard-modal.modal .nav-list > div > li.already-visited > a.wizard-nav-link {
+  color: $wizardNavColorVisited;
+  // change this to pointer if we decide to make these links
+  cursor: default;
+  :hover {
+    text-decoration: none;
+    // Use this if we are going to be able to click on the nav item
+    //color: $wizardNavColorVisitedHover !important;
+    cursor: default;
+  }
+}
+
+.wizard-modal.modal .nav-list > div > li.active > a.wizard-nav-link {
+  color: $wizardNavColorActive;
+}
+
+.already-visited > a.wizard-nav-link:hover {
+  background-color: $wizardNavBackground;
+  text-decoration: none;
+  // Use this if we are going to be able to click on the nav item
+  //color: $wizardNavColorVisitedHover !important;
+}
+
+.wizard-progress.progress {
+  height: 30px;
+}
+.wizard-progress-container {
+  padding: 20px 25px 18px;
+  background-color: $wizardNavBackgroundActive;
+}
+
+.wizard-buttons-container .prev-button {
+  margin-left: 20px;
+}
+
+.wizard-steps {
+  width: 25%;
+  height: 565px;
+  background-color: $wizardNavBackground;
+}
+
+.wizard-nav-container {
+  height: 500px;
+  background-color: $wizardNavBackground;
+}
+
+.nav > li > a.wizard-step-error {
+  background-color:#F2DEDE;
+  color:#B94A48;
+  font-weight:bold;
+}
+
+.wizard-step-error .icon-chevron-right {
+  opacity: 0;
+}
+
+.wizard-section {
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.wizard-table-section {
+  margin-top: 20px;
+}
+
+.wizard-buttons-container {
+  background-color: $modalBackground;
+  button {
+    *display: inline;
+  }
+
+  .cancel-button {
+    *float: none;
+  }
+}
+
+.wizard-modal .popover.error-popover {
+  background-color:#F2DEDE;
+  color:#B94A48;
+  border-color:#953B39;
+}
+
+.wizard-modal .popover.error-popover .arrow::after {
+  border-right-color:#F2DEDE;
+}
+
+.wizard-modal .popover.error-popover .popover-title {
+  display:none;
+}
+
+.wizard-modal .popover.error-popover .arrow {
+  border-right-color:#953B39;
+}
+
+.wizard-modal.table {
+
+  margin-top: 20px;
+}
+// Controls spacing between elements
+.wizard-element {
+  margin-top: 20px;
+}
+
+.selection-count {
+    margin: 4px 0px 10px 20px;
+    font-weight: normal;
+}
+
+table#select-listings {
+
+  th,
+  td {
+    padding: 8px;
+
+  }
+  th {
+    font-weight: bold;
+    cursor: pointer;
+  }
+  // Bottom align for column headings
+  thead th {
+    vertical-align: bottom;
+  }
+}
+
+table#resolve-differences {
+
+  th {
+    background-color: $wizardHeaderBackground;
+  }
+  td {
+    border: 0;
+  }
+}
+
+input.listing-checkbox {
+  margin: 0 !important;
+}
+
+//div.wizard-input-section {
+//  input[type="radio"] {
+//    margin: 1px 0 0;
+//  }
+//}
+
+td.duplicate {
+  background-image: theme-image($theme-name,"icons/DuplicateListing.png");
+  background-repeat: no-repeat;
+  background-position: 50% 9px;
+}
+
+// Bootstrap-selec overrides
+.bootstrap-select.btn-group,
+.bootstrap-select.btn-group[class*="span"] {
+
+  margin-bottom: 8px;
+  //Override bootstrap spacing of multiple button groups
+  margin-left: 0px !important;
+
+}
+
+.default-choice {
+  font-style: italic;
+}
+
+// override caret definition from bootstrap _button-groups
+
+.btn-info
+{
+  .caret {
+    border-top-color: $caretColor !important;
+    border-bottom-color: $caretColor !important;
+  }
+}
+
+//div.resolve-select {
+//  position: relative;
+//  //z-index: 17500;
+//}
+
+.wizard-step-num {
+   margin-right: 8px;
+}
+
+
+// Override bootstrap bar - need to make this a var in ozone-bootstrap instead
+// Bar of progress
+.wizard-modal .bootstrap-active {
+  .progress .bar {
+
+    @include gradient-vertical($progressBarBackground, $progressBarBackground);
+    @include box-shadow(none);
+
+  }
+
+
+}
+
+/* datatables overrides */
+div.dataTables_filter label {
+  width: auto !important;
+
+  span, input {
+    height: 28px !important;
+    *height: auto !important;
+  }
+}
+
+button.filter-btn {
+  width: 7em !important;
+}
+
+.clear-filters-container {
+  padding-top: 8px;
+}
+
+.filter-view .popover {
+  max-width: 600px !important;
+
+  .popover-content {
+    // IE7 needs width set explicitly, otherwise it will expand up to 600px
+    width: 275px !important;
+  }
+
+  .filter-grid {
+    .row-fluid {
+      margin-bottom: 5px !important;
+    }
+
+    #select-all-btn {
+      margin-right: 10px;
+    }
+
+    #cancel-filters-btn {
+      margin-left: 10px;
+    }
+
+    .filter-group-view {
+      label {
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+div.dataTables_info {
+  font-weight: bold;
+}
+
+.review-message {
+  padding-bottom: 10px;
+}
+
+.review-section {
+  padding-bottom: 10px;
+}
+
+.review-toggle {
+  cursor: pointer;
+  font-weight: bold;
+  padding-left: 15px;
+  background-image: theme-image($theme-name, 'icons/arrows/expand_intents.png');
+  background-repeat:no-repeat;
+  background-position: 0px 3px;
+  padding-bottom: 5px;
+  color: $btn-primary-bg;
+}
+
+.review-toggle-collapse {
+  background-image: theme-image($theme-name, 'icons/arrows/collapse_intents.png');
+  background-repeat:no-repeat;
+  background-position: 0px 3px;
+  padding-bottom: 0 !important;
+}
+
+.required-listing-img {
+  padding-bottom: 3px;
+}
+
+.import-options-row {
+  padding-bottom: 30px;
+  padding-top: 10px;
+}
+
+.import-options-left {
+  position: relative;
+  float: left;
+  width: 100px;
+  margin-left: 20px;
+}
+
+.import-options-right {
+  position: absolute;
+  left: 120px;
+}
+
+.no-option {
+  color: grey;
+  padding-top: 3px;
+}
+
+ul.review-list li {
+  display: block;
+  width: 33%;
+  float: left;
+  padding: 5px;
+}
+
+br {
+  clear: left;
+}
+
+.complete-toggle {
+  cursor: pointer;
+  font-weight: bold;
+  padding-left: 15px;
+  background-image: theme-image($theme-name, 'icons/arrows/expand_intents.png');
+  background-repeat:no-repeat;
+  background-position: 0px 3px;
+  padding-bottom: 5px;
+  color: $btn-primary-bg;
+}
+
+.complete-toggle-collapse {
+  background-image: theme-image($theme-name, 'icons/arrows/collapse_intents.png');
+  background-repeat:no-repeat;
+  background-position: 0px 3px;
+  padding-bottom: 0 !important;
+  margin-bottom: 2px !important;
+}
+
+.noAgencyTitle {
+  font-style: italic;
+}
+
+.search-icon-container {
+  /* IE7 renders the search icon box and clear search box 1px higher than
+   * the search text box between them */
+  *margin-top: 1px !important;
+}
+
+.clear-search {
+  border-left: 0px !important;
+  background-color: $input-bg !important;
+
+  /* IE7 renders the search icon box and clear search box 1px higher than
+   * the search text box between them */
+  *margin-top: 1px !important;
+}
+
+.table-search-box {
+  border-right: 0px !important;
+}
+
+.bootstrap-active {
+    .dropdown-menu {
+       overflow-y: visible;
+    }
+}

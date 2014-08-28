@@ -1,0 +1,25 @@
+{
+    "name": "oxygen",
+    "display_name": "Oxygen",
+    "author": "Oxygen Team",
+    "contact_email": "ozone-developers@googlegroups.com",
+    "created_date": "09/01/12",
+    "modified_date": "05/12/2014",
+    "description": "Oxygen Theme",
+    "css": "themes/gold.theme/css/gold.css",
+    "base_url": "themes/gold.theme/",
+    "thumb": "themes/common/theme-switcher/gold-theme-1-search.png",
+    "font_size": 12,
+    "contrast": "standard",
+    "screenshots": [
+        {
+            "url": "themes/common/theme-switcher/gold-theme-1-search.png",
+            "description": "Search Page"
+        },
+		
+		 {
+            "url": "themes/common/theme-switcher/gold-theme-2-modal.png",
+            "description": "Listing Modal"
+        }       
+    ]
+}

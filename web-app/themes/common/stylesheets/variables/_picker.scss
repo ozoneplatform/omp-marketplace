@@ -1,0 +1,71 @@
+// color picker
+$mp-colorpicker-item-border-color: #aca899 !default;
+$mp-colorpicker-over-border-color: #8bb8f3 !default;
+$mp-colorpicker-over-background-color: #deecfd !default;
+
+// date picker
+$mp-datepicker-base-color: $mp-base-color !default;
+
+$mp-datepicker-border-color: adjust-color($mp-datepicker-base-color, $hue: 5.926deg, $saturation: 4.444%, $lightness: -57.647%) !default; //#1b376c
+$mp-datepicker-border-width: 1px !default;
+$mp-datepicker-border-style: solid !default;
+$mp-datepicker-border: $mp-datepicker-border-width $mp-datepicker-border-style $mp-datepicker-border-color !default;
+$mp-datepicker-background-color: $mp-datepicker-base-color !default;
+
+$mp-datepicker-next-image: 'shared/right-btn.gif' !default;
+$mp-datepicker-prev-image: 'shared/left-btn.gif' !default;
+$mp-datepicker-month-arrow-image: 'button/s-arrow-light.gif' !default;
+$mp-datepicker-tool-sprite-image: 'tools/tool-sprites.gif' !default;
+
+$mp-datepicker-header-background-color: adjust-color($mp-datepicker-base-color, $hue: 5.768deg, $saturation: 0.419%, $lightness: -52.941%) !default; //#23427c
+$mp-datepicker-header-background-gradient: matte !default;
+
+$mp-datepicker-monthpicker-color: #fff !default;
+
+$mp-datepicker-th-color: getHighContrastColor($mp-datepicker-header-background-color) !default; //#233d6d
+$mp-datepicker-th-font-family: $mp-font-family !default;
+$mp-datepicker-th-font-size: round($mp-font-size * 0.83) !default;
+$mp-datepicker-th-font-weight: normal !default;
+$mp-datepicker-th-font: $mp-datepicker-th-font-weight $mp-datepicker-th-font-size $mp-font-family !default;
+$mp-datepicker-th-background-color: adjust-color($mp-datepicker-base-color, $hue: -1.19deg, $saturation: 22.222%, $lightness: 8.824%) !default; //#dfecfb
+$mp-datepicker-th-background-gradient: matte !default;
+$mp-datepicker-th-border-bottom-color: darken($mp-datepicker-th-background-color, 10) !default;
+$mp-datepicker-th-text-align: right !default;
+
+$mp-datepicker-td-height: 17px !default;
+
+//item
+$mp-datepicker-item-color: getHighContrastColor($mp-datepicker-background-color) !default;
+$mp-datepicker-item-border-width: 1px !default;
+$mp-datepicker-item-border-style: solid !default;
+$mp-datepicker-item-border-color: #fff !default;
+$mp-datepicker-item-border: $mp-datepicker-item-border-width $mp-datepicker-item-border-style $mp-datepicker-item-border-color !default;
+
+$mp-datepicker-item-hover-background-color: adjust-color($mp-datepicker-base-color, $hue: -0.606deg, $saturation: 38.73%, $lightness: 9.02%) !default; //#ddecfe
+
+$mp-datepicker-today-item-border-color: $mp-datepicker-item-border-color !default;
+
+$mp-datepicker-selected-item-border-width: 1px !default;
+$mp-datepicker-selected-item-border-style: solid !default;
+$mp-datepicker-selected-item-border-color: adjust-color($mp-datepicker-base-color, $hue: 0.853deg, $saturation: 5.008%, $lightness: -11.961%) !default; //#8db2e3
+$mp-datepicker-selected-item-border: $mp-datepicker-selected-item-border-width $mp-datepicker-selected-item-border-style $mp-datepicker-selected-item-border-color !default;
+$mp-datepicker-selected-item-background-color: adjust-color($mp-datepicker-base-color, $hue: 0.267deg, $saturation: -4.535%, $lightness: 6.275%) !default;
+
+$mp-datepicker-footer-background-color: $mp-datepicker-header-background-color !default;
+$mp-datepicker-footer-background-gradient: color_stops(adjust-color($mp-datepicker-footer-background-color, $hue: 0.58deg, $saturation: -2.067%, $lightness: 7.451%), adjust-color($mp-datepicker-footer-background-color, $hue: -0.43deg, $saturation: -4.736%, $lightness: 3.922%) 49%, adjust-color($mp-datepicker-footer-background-color, $hue: -0.175deg, $saturation: -4.204%, $lightness: 1.373%) 51%, adjust-color($mp-datepicker-footer-background-color, $hue: 0.952deg, $saturation: -4.831%, $lightness: 2.353%)) !default;
+$mp-datepicker-footer-border-top-color: $mp-datepicker-footer-background-color !default; //a3bad9
+
+$mp-datepicker-monthpicker-height: 167px !default;
+
+$mp-datepicker-monthpicker-item-color: $mp-datepicker-item-color !default; //#15428B
+$mp-datepicker-monthpicker-item-border: none !default;
+
+$mp-datepicker-monthpicker-item-hover-background-color: $mp-datepicker-selected-item-background-color !default;
+
+$mp-datepicker-monthpicker-item-selected-background-color: $mp-datepicker-selected-item-background-color !default;
+$mp-datepicker-monthpicker-item-selected-border: none !default;
+
+//custom
+$mp-datepicker-month-color: getHighContrastColor($mp-datepicker-header-background-color) !default;
+$mp-datepicker-item-hover-color: $mp-datepicker-item-color !default;
+$mp-datepicker-item-prev-next-date-color: #aaa !default;

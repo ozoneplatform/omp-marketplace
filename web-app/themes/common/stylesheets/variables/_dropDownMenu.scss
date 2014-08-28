@@ -1,0 +1,23 @@
+//background
+$mp-boundlist-background-color: lighten($mp-base-color, 50) !default;
+
+//borders
+$mp-boundlist-border-color: adjust-color($mp-base-color, $hue: 0.58deg, $saturation: 25.146%, $lightness: -6.471%) !default;
+$mp-boundlist-border-width: 1px !default;
+$mp-boundlist-border-style: solid !default;
+
+$mp-boundlist-item-padding: 2px !default;
+$mp-boundlist-item-border-width: 1px !default;
+$mp-boundlist-item-border-style: dotted !default;
+$mp-boundlist-item-border-color: $mp-boundlist-background-color !default;
+
+$mp-boundlist-item-over-border-color: adjust-color($mp-base-color, $hue: 6.952deg, $saturation: 5.848%, $lightness: -6.471%) !default;
+$mp-boundlist-item-selected-border-color: darken($mp-boundlist-item-over-border-color, 5) !default;
+
+$mp-boundlist-item-over-background-color: adjust-color($mp-base-color, $hue: 3.188deg, $saturation: 0.542%, $lightness: 7.843%) !default;
+$mp-boundlist-item-selected-background-color: darken($mp-boundlist-item-over-background-color, 5) !default;
+
+//custom properties, not supported by ExtJS
+$mp-boundlist-item-color: #000 !default;
+$mp-boundlist-item-over-color: $mp-boundlist-item-color !default;
+$mp-boundlist-item-selected-color: $mp-boundlist-item-color !default

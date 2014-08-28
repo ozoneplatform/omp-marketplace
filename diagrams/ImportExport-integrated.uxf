@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>60</x>
+      <y>30</y>
+      <w>260</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+ExportController
+--
+
++exportAll()
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>170</x>
+      <y>600</y>
+      <w>260</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ImportExecutor&gt;&gt;
+FileBasedImportExportService
+--
++getName()
++getFullQueryParams()
++getDeltaQueryParams()
++preProcessServiceItem()
+--
+-preExecute()
+-postExecute()
+-getDefaultImageUrl(String)
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>380</x>
+      <y>0</y>
+      <w>260</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+ImportTaskController
+--
+
++execute(ImportTask)
++getImportTypes()
++generateUrl(ImportTask()
++scheduleTask(ImportTask)
++unscheduleTask(ImportTask)
++importFromFile('file-to-import')
++importAll2('photo-path')</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>400</y>
+      <w>330</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+ImportTaskService
+--
+
++getLatestSuccessfulImportTaskResult(ImportTask)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>380</x>
+      <y>260</y>
+      <w>260</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+ImportService
+--
+
++execute(ImportTask)
++getImportTypes()
++generateUrl(ImportTask()
++scheduleTask(ImportTask)
++unscheduleTask(ImportTask)
++getImportExecutor(String execName)
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>300</x>
+      <y>350</y>
+      <w>100</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2={uses}
+</panel_attributes>
+    <additional_attributes>30;130;80;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>470</x>
+      <y>150</y>
+      <w>62</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2={uses}
+</panel_attributes>
+    <additional_attributes>40;110;40;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>560</x>
+      <y>540</y>
+      <w>260</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ImportExecutor&gt;&gt;
+AbstractImportExecutor
+--
++fullImport(ImportTask)
++deltaImport(ImportTask)
+--
+/+getName()/
+/+getFullQueryParams()/
+/+getDeltaQueryParams()/
+/+preProcessServiceItem()/
+--
+-preExecute()
+-postExecute()
+-getDefaultImageUrl(String)
+-parseAndSave(ImportTask,JSON)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>520</x>
+      <y>430</y>
+      <w>170</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2={uses}
+</panel_attributes>
+    <additional_attributes>150;110;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>220</x>
+      <y>810</y>
+      <w>260</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ImportExecutor&gt;&gt;
+OmpImportExecutorService
+--
++getName()
++getFullQueryParams()
++getDeltaQueryParams()
++preProcessServiceItem()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>450</x>
+      <y>710</y>
+      <w>130</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>110;30;30;120</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>600</x>
+      <y>970</y>
+      <w>260</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ImportExecutor&gt;&gt;
+Er2ImportExecutorService
+--
++getName()
++getFullQueryParams()
++getDeltaQueryParams()
++preProcessServiceItem()
++getDefaultImageUrl(String)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>620</x>
+      <y>730</y>
+      <w>120</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;100;240</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>200</x>
+      <y>1010</y>
+      <w>330</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>The Er2ImportExecutor is not intended to be
+exposed by default in the OMP deployment.
+It resides in the class tree as a fail-safe in 
+event that the standard OmpImportExecutor
+has an issue handling an ER2 interface.
+  
+To utilize this executor, the OMP admin needs
+to map it in using the Spring DSL in
+MarketplaceConfig.groovy.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>500</x>
+      <y>1050</y>
+      <w>120</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>100;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>860</x>
+      <y>20</y>
+      <w>260</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;POGO&gt;&gt;
+ImportTask
+--
+
++name
++updateType // Full or Delta
++cronExp
++execInterval
++url
++extraUrlParams
++enabled = true
++downloadImages = false 
++lastRunResult :	ImportTaskResult 
++interfaceConfig : InterfaceConfiguration
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>880</x>
+      <y>310</y>
+      <w>260</w>
+      <h>310</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;POGO&gt;&gt;
+InterfaceConfiguration
+--
+
++name()
++defaultLargeIconUrl()
++defaultSmallIconUrl()
++fullStaticParameters()
++deltaStaticParameters()
++deltaSinceTimeParam()
++queryDateFormat()
++responseDateFormat()
++keystorePath()
++keystorePass()
++truststorePath()
++looseMatch = false
++autoCreateMetaData = false
++allowTruncate = false
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>970</x>
+      <y>220</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>980</x>
+      <y>960</y>
+      <w>320</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>This object identifies interface specifics.
+This is used to accomodate specific
+connection details and potential
+characteristics of external feed providers.
+  
+Example:  an interface may require a specific
+certificate and password for connection
+  
+Example 2: an external warehouse may partially
+support the spec by having metaData (types,
+states, categories, customFields) auto-created
+during import
+bg=blue
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>990</x>
+      <y>590</y>
+      <w>170</w>
+      <h>390</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;150;370</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>400</x>
+      <y>660</y>
+      <w>180</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>160;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>720</x>
+      <y>810</y>
+      <w>350</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>The original ImportExportService.importAll(JSON)
+is moved to replace the parseAndSave() logic
+in the AbstractImportExecutor
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>700</x>
+      <y>730</y>
+      <w>90</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;70;80</additional_attributes>
+  </element>
+</diagram>

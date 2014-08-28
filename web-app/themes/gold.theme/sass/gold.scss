@@ -1,0 +1,539 @@
+@charset "UTF-8";
+
+// OWF UTILITY FUNCTIONS
+@import 'functions/marketplace_functions';
+
+
+@import 'compass'; //pull in base functions and mixins provided by the compass framework
+
+$theme-name: 'gold';
+
+
+/*****************************************************************
+ * Put yor theme customizations here.  If you have many customizations,
+ * you may want to put them in a separate file which you import here.
+ * The import statements in this file reference stylesheets
+ * from the themes/common folder. You can look at
+ * themes/common/stylesheets/variables/-defaults in order to see what variables
+ * may be changed.
+ */
+
+/*
+* linear background gradient for IE
+*/
+
+// ===============================
+// =============== Theme Variables
+// ===============================
+$mp-gold: #fcbb1b;
+$mp-dkgray: #4d4d4d;
+$mp-ltgray: #a7a8ab;
+$mp-blue: #055d78;
+$mp-ltblue: #3A839A;
+$mp-medgray: #7d7e80;
+
+$mp-color: #4D4D4D;
+
+$heading-color: $mp-blue;
+$mp-base-color: $mp-ltgray;
+$mp-alt-base-color: #aaa;
+$content-area-background-color: #fff;
+$meta-info-color: #7d7e80;
+$affiliated-mp-title-color: $mp-gold;
+
+$recent-activity-divider-color: $mp-gold;
+$mp-font-size: 12px;
+$mp-toolbar-base-color: #e6e7e8;
+$mp-tool-width: 17px;
+
+$file-import-file-browser-background-color: #ccc;
+
+$mp-head1-font-size: 24px;
+$mp-head1-line-height: 32px;
+
+$mp-head2-font-size: 20px;
+$mp-head2-line-height: 26px;
+
+$mp-title-font-size: 20px;
+
+/*
+ * The font family of most of the interface
+ */
+$mp-font-family: Verdana, Helvetica, Arial, sans-serif !default;
+
+$mp-tip-base-color: $mp-dkgray;
+
+$warning-color: #900B09;
+
+
+$link-color: $mp-blue !default;
+$link-over-color: $mp-ltblue;
+
+// theme selector
+$theme-screenshots-fieldset-border-color: #555;
+
+
+
+
+
+//-- header -----------------------------------------------------------
+$search-controls-background: none;
+$user-menu-button-theme: (
+    null,
+  $mp-dkgray,
+null
+) !default;
+
+$user-menu-over-button-theme: (
+    (#fafafa, $mp-gold),
+#222,
+#aaa
+);
+
+//-- sidebar ----------------------------------------------------------
+$mp-sidebar-background-color: #ddd;
+
+$mp-filter-heading-color: $mp-dkgray;
+$mp-filter-dividier-color: $mp-ltgray;
+$mp-filter-type-heading-color: $mp-dkgray;
+
+$mp-filter-item-color: $mp-dkgray;
+$mp-filter-item-over-color: #111;
+$mp-filter-item-selected-color: $mp-blue;
+
+$mp-filter-item-count-color: $mp-medgray;
+
+$listing-manager-background: #858B90;
+$listing-manager-color: #25292B;
+
+$footer-background: #024255;
+$footer-over-color: #ccc;
+
+// -- Component Themes ------------------------------------------------
+$active-component-theme: (
+    $mp-base-color,    //base color
+  (lighten($mp-base-color, 20%), $mp-base-color),   //gradient start/end colors
+getHighContrastColor($mp-base-color), //text color
+getHighContrastColor($mp-base-color), //outer border color
+getHighContrastColor($mp-base-color)  //body border color
+) !default;
+
+// -- Button Themes----------------------------------------------------
+$default_button_theme: (
+    (#BABFC3 0%, #F1F2F2 45%, #C9CBCE 50%),
+#454F55,
+#7A868C
+);
+
+$over_button_theme: (
+    (#BABFC3 0%, #F1F2F2  45%),
+#25282B,
+$mp-blue
+);
+
+$pressed_button_theme: (
+    (#BABFC3 0%, #F1F2F2 45%),
+#25282B,
+#5C6971
+);
+
+$disabled_button_theme: (
+    (#9298A0),
+#656E77,
+#656E77
+);
+
+// -- toolbar themes ----------------------------------------------------
+$mp-custom-toolbar-base-color: #eee;
+$mp-custom-toolbar-color: getHighContrastColor($mp-custom-toolbar-base-color);
+$mp-custom-border-color: #d0d0d0;
+$mp-custom-toolbar-border: 1px solid $mp-custom-border-color;
+
+// -- tabs -------------------------------------------------------------
+$mp-tab-base-color: #C8C8C8;
+$mp-tab-color: #303030;
+
+$mp-tab-color-over: #000;
+
+$mp-tab-base-color-active: #EEE;
+$mp-tab-color-active: #000;
+
+// -- form styles -------------------------------------------------------------
+$mp-fieldset-header-color: #26587C;
+
+$selectable-item-selected-background-color: #bbb;
+$selectable-item-selected-border-color: #ccc;
+
+// -- grid -----------------------------------------------------------
+$mp-grid-header-background-color: #aaa;
+$mp-grid-header-over-background-color: #ccc;
+$mp-grid-header-color: #000;
+
+//grid rows
+$mp-grid-row-wrap-border-color: #bbb;
+
+$mp-grid-row-cell-color: #222;
+
+$mp-grid-row-cell-background: #f0f0f0;
+$mp-grid-row-cell-alt-background: #ffffff;
+$mp-grid-row-cell-over-background-color: #ccc;
+$mp-grid-row-cell-selected-background-color: #999;
+$mp-grid-row-cell-focus-background-color: #bbb;
+
+
+// -- dropdown---------------------------------------------------------
+$mp-boundlist-background-color: $mp-grid-row-cell-background;
+$mp-boundlist-item-over-background-color: $mp-grid-row-cell-over-background-color;
+$mp-boundlist-item-selected-background-color: $mp-grid-row-cell-selected-background-color;
+
+$mp-top-border-radius: 0px;
+$mp-bottom-border-radius: 10px;
+
+// -- date picker ---------------------------------------------------------------
+$mp-datepicker-background-color: #fff;
+$mp-datepicker-border-color: #aaa;
+$mp-datepicker-header-background-color: #aaa;
+$mp-datepicker-th-background-color: #ccc;
+$mp-datepicker-item-border-color: $mp-datepicker-th-background-color;
+$mp-datepicker-selected-item-background-color: $mp-datepicker-th-background-color;
+$mp-datepicker-selected-item-border-color: white;
+$mp-datepicker-item-hover-background-color: $mp-datepicker-th-background-color;
+
+
+
+
+
+
+
+body {
+  min-width: 768px;
+}
+//MARKETPLACE VARIABLES
+@import 'variables/constants';
+@import 'variables/defaults';
+
+/* AML-SPECIFIC OVERRIDES */
+
+
+/*
+ * Body background color & image
+ */
+$mp-body-page-background-image: theme-image($theme-name, 'body_bkg.jpg');
+$body-background-gradient-start: #e6e7e8;
+$body-background-gradient-end: #ffffff;
+
+$mp-body-background-default-color: #E2E2E2;
+
+$footer-background: #e2e2e2;
+
+// -- listing block ----------------------------------------------------------
+$mp-author-text-color: #949494;
+$mp-author-over-text-color: lighten($mp-author-text-color, 10%);
+
+$listing-settings-color: #bfbfbf;
+
+//-- scorecard
+$mp-sc-header-background-color: transparent;
+
+/*
+* These imports create the marketplace-specific stylesheets, based on the values of the
+* variables that are defined in variables/defaults (which can be overridden in this
+* file).If extensive changes are required, you can delete some of these imports and
+* reimplement them as necessary
+*/
+//MARKETPLACE STYLESHEETS
+@import 'marketplace_all';
+
+// ===============================
+// ======= Background ============
+
+
+
+
+
+.widget-marketContentWrapper-wleftbar {
+  width: 1000px!important;
+}
+
+
+
+
+#widget_header, #header {
+  background-image: theme-image($theme-name, 'header_bkg.jpg');
+  background-repeat: repeat-x;
+}
+
+@media (max-width: 939px) {
+	html {
+	 .omp_header_logo {
+	 	position:relative;
+	 	left:5%;
+	 }
+	}
+}
+
+
+#footer {
+  background-image: theme-image($theme-name, 'footer.png') !important;
+  background-repeat: repeat-x;
+  background-color: transparent;
+
+  width: 100%;
+  padding: $footer-top-bottom-padding 0;
+  bottom:0px;
+  z-index: 0;
+
+  clear:both;
+
+
+  #footer_content_center {
+    width: 1000px;
+    margin: 0 auto;
+  }
+
+  .widget_footer_text {
+    text-align: left;
+    font-size: 12px;
+    font-weight:normal;
+    color:#FBBB1C;
+    padding: 0px 0px 6px 3px;
+  }
+
+  .widget_footer_featured_subtext {
+    font-size: 10px;
+    color: #A7A8AB;
+    padding: 0px 0px 2px 3px;
+
+  }
+
+  .widget_footer_subtext {
+    font-size: 10px;
+    color: #A7A8AB;
+    padding: 0px 0px 2px 3px;
+
+
+    &:hover {
+      color: #F5F5F5;
+    }
+
+    a {
+      padding-left: 0px;
+      font-size: 10px;
+      color: #A7A8AB;
+    }
+
+    a:hover {
+      color: #F5F5F5;
+    };
+  }
+}
+
+#pending_block {
+
+  .pending_line {
+    display: none;
+  }
+}
+
+#pending_list {
+  .message {
+    color: $mp-color;
+    font-weight:normal;
+    font-size: $mp-font-size;
+    padding-top: 5px;
+    padding-bottom: 20px;
+  }
+}
+
+#activity_hdr, #listings_hdr, .block_hdr, #pending_hdr {
+  font-size:  $mp-head2-font-size;;
+  font-weight: normal;
+  padding-bottom: 10px;
+  color: $heading-color;
+}
+
+.item_title {
+  font-size: $mp-title-font-size;
+  font-weight: normal;
+}
+
+
+td.discover {
+
+  .numRatings_comment_text {
+    display: none;
+  }
+
+  .rating_total_votes_count {
+    top: 0px;
+  }
+}
+.discover_item_title {
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+/*****
+ * ITEMS
+ *********/
+
+
+.franchise_discover_see_more_text a:hover{
+  color: #4d4d4d
+}
+
+
+/***
+* Sidebar
+*/
+#left-sidebar, #left-sidebar-guide, #filter-container, #filter-window-body {
+  background-image: theme-image($theme-name, 'sidebar_bkg.png');
+  background-repeat: repeat-y;
+}
+
+#left_sidebar {
+
+  .nav_item {
+
+    .category {
+      font-size: 13px;
+      font-weight: normal;
+      color: $mp-dkgray;
+    }
+
+  }
+}
+
+/***
+ * SHADOW DEFINITION
+ */
+
+.one-center-edge-shadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.one-top-edge-shadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+
+#omp_main_panel {
+
+  .omp_nuggets_wrapper{
+    padding-top: 2px;
+    padding-bottom: 10px;
+    .omp_nuggets {
+
+
+      .omp-nuggets-text {
+        font-size: 11px;
+      }
+
+
+      .query-filter {
+
+        &.omp-nugget-hover {
+          .omp-nuggets-text {
+            color: #ffffff!important;
+          }
+
+          .remove-region {
+            .remove-x-icon {
+              display:block!important;
+            }
+          }
+        }
+
+        .omp-nuggets-text {
+          color: #e7e6e6!important ;
+        }
+      }
+    }
+  }
+}
+
+
+
+//////////////////////////////////////////////////////////////
+
+.listing_detail_title {
+  font-size: 18px;
+}
+
+.listing_profile_detail_extra {
+  padding-bottom: 16px;
+}
+
+.aml_desc {
+  padding-bottom: 10px;
+}
+
+.omp_status_text {
+  padding-left: 5px;
+}
+
+
+
+
+//SEARCH AFFILIATED MP HEADER
+.search-results-header {
+  color: $heading-color;
+  font-weight: normal;
+  font-size: $mp-head1-font-size;
+  line-height: $mp-head1-line-height;
+
+  .search-results-header-text {
+    padding-bottom: 12px;
+  }
+}
+
+.affiliated_marketplace_search_results {
+
+  .affiliated-marketplace-search-panel {
+    .affiliated-marketplace-results-panel {
+      .affiliated-marketplace-results-body {
+
+        td.remote-listing  {
+          .remote-listing-wrapper {
+            .remote-listing-title {
+              font-size: 18px;
+              font-weight: normal;
+            }
+          }
+
+        }
+
+      }
+    }
+  }
+}
+
+
+
+
+// Cancel button icon
+.cancelBtnIcon {
+  background-image: theme-image($theme-name, 'icons/x_red_15x15.png');
+  margin-left: 1px;
+}
+
+.admin-text-input{
+    border: 1px solid white;
+    padding-left: 3px;
+    padding-top: 4px;
+}
+
+
+.admin-text-active-input{
+    border: 1px solid #7C7D80;
+}
+
+.admin-add-new-link:hover {
+    color: #212121;
+    background-color: #a4a4a4;
+}

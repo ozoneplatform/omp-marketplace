@@ -1,0 +1,142 @@
+//-------------
+// <VARIABLES>
+//-------------
+
+// colors
+$tag-color-text:                        #FFFFFF !default;
+$tag-color-text-hover:                  #FFFFFF !default;
+$tag-color-background:                  #A7A8AB !default;
+$tag-color-corners-background:          #e2e7e8 !default;
+$tag-color-background-hover:            #2B6897 !default;
+
+//--------------
+// </VARIABLES>
+//--------------
+
+//---------
+// <RULES>
+//---------
+
+.tag-select2-drop {
+    width: 150px !important;
+}
+
+.tag-panel {
+    padding-bottom: 5px;
+    margin-top: 8px;
+    overflow:hidden;
+}
+
+
+.tag-container {
+    $tag-container-border-clip: 5px;
+
+    padding:0px 3px 0px 6px;
+    background-color: $tag-color-background;
+    margin-right: 5px;
+    margin-top: 5px;
+    position: relative;
+
+    display: inline-block;
+
+    line-height: 19px;
+
+    &:last-child {
+        margin-right: 10px;
+    }
+
+    &:hover:before {
+        border-bottom-color: $tag-color-background-hover;
+        border-left-color: $tag-color-corners-background;
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-bottom: $tag-container-border-clip solid  $tag-color-background;
+        border-left: $tag-container-border-clip solid $tag-color-corners-background;
+    }
+
+    &:hover:after {
+        border-top-color: $tag-color-background-hover;
+        border-left-color: $tag-color-corners-background;
+    }
+
+    &:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-top: $tag-container-border-clip solid  $tag-color-background;
+        border-left: $tag-container-border-clip solid $tag-color-corners-background;
+    }
+
+    .tag-link, .tag-remove {
+        color: $tag-color-text;
+    }
+
+    .tag-remove {
+        background-color: transparent;
+        cursor: pointer;
+        font-weight: bold;
+        opacity: 0.7;
+        filter: alpha(opacity=20);
+
+        padding-left: 5px;
+
+        &:hover {
+            opacity: 1;
+            filter: none;
+        }
+    }
+}
+
+.tag-container:hover {
+    background-color: $tag-color-background-hover;
+
+    .tag-link {
+        color:            $tag-color-text-hover;
+        background-color: transparent;
+    }
+
+    .tag-link:hover {
+        color:            $tag-color-text-hover;
+    }
+    .tag-link:active, .tag-link:hover, .tag-link:link, .tag-link:visited {
+        text-decoration:  none;
+    }
+}
+
+.tag-lookup {
+    margin-left: 15px;
+    margin-right: 5px;
+    width: 150px;
+}
+
+.tag-lookup-panel {
+    display: inline-block;
+
+    .btn-field-add-tag {
+        position: relative;
+    }
+
+    .add-tag-text {
+        position: absolute;
+        top: 3px;
+    }
+}
+
+.tag-lookup-panel-hide {
+    background-color: transparent;
+    width: 100px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+
+
+//----------
+// </RULES>
+//----------

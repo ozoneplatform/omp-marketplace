@@ -1,0 +1,252 @@
+#create-edit-listing.modal {
+    $modal-width: 900px;
+    // form width - border - padding - margin left - remove button width - scrollbar width
+    $controls-width: $modal-width - 2px - 30px - 180px - 15px - 15px;
+
+    width: $modal-width;
+    margin-left: -$modal-width/2;
+    top: 50px;
+    bottom: 50px;
+
+    [class^="icon-"], [class*=" icon-"] {
+        font-size: 14px;
+    }
+
+    .icon-info {
+        color: $quickview-faded-color;
+    }
+
+    .modal-header, .modal-footer {
+        background: $quickview-background-color;
+        border-color: $quickview-background-color;
+    }
+
+    .modal-header {
+        padding-top: 0;
+        padding-bottom: 0;
+        overflow: hidden;
+
+        .modal-title {
+            @include ie7-inline-block();
+
+            > a {
+                margin-left: 4px;
+                color: #fff;
+            }
+        }
+
+        .close {
+            margin-top: 0px;
+            font-size: 36px;
+            line-height: 36px;
+            *font-size: 24px;
+            *line-height: 24px;
+        }
+
+        button {
+            margin-top: 9px;
+        }
+
+        &.in-progress {
+            background-color: $state-info-text;
+
+            .modal-title, .close {
+                color: #fff;
+            }
+        }
+        &.pending {
+            background-color: $state-warning-text;
+
+            .modal-title, .close {
+                color: #fff;
+            }
+        }
+        &.approved {
+            background-color: $state-success-text;
+
+            .modal-title, .close {
+                color: #fff;
+            }
+        }
+        &.rejected {
+            background-color: $state-error-text;
+
+            .modal-title, .close {
+                color: #fff;
+            }
+        }
+    }
+
+    .modal-body {
+        padding-top: 0px;
+        position: absolute;
+        bottom: 58px;   // footer height
+        top: 37px;      // header height
+        left: 0;
+        right: 0;
+        max-height: none;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    .modal-footer {
+        padding: 10px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    fieldset {
+        margin-top: 36px;
+
+        &:first-child {
+            margin-top: 10px;
+        }
+    }
+
+    .form-horizontal {
+        .control-group {
+            margin-bottom: 15px;
+        }
+        .control-label {
+            cursor: text;
+        }
+        .controls {
+            width: $controls-width;
+        }
+
+        label {
+            text-align: left;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            *width: $controls-width - 14px; // subtract padding and border
+        }
+
+        input {
+            height: 30px !important;
+        }
+
+        .auto-width {
+            width: auto !important;
+        }
+
+        label.switch {
+            margin: 0;
+        }
+
+        .input-append {
+            position: relative;
+            input[type="url"], .url {
+                width: $controls-width - 26px; //  // subtract width of addon button, padding and border
+                *width: $controls-width - 26px - 14px;  // subtract padding and border
+            }
+            > .add-on {
+                height: 30px;
+            }
+        }
+
+        .tag-lookup-panel {
+            margin: 0;
+        }
+    }
+
+    .btn-field-remove {
+        *position: absolute !important;
+    }
+
+    .array-items.docurls {
+        $label-width: 150px;
+        .label-field {
+            width: $label-width;
+            input {
+                *width: $label-width - 14px;
+                *margin-left: -20px;
+            }
+        }
+        .url-field {
+            width: $controls-width - 20px - $label-width;
+            input {
+                *margin-left: -20px;
+                *width: $controls-width - 20px - $label-width - 14px;
+            }
+        }
+    }
+
+    .array-items.screenshots {
+        $image-field-width: ($controls-width - 20px)/2;
+
+        .small-image-field, .large-image-field {
+            width: $image-field-width;
+
+            .input-append {
+                width: 100%;
+
+                input {
+                    width: $image-field-width - 26px;
+                    *width: $image-field-width - 26px - 14px;
+                }
+            }
+        }
+    }
+
+    .array-items.intents {
+        $send-receive-width: 100px;
+
+        .send-field, .receive-field {
+            width: $send-receive-width;
+        }
+
+        .action-field, .data-type-field {
+            width: ($controls-width - ($send-receive-width * 2) - (3 * 20px))/2;
+        }
+    }
+
+    .array-items.contacts {
+        $type-width: 120px;
+        $name-field-width: ($controls-width - $type-width - (2 * 20px))/2;
+        $email-field-margin-left: $type-width + 20px * 2;
+
+        .type-field {
+            width: $type-width;
+        }
+
+        .array-item > .row + .row {
+            margin-top: 10px;
+        }
+
+        .name-field, .organization-field {
+            width: $name-field-width;
+
+            input {
+                *margin-left: -20px;
+                *width: $name-field-width - 14px;
+            }
+        }
+
+        .email-field {
+            margin-left: $email-field-margin-left;
+            width: $name-field-width;
+            input {
+                *margin-left: -$email-field-margin-left;
+                *width: $name-field-width - 14px;
+            }
+        }
+
+        .secure-phone-field, .unsecure-phone-field {
+            width: ($controls-width - $name-field-width - $email-field-margin-left - 20px)/2;
+
+            input {
+                *margin-left: -20px;
+                *width: ($controls-width - $name-field-width - $email-field-margin-left - 20px)/2 - 14px;
+            }
+        }
+
+        .btn-field-remove {
+            padding-top: 28px;
+        }
+    }
+
+}

@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+/*
+ * This file contains the default values for scoreCard score and item displays
+ */
+
+ $sc-text-color: #333;
+ $sc-question-color: $sc-text-color;
+ $sc-description-color: #7d7d7d;
+ $sc-header-color: #055d78;
+ $sc-header-size: $mp-font-size*1.1;
+ $sc-header-description-color: #444;
+
+$mp-sc-header-background-color: #e7e7e7;
+$mp-sc-background-color: $content-area-background-color;
+$mp-sc-border-color: #d0d0d0;
+
+$mp-sc-grid-header-background-color: #e7e7e7;
+$mp-sc-grid-header-over-background-color: #e7e7e7;
+$mp-sc-grid-header-color: $sc-header-color;
+$mp-sc-grid-header-border-color: #d0d0d0;
+$mp-sc-grid-header-over-border-color: #d0d0d0;
+$mp-sc-grid-row-cell-border-color: #bfbfbf;
+$mp-sc-grid-row-wrap-border-color: #bfbfbf;
+$mp-sc-grid-row-cell-color: #333;
+$mp-sc-grid-row-cell-background: #fff;
+$mp-sc-grid-row-cell-alt-background: #fff;
+$mp-sc-grid-row-cell-over-background-color: #fff;
+$mp-sc-grid-row-cell-selected-background-color: #fff;
+$mp-sc-grid-row-cell-focus-background-color: #fff;
+
+// For admin page hover on wheel - colors for corresponding item
+$sc-admin-scorecard-item-hover-bkgnd: #EAEAEA;
+$sc-admin-scorecard-item-hover-color: $mp-sc-grid-row-cell-color;
+
+// colors on the admin page
+$sc-weight-label-text-color: $sc-header-color;
+$sc-admin-add-question-text-color: #055d78;
+$sc-admin-equalize-button-background-color: $sc-admin-add-question-text-color;
+$sc-admin-equalize-button-text-color: #FFFFFF;

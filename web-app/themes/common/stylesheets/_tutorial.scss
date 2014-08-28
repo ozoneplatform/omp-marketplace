@@ -1,0 +1,261 @@
+.media-tabs {
+  border: none;
+  border-color: transparent;
+  height: 36px;
+  padding-left: 2%;
+
+  button {
+    width:127px;
+    height: 36px;
+    float: left;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 3px solid $media-tabs-border-color;
+    margin-right: 16px;
+    font-weight: normal;
+    background-color: transparent;
+
+    font-size: 18px;
+    color: $media-tabs-color;
+    display: block;
+    cursor: pointer;
+  }
+
+
+  button.inactive {
+    color: $media-tabs-color-inactive;
+    border-bottom:none;
+  }
+
+  button.inactive:hover {
+    color: $media-tabs-color-inactive-hover;
+  }
+
+  button:hover {
+
+    color: $media-tabs-color;
+  }
+}
+
+
+#media_badge {
+  height: 106px;
+  width: 144px;
+  margin-bottom: -35px;
+  text-align: center;
+}
+
+.media_cell {
+  padding-left:15px;
+  padding-right:15px;
+}
+
+.media_type_icon {
+  position:relative;
+  left: 1%;
+  vertical-align:bottom;
+}
+
+.media_type_icon_large {
+  position: relative;
+  left: 5%;
+  padding-top: 10%;
+  vertical-align: bottom;
+
+  *display:none;
+}
+
+.large_ribbon_time {
+  position: relative;
+  left: 18%;
+  bottom: 25%;
+
+  *display:none;
+}
+
+.large_ribbon_title {
+  text-align: left;
+  padding-left: 5%;
+  top: 20%;
+  position: relative;
+
+  *display:none;
+}
+
+.media_length {
+  width:100px;
+  height:25px;
+  font-size: 10px;
+  padding-left:3%;
+  padding-top:6%;
+  position: relative;
+  color:#FFFAFA;
+  margin-left: 96px;
+  bottom: 104px;
+  background-image: theme-image($theme-name, 'media_page/ribbon.png');
+  background-repeat: no-repeat;
+
+  *left:47%;
+  *margin-left:22%;
+
+}
+
+.media_length_medium {
+  width: 141px;
+  height: 50px;
+  font-size: 18px;
+  padding-top: 1.5%;
+  position: relative;
+  color: #FFFAFA;
+  margin-left: 25%;
+  bottom: -48px;
+  background-image: theme-image($theme-name, 'media_page/medium_ribbon.png');
+  background-repeat: no-repeat;
+
+  *display:none;
+}
+
+.video_shadow_medium {
+  background-image: theme-image($theme-name, 'media_page/video_shadow_medium.png');
+  background-repeat: no-repeat;
+  background-position:center;
+  width: 297.7px;
+  height: 20px;
+  top: 85%;
+  left: 4%;
+  position: absolute;
+}
+
+.video_shadow_large {
+  background-image: theme-image($theme-name, 'media_page/video_shadow_large.png');
+  background-repeat: no-repeat;
+  background-position:center;
+  height: 16px;
+  width: 450px;
+  bottom: 22.5%;
+  position: relative;
+
+  bottom:19.5% \0/IE9;
+  *bottom:0%;
+}
+
+.media_title {
+  text-align:center;
+  color: $media-title-color;
+  height: 50px;
+  bottom: 90px;
+  position: relative;
+
+}
+
+.media_length_big {
+  width:182px;
+  height: 60px;
+  position: relative;
+  color:#FFFAFA;
+  bottom:84px;
+  margin-left:27%;
+  background-image: theme-image($theme-name, 'media_page/big_ribbon.png');
+  background-repeat: no-repeat;
+
+  *display:none;
+  
+  margin-left:27% \0/IE9;
+}
+
+#video-description {
+	width:400px;
+}
+
+.videoBack {
+  background-image: theme-image($theme-name, 'media_page/video_shadow_out.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.videoFront {
+  height: 100px;
+  width: 150px;
+  bottom: 66px;
+  position: relative;
+}
+
+.guideBack{
+  background-image: theme-image($theme-name, 'media_page/doc_shadow_out.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.guideFront {
+  height: 100px;
+  width: 150px;
+  bottom: 66px;
+  position: relative;
+}
+
+.slideshowBack{
+  background-image: theme-image($theme-name, 'media_page/ppt_shadow_out.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.slideshowFront {
+  height: 100px;
+  width: 150px;
+  bottom: 66px;
+  position: relative;
+}
+
+.media_badge_container:hover .videoBack{
+  background-image: theme-image($theme-name, 'media_page/video_shadow_over.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.media_badge_container:hover .videoFront{
+  background-image: theme-image($theme-name, 'media_page/play_overlay_gold.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.media_badge_container:hover .guideBack{
+  background-image: theme-image($theme-name, 'media_page/doc_shadow_over.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.media_badge_container:hover .guideFront{
+  background-image: theme-image($theme-name, 'media_page/doc_overlay_gold.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.media_badge_container:hover .slideshowBack{
+  background-image: theme-image($theme-name, 'media_page/ppt_shadow_over.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+.media_badge_container:hover .slideshowFront{
+  background-image: theme-image($theme-name, 'media_page/ppt_overlay_gold.png');
+  background-repeat: no-repeat;
+  background-position:center;
+}
+
+@-moz-document url-prefix() {
+	.media_length_big {
+		width:182px;
+		height: 66px;
+		margin-left: 27%;
+	}
+
+	.media_type_icon {
+		vertical-align:top;
+	}
+
+
+	.video_shadow_large {
+		bottom:23.5%;
+	}
+}

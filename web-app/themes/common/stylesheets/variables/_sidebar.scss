@@ -1,0 +1,19 @@
+$mp-sidebar-background-color: #465157 !default;
+
+$mp-filter-heading-color: $mp-alt-base-color !default;
+$mp-filter-type-heading-color: getHighContrastColor($mp-sidebar-background-color) !default;
+$mp-filter-dividier-color: $mp-filter-heading-color !default;
+
+$mp-filter-item-color: getHighContrastColor($mp-sidebar-background-color) !default;
+$mp-filter-item-over-color: adjustColorForBackground($mp-filter-item-color, $mp-sidebar-background-color, true) !default;
+$mp-filter-item-selected-color: $mp-filter-heading-color !default;
+
+$mp-filter-item-font-weight: bold !default;
+$mp-filter-item-over-font-weight: $mp-filter-item-font-weight !default;
+
+$mp-filter-item-count-color: $mp-filter-item-color !default;
+
+$mp-filter-item-padding: 2px 0 2px 12px !default;
+
+$listing-manager-background: adjustColorForBackground($mp-sidebar-background-color, $mp-sidebar-background-color) !default;
+$listing-manager-color: getHighContrastColor($listing-manager-background) !default;

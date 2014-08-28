@@ -1,0 +1,328 @@
+.profile-window {
+    .tab-pane {
+        overflow: hidden;
+
+        > .info {
+            width: 75%;
+
+            position: relative;
+            float: left;
+        }
+
+        > .preferences {
+            width: 65%;
+
+            position: relative;
+            float: left;
+        }
+
+        > .themes {
+            width: 30%;
+
+            position: relative;
+            float: right;
+        }
+
+        > .my-listings {
+            width: 28%;
+
+            position: relative;
+            float: left;
+        }
+
+        > .changelog-pane {
+            width: 72%;
+
+            position: relative;
+            float: right;
+        }
+
+        > .my-reviews {
+            width: 63%;
+
+            position: relative;
+            float: left;
+        }
+
+        > .my-tags {
+            width: 33%;
+
+            position: relative;
+            float: right;
+
+            //overwrite datatables style that gets applied since this
+            //is a table
+            clear: none;
+        }
+
+        h4 {
+            margin-bottom: 11px;
+            margin-top: 0;
+        }
+
+        h6 {
+            color: $text-color;
+        }
+
+        .count {
+            margin-left: 5px;
+            color: $quickview-faded-color;
+
+            font-size: 12px;
+        }
+    }
+
+    .info {
+        dd, dt {
+            display: inline-block;
+
+            margin: 0 0 12px 0;
+        }
+
+        dt {
+            color: $quickview-faded-color;
+            font-weight: normal;
+
+            width: 30%;
+
+            vertical-align: top;
+        }
+
+        dd {
+            width: 70%;
+            color: $text-color;
+        }
+
+        dl {
+            margin-bottom: 0px;
+
+            .popover {
+                //bio error popover is strangely narrow without this
+                width: 200px;
+            }
+        }
+    }
+
+    .bio {
+        line-height: 1;
+        white-space: normal;
+
+        &.can-edit {
+            cursor: pointer;
+
+            .content:hover {
+                border-color: $input-border;
+                background-color: $input-bg;
+            }
+        }
+
+        .content {
+            word-wrap: break-word;
+            border: 1px solid transparent;
+
+            padding: 4px 6px 4px 6px;
+
+            //to make the text line up despite the padding and border
+            margin-left: -7px;
+        }
+
+        > .editable-container, .editable-input, textarea {
+            width: 100%;
+        }
+
+        .editable-buttons > .btn {
+            float: right;
+        }
+
+        .empty {
+            font-style: italic;
+            color: $quickview-faded-color;
+        }
+    }
+
+    .preference {
+        label {
+            float: right;
+            position: relative;
+            display: block;
+        }
+
+        overflow: hidden;
+
+        line-height: 22px;
+
+        .description {
+            color: $quickview-faded-color;
+        }
+
+        margin-bottom: 8px;
+    }
+
+    .themes {
+        $active-background-color: $progress-bg;
+
+        ul {
+            margin: 0;
+        }
+
+        h5 {
+            color: $text-color;
+            margin: 0;
+        }
+
+        .screenshots > img {
+            display: inline-block;
+            padding: 5px;
+
+            width: 50%;
+        }
+
+        fieldset {
+            text-align: right;
+        }
+
+        li {
+            padding: 5px;
+            margin-bottom: 5px;
+
+            .apply-theme-btn {
+                //use visibility instead of display to keep the
+                //height that the button gives
+                visibility: hidden;
+            }
+
+            .active-theme-btn {
+                display: none;
+            }
+
+            &:hover {
+                background-color: $active-background-color;
+
+                .apply-theme-btn {
+                    visibility: visible;
+                }
+            }
+
+            &.active-theme {
+                background-color: $active-background-color;
+
+                .active-theme-btn {
+                    display: inline-block;
+                }
+
+                //never show apply btn on active theme, even if hovered
+                .apply-theme-btn {
+                    visibility: hidden;
+                }
+            }
+        }
+    }
+
+    .comment {
+        color: $text-color;
+
+        .item-user-rating {
+            position: relative;
+            float: right;
+
+            text-align: right;
+        }
+
+        .item-review-date {
+            margin-left: 10px;
+        }
+
+        .review-text {
+            word-wrap: break-word;
+        }
+    }
+
+    .my-tags {
+        margin: 0;
+
+        th {
+            color: $quickview-faded-color;
+        }
+
+        .tags {
+            width: 60%;
+        }
+
+        > tbody > tr > td {
+            padding-top: 4px;
+            padding-bottom: 4px;
+
+            vertical-align: top;
+        }
+
+        .tags {
+            line-height: 24px;
+        }
+
+        .service-item {
+            padding-right: 5px;
+        }
+    }
+
+    .tag-container {
+        &:before, &:after {
+            border-left-color: $quickview-inner-background-color;
+        }
+    }
+}
+
+.ie7 {
+    .profile-window {
+        .info {
+            dd, dt {
+                display: inline;
+                zoom: 1;
+            }
+
+            width: 70%;
+        }
+
+        .my-listings {
+            width: 25%;
+        }
+
+        .comment .item-user-rating {
+            width: 110px !important;
+        }
+
+        .screenshots > img {
+            zoom: 1;
+            display: inline;
+        }
+    }
+}
+
+//IE7 and for some reason FF17 do not size the images correctly
+.ie7, .gecko {
+    .profile-window .screenshots > img {
+        width: 46%;
+    }
+}
+
+.ie7 {
+    .service-item-subsection {
+        li.disabled {
+            img, span {
+                //opacity for old IE
+                filter: alpha(opacity=50);
+                zoom: 1;
+            }
+        }
+    }
+}
+.ie8 {
+    .service-item-subsection {
+        li.disabled {
+            img, span {
+                //opacity for old IE
+                -ms-filter: "alpha(opacity=50)";
+                display: inline-block;
+            }
+        }
+    }
+}

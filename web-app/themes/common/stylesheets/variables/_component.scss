@@ -1,0 +1,33 @@
+/*
+ * The theme applied to the header and borders of active, inactive and ghost component/windows.
+ */
+$active-component-theme: (
+    $mp-base-color,    //base color
+    (lighten($mp-base-color, 10%), $mp-base-color),   //gradient start/end colors
+    getHighContrastColor($mp-base-color), //text color
+    getHighContrastColor($mp-base-color), //outer border color
+    getHighContrastColor($mp-base-color)  //body border color
+) !default;
+
+/*
+ * The theme applied to the header and border of inactive components. 
+ * This is based on the alt base color by default
+ */
+$inactive-component-theme: (
+    $mp-alt-base-color,    //base color
+    (lighten($mp-alt-base-color, 20%), $mp-alt-base-color),   //gradient start/end colors
+    getHighContrastColor($mp-alt-base-color),  //text color
+    getHighContrastColor($mp-alt-base-color),	//outer border color
+    getHighContrastColor($mp-alt-base-color)	//body border color
+) !default;
+
+/*
+ * The theme applied to window ghosts that are rendered when dragging
+ */
+$ghost-component-theme: (
+    #fff,   //base color
+    (#fff,#fff),    //gradient start/end colors
+    getHighContrastColor(#fff), //text color
+    getHighContrastColor(#fff),	//outer border color
+    getHighContrastColor(#fff)	//body border color
+) !default;

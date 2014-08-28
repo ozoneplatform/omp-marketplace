@@ -1,0 +1,172 @@
+$modal-back-background-color: #E5E5E5!default;
+
+.bootstrap-active {
+    .store-modal {
+        border: 0px;
+        border-radius: 0px;
+        padding: $quickview-gutter;
+        width: $quickview-width;
+        background-color: $quickview-background-color;
+        color: $quickview-color;
+        font-size: 12px;
+        line-height: 16px;
+        margin-left: -$quickview-width/2;
+
+        > .modal-back {
+            display: block;
+            position: absolute;
+
+            bottom: 100%;
+            left: 0;
+
+            background-color: $modal-back-background-color;
+            padding: 5px;
+
+            //same as an h4
+            font-size: $font-size-base * 1.25;
+            font-family: $font-family-base, FontAwesome;
+
+            &:before {
+                //the chevron should be gray
+                color: $quickview-faded-color;
+
+                content: "\f053";
+            }
+
+            > .title {
+                margin: 0 4px 0 4px;
+            }
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+
+        .close {
+            margin-top: -$quickview-gutter;
+            font-size: 36px;
+            line-height: 36px;
+        }
+    }
+
+    .store-modal-header {
+        background-color: $quickview-inner-background-color;
+        color: $quickview-header-color;
+
+        margin: auto;
+
+        padding: 10px;
+        border: 1px solid $quickview-border-color;
+        position: relative;
+
+        h3 {
+            margin: 0;
+            font-size: 24px;
+
+            color: $link-color;
+        }
+
+        .close {
+            margin-top: -12px;
+            font-size: 36px;
+            font-weight: lighter;
+            line-height: 36px;
+
+            position: relative;
+            float: right;
+            display: block;
+        }
+    }
+
+    .store-modal-body {
+        border: 0px;
+        padding: 0px;
+        color: $quickview-color;
+
+        // override bootstrap defaults to fix scrollbar weirdness
+        max-height: none;
+        overflow: visible;
+    }
+
+    .store-modal-contents {
+        position: relative;
+        margin-top: 12px;
+
+        .nav-tabs {
+            margin-bottom: 0;
+            border-bottom: 1px solid $nav-tab-border-color;
+
+            font-size: 14px;
+
+            > li {
+                width: 140px;
+                text-align: center;
+            }
+        }
+
+        .tab-content {
+            padding: 12px;
+            height: 418px;
+            background-color: $quickview-inner-background-color;
+            border-bottom: 1px solid $quickview-border-color;
+            border-left: 1px solid $quickview-border-color;
+            border-right: 1px solid $quickview-border-color;
+
+            overflow: auto;
+        }
+    }
+
+    .categorized-service-item-list {
+        .subsection-title {
+            font-size: 12px;
+            margin: 3px 0 3px 0;
+
+            color: $quickview-color;
+
+            .arrow {
+                color: $text-color;
+            }
+        }
+
+        h5 {
+            margin: 0;
+        }
+
+        .service-item-subsection {
+            img {
+                height: 16px;
+                width: 16px;
+
+                margin-right: 5px;
+            }
+
+            li {
+                margin: 8px 0 8px 0;
+
+                &.disabled {
+                    opacity: .5;
+                }
+            }
+        }
+    }
+
+}
+
+.ie7 {
+    .store-modal-header .header-text {
+        float: left;
+    }
+
+    .store-modal-header {
+        clear: both;
+    }
+
+    .store-modal-contents {
+        margin-top: 40px;
+    }
+
+    .tab-content {
+        //fix overflow: auto bug
+        position: relative;
+    }
+}

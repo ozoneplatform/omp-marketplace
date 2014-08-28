@@ -1,0 +1,67 @@
+.loading-mask {
+    display: none;
+
+    position: fixed;
+
+    height: 100%;
+    width: 100%;
+
+    top: 0;
+
+    z-index: 20000;
+
+    &.active {
+        display: block;
+    }
+}
+
+.loading-mask-content {
+    $loading-mask-width: 100px;
+
+    position: absolute;
+
+    left: 50%;
+    margin-left: -($loading-mask-width / 2);
+
+    width: $loading-mask-width;
+
+    top: 40%;
+}
+
+//TODO find a more appropriate file for these styles
+.affiliated-store-search-results {
+    .loading-mask-content {
+        top: 20%;
+    }
+}
+
+.loading-mask-spinner-container {
+    position: relative;
+
+    height: 100px;
+    width: 100px;
+
+    background-color: $mp-loadmask-background;
+
+    @include border-radius(8px);
+}
+
+.loading-mask-message {
+    color: adjustColorForBackground(getHighContrastColor($mp-loadmask-background),
+        $mp-loadmask-background, true);
+
+    font-weight: bold;
+    font-size: 1.5em;
+
+    margin-top: 3px;
+
+    text-align: center;
+}
+
+.loading-mask-bg {
+    height: 100%;
+    width: 100%;
+
+    background-color: $mp-loadmask-background;
+    @include opacity(.5);
+}

@@ -1,0 +1,67 @@
+// Creates dataTables css
+
+$theme-name: 'gold';
+
+// Import dataTables css
+
+//@import "dataTables/dataTables";
+
+// URL paths
+
+// changed urls for theming
+.paginate_enabled_previous { background: theme-image($theme-name,"dataTables/back_enabled.png") no-repeat top left; }
+.paginate_enabled_previous:hover { background: theme-image($theme-name,"dataTables/back_enabled_hover.png") no-repeat top left; }
+.paginate_disabled_previous { background: theme-image($theme-name,"dataTables/back_disabled.png") no-repeat top left; }
+
+.paginate_enabled_next { background: theme-image($theme-name,"dataTables/forward_enabled.png") no-repeat top right; }
+.paginate_enabled_next:hover { background: theme-image($theme-name,"dataTables/forward_enabled_hover.png") no-repeat top right; }
+.paginate_disabled_next { background: theme-image($theme-name,"dataTables/forward_disabled.png") no-repeat top right; }
+
+/*
+ * Sorting
+ */
+.sorting { background: theme-image($theme-name,"dataTables/sort_both.png") no-repeat center right; }
+.sorting_asc { background: theme-image($theme-name,"dataTables/sort_asc.png") no-repeat center right; }
+.sorting_desc { background: theme-image($theme-name,"dataTables/sort_desc.png") no-repeat center right; }
+
+.sorting_asc_disabled { background: theme-image($theme-name,"dataTables/sort_asc_disabled.png") no-repeat center right; }
+.sorting_desc_disabled { background: theme-image($theme-name,"dataTables/sort_desc_disabled.png") no-repeat center right; }
+
+
+// Bootstrap integration
+
+div.dataTables_length label {
+  width: 460px;
+  float: left;
+  text-align: left;
+}
+
+div.dataTables_length select {
+  width: 75px;
+}
+
+div.dataTables_filter label {
+  float: right;
+  width: 460px;
+}
+
+div.dataTables_info {
+  padding-top: 8px;
+}
+
+div.dataTables_paginate {
+  float: right;
+  margin: 0;
+}
+
+
+   table {
+     margin: 1em 0;
+     clear: both;
+   }
+
+
+
+
+
+

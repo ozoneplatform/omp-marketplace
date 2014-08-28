@@ -1,0 +1,401 @@
+// Base colors
+
+//$comp_base: #FABA1A;
+//$comp_dark: #BC8C14;
+//$comp_dark2: #53460A;
+//$comp_light: #FCD676;
+//$comp_light1: #88b8Df;
+//$comp_light2: #b0d0e9;
+//$comp_light3: #d7e7f4;
+
+$text_light: #FFF;
+$text_dark: #000;
+
+$accent_base: #faba1a;
+$accent_dark: #bc8c14;
+$accent_dark1: #7d5d0d;
+$accent_dark2: #5e460a;
+$accent_light: #fcd676;
+//$accent_light1: #badd8c;
+//$accent_light2: #d1e8b3;
+//$accent_light3: #e8f4d9;
+
+$gray_base: #7d7e80;
+$gray_dark: #4d4d4d;
+$gray_dark1: #272727;
+$gray_dark2: #212121;
+$gray_light: #a7a8ab;
+$gray_light1: #bfbfbf;
+$gray_light2: #e5e5e5;
+$gray_light3: #f2f2f2;
+
+$mp-blue: #055d78;
+
+$text_color: $gray_light2;
+$heading_color: $accent_base;
+
+// Variables added by ozone
+
+$modalBackground:                   #363636;
+
+//------------------
+// END Input Colors
+//------------------
+
+//------------
+// Nav Colors
+//------------
+
+$nav-tab-hover-border-color:        #323232;
+$nav-hover-background-color:        #323232;
+$nav-tab-color:                     #ffffff;
+$nav-tab-border-color:              #373636;
+
+//----------------
+// END Nav Colors
+//----------------
+
+//-------------
+// Link Colors
+//-------------
+
+$link-color:             #F9BA1B;
+$link-color-hover:        #FBDF6E;
+
+//-----------------
+// END Link Colors
+//-----------------
+
+
+// ---- BOOTSTRAP OVERRIDES -------
+// --------------------------------
+
+// Add all overrides to common/stylesheets/bootstrap/_variables.scss here **
+// The entire bootstrap variables file is included (sans !default).
+// To override a variable, uncomment the line and change the value
+
+
+
+
+//
+// Variables
+// --------------------------------------------------
+
+
+// Global values
+// --------------------------------------------------
+
+
+// Grays
+// -------------------------
+//$black:                 #000 ;
+//$gray-darker:            #222 ;
+//$gray-dark:              #333 ;
+//$gray:                  #555 ;
+//$gray-light:             #999 ;
+//$gray-lighter:           #eee ;
+//$white:                 #fff ;
+
+
+// Accent colors
+// -------------------------
+//$blue:                  #049cdb ;
+//$blueDark:              #0064cd ;
+//$green:                 #46a546 ;
+//$red:                   #9d261d ;
+//$yellow:                #ffc40d ;
+//$orange:                #f89406 ;
+//$pink:                  #c3325f ;
+//$purple:                #7a43b6 ;
+
+
+// Scaffolding
+// -------------------------
+$body-bg:          #373636;
+$text-color:             $text_color;
+
+
+// Links
+// -------------------------
+//$link-color:             #08c ;
+//$link-color-hover:        darken($link-color, 15%) ;
+
+
+
+// Typography
+// -------------------------
+$font-family-sans-serif:        Helvetica, Verdana, Arial, sans-serif;
+//$font-family-serif:       Georgia, "Times New Roman", Times, serif ;
+//$font-family-monospace:        Monaco, Menlo, Consolas, "Courier New", monospace ;
+
+$font-size-base:          12px;
+//$font-family-base:        $font-family-sans-serif ;
+$line-height-base:        $font-size-base*1.5;
+
+//$headings-font-family:    inherit ; // empty to use BS default, $font-family-base
+$headings-font-weight:    normal ;    // instead of browser default, bold
+$headings-color:         $heading_color;
+
+
+// Component sizing
+// -------------------------
+// Based on 14px font-size and 20px line-height
+
+//$font-size-large:         $font-size-base * 1.25 ; // ~18px
+//$font-size-small:         $font-size-base * 0.85 ; // ~12px
+//$font-size-mini:          $font-size-base * 0.75 ; // ~11px
+
+//$padding-large:          11px 19px ; // 44px
+//$padding-small:          2px 10px ;  // 26px
+//$padding-mini:           0px 6px ;   // 22px
+
+//$border-radius-base:      4px ;
+//$border-radius-large:     6px ;
+//$border-radius-small:     3px ;
+
+
+// Tables
+// -------------------------
+$table-bg:                   transparent ; // overall background-color
+$table-accent-bg:             $table-bg ; // for striping
+$table-hover-bg:              $table-bg ; // for hover
+$table-border-color:                       #7d7e80 ; // table and cell border
+
+// Buttons
+// -------------------------
+$btn-default-color:   	#FABA1A;
+$btn-default-bg:        #212121;
+$btn-default-border: 	#171717;
+
+$btn-primary-color:   	#111111;
+$btn-primary-bg:        #FABA1A;
+$btn-primary-border: 	#111111;
+
+$btn-info-color:		#e5e5e5;
+$btn-info-border: 		#a7a8ab;
+$btn-info-bg: 			#212121;
+
+
+// Forms
+// -------------------------
+$input-bg:                      #212121;
+$input-color:                   #e5e5e5;
+$input-border:                  #4d4d4d;
+
+$input-bg-disabled:             #4d4d4d;
+$input-color-disabled:          #e5e5e5;
+$input-border-disabled:         #4d4d4d;
+
+$uneditable-input-color:        #a7a8ab;
+
+
+// Dropdowns
+// -------------------------
+$dropdown-bg:            #212121 ;
+$dropdown-border:                #4d4d4d ;
+
+$dropdown-link-color:             #e5e5e5 ;
+$dropdown-link-hover-color:        #f2f2f2 ;
+$dropdown-link-active-color:       #f2f2f2 ;
+
+$dropdown-link-active-bg:  #111111 ;
+
+
+
+
+// COMPONENT VARIABLES
+// --------------------------------------------------
+
+
+// Z-index master list
+// -------------------------
+// Used for a bird's eye view of components dependent on the z-axis
+// Try to avoid customizing these :)
+//$zindexDropdown:          1000 ;
+//$zindexPopover:           1010 ;
+//$zindexTooltip:           1030 ;
+//$zindexFixedNavbar:       1030 ;
+$zindexModalBackdrop:     18501 ;
+$zindexModal:             18502 ;
+
+
+// Sprite icons path
+// -------------------------
+
+// For dark themes, we don't use the icon-white style since we aren't changing the markup
+// based upon the theme. We'll just set the dark path to the white path
+$iconSpritePath:          theme-image($theme-name,"glyphicons-halflings-white.png");
+$iconWhiteSpritePath:     theme-image($theme-name,"glyphicons-halflings-white.png") ;
+
+
+// Input placeholder text color
+// -------------------------
+//$input-color-placeholder:         $gray-light ;
+
+
+// Hr border color
+// -------------------------
+//$hrBorder:                $gray-lighter ;
+
+
+// Horizontal forms & lists
+// -------------------------
+//$horizontalComponentOffset:       180px ;
+
+
+// Wells
+// -------------------------
+//$wellBackground:                  #f5f5f5 ;
+
+
+// Navbar
+// -------------------------
+//$navbarCollapseWidth:             979px ;
+//$navbarCollapseDesktopWidth:      $navbarCollapseWidth + 1;
+
+//$navbarHeight:                    40px ;
+//$navbarBackgroundHighlight:       #ffffff ;
+//$navbarBackground:                darken($navbarBackgroundHighlight, 5%) ;
+//$navbarBorder:                    darken($navbarBackground, 12%) ;
+
+//$navbarText:                      #777 ;
+//$navbarLinkColor:                 #777 ;
+//$navbarLinkColorHover:            $gray-dark ;
+//$navbarLinkColorActive:           $gray ;
+//$navbarLinkBackgroundHover:       transparent ;
+//$navbarLinkBackgroundActive:      darken($navbarBackground, 5%) ;
+
+//$navbarBrandColor:                $navbarLinkColor ;
+
+// Inverted navbar
+//$navbarInverseBackground:                #111111 ;
+//$navbarInverseBackgroundHighlight:       #222222 ;
+//$navbarInverseBorder:                    #252525 ;
+
+//$navbarInverseText:                      $gray-light ;
+//$navbarInverseLinkColor:                 $gray-light ;
+//$navbarInverseLinkColorHover:            $white ;
+//$navbarInverseLinkColorActive:           $navbarInverseLinkColorHover ;
+//$navbarInverseLinkBackgroundHover:       transparent ;
+//$navbarInverseLinkBackgroundActive:      $navbarInverseBackground ;
+
+//$navbarInverseSearchBackground:          lighten($navbarInverseBackground, 25%) ;
+//$navbarInverseSearchBackgroundFocus:     $white ;
+//$navbarInverseSearchBorder:              $navbarInverseBackground ;
+//$navbarInverseSearchPlaceholderColor:    #ccc ;
+
+//$navbarInverseBrandColor:                $navbarInverseLinkColor ;
+
+
+// Pagination
+// -------------------------
+//$paginationBackground:                #fff ;
+//$paginationBorder:                    #ddd ;
+//$paginationActiveBackground:          #f5f5f5 ;
+
+
+// Hero unit
+// -------------------------
+//$heroUnitBackground:              $gray-lighter ;
+//$heroUnitHeadingColor:            inherit ;
+//$heroUnitLeadColor:               inherit ;
+
+
+// Form states and alerts
+// -------------------------
+$state-warning-text:            #faba1a;
+
+$state-error-text:              #c91414;
+
+$state-success-text:            #8cc640;
+
+$state-info-text:               #2b6797;
+
+
+// Tooltips and popovers
+// -------------------------
+$tooltipColor:            #E5E5E5;
+$tooltipBackground:       #272727;
+//$tooltipArrowWidth:       5px ;
+//$tooltipArrowColor:       $tooltipBackground ;
+
+$popoverBackground:      $gray_dark1 ;
+//$popoverArrowWidth:       10px ;
+$popoverArrowColor:      $gray_dark1 ;
+//$popoverTitleBackground:  darken($popoverBackground, 3%) ;
+
+// Special enhancement for popovers
+//$popoverArrowOuterWidth:  $popoverArrowWidth + 1 ;
+//$popoverArrowOuterColor:  rgba(0,0,0,.25) ;
+
+
+
+// GRID
+// --------------------------------------------------
+
+
+// Default 940px grid
+// -------------------------
+//$gridColumns:             12 ;
+//$gridColumnWidth:         60px ;
+//$gridGutterWidth:         20px ;
+//$gridRowWidth:            ($gridColumns * $gridColumnWidth) + ($gridGutterWidth * ($gridColumns - 1)) ;
+
+// 1200px min
+//$gridColumnWidth1200:     70px ;
+//$gridGutterWidth1200:     30px ;
+//$gridRowWidth1200:        ($gridColumns * $gridColumnWidth1200) + ($gridGutterWidth1200 * ($gridColumns - 1)) ;
+
+// 768px-979px
+//$gridColumnWidth768:      42px ;
+//$gridGutterWidth768:      20px ;
+//$gridRowWidth768:         ($gridColumns * $gridColumnWidth768) + ($gridGutterWidth768 * ($gridColumns - 1)) ;
+
+
+// Fluid grid
+// -------------------------
+//$fluidGridColumnWidth:    percentage($gridColumnWidth/$gridRowWidth) ;
+//$fluidGridGutterWidth:    percentage($gridGutterWidth/$gridRowWidth) ;
+
+// 1200px min
+//$fluidGridColumnWidth1200:     percentage($gridColumnWidth1200/$gridRowWidth1200) ;
+//$fluidGridGutterWidth1200:     percentage($gridGutterWidth1200/$gridRowWidth1200) ;
+
+// 768px-979px
+//$fluidGridColumnWidth768:      percentage($gridColumnWidth768/$gridRowWidth768) ;
+//$fluidGridGutterWidth768:      percentage($gridGutterWidth768/$gridRowWidth768) ;
+
+
+// Progress Bars
+// -------------------------
+$progress-bg: #212121;
+
+$progress-bar-color: #fff;
+$progress-bar-bg: #faba1a;
+$progress-bar-text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+
+// Filter menu colors
+// -------------------------
+
+// Background colors
+$filter-menu-item-bg: #272727;
+//
+$filter-menu-item-bg-color: rgba($filter-menu-item-bg, 0.9);
+$filter-menu-item-bg-color-hover: rgba(#4d4d4d, 0.9);
+
+$filter-menu-item-bg-color-ie9: rgba($filter-menu-item-bg, 0.6);
+
+$filter-menu-item-bg-color-ie7: $filter-menu-item-bg;
+$filter-menu-item-bg-color-hover-ie7: #4d4d4d;
+
+// Text Colors
+$filter-menu-heading-color: #E5E5E5 !important;
+$filter-menu-heading-color-hover: #A7A8AB;
+$filter-menu-item-unsel-color: #D7D7D7;
+$filter-menu-item-sel-color: #FCBB1B;
+$filter-menu-item-count-color: #a7a8ab;
+
+// Border Colors
+$filter-menu-item-border-top-color: #272727;
+$filter-menu-item-border-bottom-color: #a7a8ab;
+$filter-menu-item-border-side-color: #7d7e80;

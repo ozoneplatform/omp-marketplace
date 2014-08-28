@@ -1,0 +1,221 @@
+$carousel-width: 864px;
+$nav-button-width: 77px;
+$pager-button-padding: 20px;
+
+@media  (max-width: 839px) {
+    html {
+        .carousel {
+            width: 481+2*$nav-button-width;
+            left: 6%;
+        }
+
+        .carousel ul {
+            width: 481;
+        }
+
+        div.carousel-content {
+            width: 481;
+            left: 8%;
+            position: relative;
+        }
+
+        .bx-prev {
+            left: -8%;
+        }
+
+        .bx-next {
+            right: 26%;
+        }
+
+        .bx-pager {
+            position: relative;
+            right: 18%;
+        }
+    }
+}
+
+@media (min-width: 840px) {
+    html {
+        .carousel {
+            //width: 962+2*$nav-button-width;
+            width: auto;
+            right: 0;
+        }
+
+        .carousel ul {
+            width: 962;
+        }
+
+        div.carousel-content {
+            width: 962;
+        }
+    }
+}
+
+/** content carousel */
+.bx-wrapper {
+  margin: 0 auto;
+}
+
+.carousel {
+  margin: 15px 0px 15px 0px;
+  padding-top: 5px;
+  position:relative;
+
+  clear: both;
+
+  *width: $carousel-width+2*$nav-button-width;
+  *right:2%;
+
+    .discover_market_items_table {
+        display: inline-block;
+    }
+}
+
+//only show the see more link if there is more than one page worth of items
+.see-more, .ie7 .see-more {
+    display: none;
+}
+
+.multi-page.carousel {
+    .see-more {
+        display: inline;
+    }
+
+    .bx-pager {
+        display: block;
+    }
+}
+
+.see-more:hover {
+    text-decoration: underline;
+}
+
+.ie7 .carousel .discover_market_items_table {
+    display: inline;
+    zoom: 1;
+}
+
+.carousel-page {
+    > .discover_market_items_table {
+        vertical-align: top;
+    }
+}
+
+.carousel-visible {
+  background: theme-image($theme-name, 'carousel/bg.png') repeat-y;
+  background-position:center;
+  border: none;
+}
+
+.carousel-waiting {
+    .loading-mask-message {
+        color: #999;
+    }
+
+    .loading-mask-image {
+        background-image: theme-image($theme-name, 'carousel/spinner.gif');
+        background-color: $carousel-spinner-color;
+    }
+}
+
+.carousel-invisible {
+    height: 270px;
+
+    .bx-next, .bx-prev {
+        visibility: hidden;
+    }
+
+    &:hover {
+        background: theme-image($theme-name, 'carousel/carousel-background.png');
+        background-repeat: no-repeat;
+        background-position:center;
+        .bx-next, .bx-prev {
+            visibility: visible;
+        }
+    }
+}
+
+.carousel ul {
+  width: $carousel-width;
+  padding: 0;
+  margin-top: 10px;
+  height: 200px;
+
+  overflow: hidden;
+}
+
+.carousel li {
+  list-style: none;
+  width: 100%;
+  position: relative;
+}
+
+div.carousel-content {
+  text-align: center;
+  margin: auto;
+}
+
+/* next/previous buttons */
+.bx-next {
+  position:absolute;
+  width: $nav-button-width;
+  height: 100%;
+  right: -$nav-button-width;
+  top: 0;
+  background: theme-image($theme-name, 'carousel/right-arrow-out.png') no-repeat;
+  background-position:center;
+}
+
+.bx-next:hover {
+  background: theme-image($theme-name, 'carousel/right-arrow-over.png') no-repeat;
+  background-position:center;
+}
+
+.bx-prev {
+  position:absolute;
+  width: $nav-button-width;
+  height: 100%;
+  left:-$nav-button-width;
+  top: 0;
+  background: theme-image($theme-name, 'carousel/left-arrow-out.png') no-repeat;
+  background-position:center;
+}
+
+.bx-prev:hover {
+  background: theme-image($theme-name, 'carousel/left-arrow-over.png') no-repeat;
+  background-position:center;
+}
+
+/** page buttons */
+.carousel .bx-pager {
+  //only show the pager if there is more than one page,
+  //controlled by the multi-page class
+  display: none;
+}
+.bx-pager {
+  width: 100%;
+  text-align: center;
+}
+
+
+// AML-1532 Set bottom to 25px
+.bx-pager a {
+  padding-left: $pager-button-padding/2;
+  padding-right: $pager-button-padding/2;
+  position: relative;
+  zoom: 1; // for ie7
+  background: theme-image($theme-name, 'carousel/inactive-page-out.png') no-repeat;
+}
+
+.bx-pager a:hover {
+  background: theme-image($theme-name, 'carousel/inactive-page-over.png') no-repeat;
+}
+
+.bx-pager a.pager-active {
+  background: theme-image($theme-name, 'carousel/active-page-out.png') no-repeat;
+}
+
+.bx-pager a.pager-active:hover {
+  background: theme-image($theme-name, 'carousel/active-page-over.png') no-repeat;
+}

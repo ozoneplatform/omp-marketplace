@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- Be careful what gets logged to this appender. If stdout is directed
+    to a file, it will not have log rolling
+    -->
+    <appender name="ozone-stdout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS z} [%t] %-5p[%c]: %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="ozone-syslog" class="org.apache.log4j.net.SyslogAppender">
+        <param name="syslogHost" value="localhost:8014" />
+        <param name="facility" value="USER" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601}{UTC} %-5p [%c] %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="ozone-rolling-log" class="org.apache.log4j.rolling.RollingFileAppender">
+        <param name="File" value="logs/marketplace.log" />
+        <param name="Encoding" value="UTF-8" />
+
+        <!--
+            Set to immediate flush so the results are saved before a system
+            crash, slows performance though
+        -->
+        <param name="ImmediateFlush" value="true" />
+        <!--
+            Uncomment these parameters to boost performance but entries won't get
+            written immediately
+
+        <param name="BufferedIO" value="false"/>
+        <param name="BufferSize" value="8192"/>
+        -->
+
+        <rollingPolicy class="org.apache.log4j.rolling.FixedWindowRollingPolicy">
+            <param name="MaxIndex" value="3"/> <!-- Maximum number of backups to keep -->
+            <param name="FileNamePattern" value="logs/marketplace.log.%i"/>
+        </rollingPolicy>
+        <triggeringPolicy class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">
+            <param name="MaxFileSize" value="100000000" /> <!-- 100 MB -->
+        </triggeringPolicy>
+
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS z} [%t] %-5p[%c]: %m%n" />
+        </layout>
+
+        <filter class="org.apache.log4j.varia.StringMatchFilter">
+            <param name="StringToMatch" value="/css/" />
+            <param name="AcceptOnMatch" value="false" />
+        </filter>
+        <filter class="org.apache.log4j.varia.StringMatchFilter">
+            <param name="StringToMatch" value="/js/" />
+            <param name="AcceptOnMatch" value="false" />
+        </filter>
+        <filter class="org.apache.log4j.varia.StringMatchFilter">
+            <param name="StringToMatch" value="/js-lib/" />
+            <param name="AcceptOnMatch" value="false" />
+        </filter>
+    </appender>
+
+    <appender name="ozone-async" class="org.apache.log4j.AsyncAppender">
+        <appender-ref ref="ozone-rolling-log" />
+        <!-- <appender-ref ref="ozone-stdout" /> -->
+    </appender>
+
+
+    <appender name="ozone-cef-log" class="org.apache.log4j.rolling.RollingFileAppender">
+        <param name="File" value="logs/marketplace-cef-audit.log" />
+        <param name="Encoding" value="UTF-8" />
+
+        <!-- CEF logs should never be automatically deleted, so using a rolling policy
+             that doesn't automatically delete backups
+        -->
+        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+            <param name="FileNamePattern" value="logs/marketplace-cef-audit.log.%d"/>
+        </rollingPolicy>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="ozone-async-cef" class="org.apache.log4j.AsyncAppender">
+        <appender-ref ref="ozone-cef-log" />
+    </appender>
+
+    <logger name="AuditOWFWebRequestsLogger" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <!-- Enable debug for the general Ozone application -->
+    <logger name="grails.app" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <!-- For security logging, set this log level to "info". -->
+    <logger name="ozone.marketplace.util.AuditLogListener" additivity="false">
+        <level value="info" />
+        <appender-ref ref="ozone-async-cef" />
+    </logger>
+    <logger name="org.ozoneplatform.auditing" additivity="false">
+        <level value="info" />
+        <appender-ref ref="ozone-async-cef" />
+    </logger>
+    <logger name="grails.app.filters.org.ozoneplatform.auditing" additivity="false">
+        <level value="info" />
+        <appender-ref ref="ozone-async-cef" />
+    </logger>  
+
+    <!-- All other logs from Ozone secuity can be sent to the regular log
+    unless you are worried that the regular logs have too lax of read permissions. -->
+    <logger name="ozone.securitysample.authentication" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <logger name="ozone.utils.Utils" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <logger name="grails" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <logger name="org.codehaus.groovy.grails" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <logger name="org.mortbay.log" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <logger name="org.springframework" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <logger name="org.hibernate" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <!-- To remove WARN issue: MARKETPLACE-1275, REF: https://issues.jasig.org/browse/CASC-105 -->
+    <logger name="org.jasig.cas.client.util.CommonUtils" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <!-- To remove WARN issue: MARKETPLACE-2894, REF: https://hibernate.onjira.com/browse/HHH-1367 -->
+    <logger name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <logger name="org.compass" additivity="false">
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </logger>
+
+    <root>
+        <level value="error" />
+        <appender-ref ref="ozone-async" />
+    </root>
+
+</log4j:configuration>

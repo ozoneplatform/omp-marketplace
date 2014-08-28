@@ -1,0 +1,805 @@
+//-------------
+// <VARIABLES>
+//-------------
+
+// colors
+$quickview-background-color:            #F2F2F2 !default;
+$quickview-color:                       #2c3e50 !default;
+$quickview-border-color:                white !default;
+$quickview-inner-background-color:      white !default;
+$quickview-header-color:                #808e8e !default;
+$quickview-faded-color:                 #7D7E80 !default;
+$quickview-free-text-warning-color:     red !default;
+
+$quickview-width:                       924px;
+$quickview-gutter:                      12px;
+$quickview-tab-left-pane-width:         600px;
+$quickview-tab-right-pane-width:        235px;
+$quickview-tab-left-pane-height:        375px;
+
+
+// height calculation for tab-content
+$quickview-height:                      640px;
+$quickview-header-height:               118px;
+$quickview-body-margin-top:             $quickview-gutter;
+$quickview-tabs-height:                 37px;
+$quickview-tab-content-padding:         $quickview-gutter;
+$quickview-footer-margin-top:           3px;
+$quickview-footer-height:               30px;
+$quickview-tab-content-height:          $quickview-height
+                                        - $quickview-header-height
+                                        - $quickview-body-margin-top
+                                        - $quickview-tabs-height
+                                        - ($quickview-tab-content-padding * 2)
+                                        - $quickview-footer-margin-top
+                                        - $quickview-footer-height;
+
+//--------------
+// </VARIABLES>
+//--------------
+
+//---------
+// <RULES>
+//---------
+.quickview.modal {
+
+    border: 0px;
+    border-radius: 0px;
+    padding: $quickview-gutter;
+    width: $quickview-width;
+    height: $quickview-height;
+    background-color: $quickview-background-color;
+    color: $quickview-color;
+    font-size: 12px;
+    line-height: 16px;
+    margin-left: -$quickview-width/2;
+
+    .modal-body {
+        border: 0px;
+        padding: 0px;
+        color: $quickview-color;
+
+        // override bootstrap defaults to fix scrollbar weirdness
+        max-height: none;
+        overflow: visible;
+    }
+
+    h3 {
+        font-weight: normal;
+    }
+
+    .tabbable {
+        position: relative;
+    }
+
+    .service-item-read-more {
+        position: absolute;
+        right: 0;
+        top: 0px;
+        font-size: 14px;
+        line-height: 22px;
+        padding: 8px 0;
+    }
+
+    .scorecard-icon {
+        display: inline;
+        margin-right: 6px;
+        width: 20px;
+        height: 20px;
+        font-size: 18px;
+        line-height: 20px;
+        color: $quickview-header-color;
+    }
+
+    .confirm-start-in-owf {
+        width: 220px;
+    }
+}
+
+.quickview-header {
+
+    margin: auto;
+    width: 100%;
+    background-color: $quickview-inner-background-color;
+    color: $quickview-header-color;
+
+    .quickview-header-content {
+        padding: 10px;
+        border: 1px solid $quickview-border-color;
+        position: relative;
+    }
+
+    h3 {
+        margin: 0px;
+        font-size: 24px;
+    }
+
+    p {
+        margin: 0px;
+    }
+
+    .service-item-icon-wrapper {
+        margin-right: 12px;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        width: 96px;
+        height: 96px;
+    }
+
+    .service-item-icon {
+        width: 96px;
+        height: 96px;
+    }
+
+    .service-item {
+        position: absolute;
+        width: 600px;
+    }
+
+    .service-item-title {
+        color: $link-color;
+        margin-right: $quickview-gutter;
+        @extend .ellipsis;
+        cursor: default;
+    }
+
+    .service-item-version {
+        margin-bottom: 5px;
+        @extend .ellipsis;
+        cursor: default;
+    }
+
+    .service-item-agency {
+        margin-bottom: 5px;
+        @extend .ellipsis;
+        font-size: 18px;
+    }
+
+    .service-item-agency-icon {
+        margin-right: 5px;
+        height: 20px;
+    }
+
+    .service-item-ratings {
+        margin-right: 5px;
+        cursor: default;
+    }
+
+    .btn-add, .btn-submit {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        line-height: 5px;
+        *line-height: 18px; // ie7 fix
+        font-weight: bold;
+    }
+
+    .service-item-is-added-icon {
+        // Relies on quickview-header-content to have relative position
+        position: absolute;
+        top: -5px;
+        left: 5px;
+        background: theme-image($theme-name, 'AddedCheck39x42.png') no-repeat;
+        border: 0;
+        width: 39px;
+        height: 42px;
+        display: none; // Hidden by default
+    }
+
+    .service-item-review-prompt {
+        color: $link-color;
+        cursor: pointer;
+    }
+
+    .service-item-ratings-total {
+        margin-right: 5px;
+        cursor: default;
+    }
+
+}
+
+.quickview-body {
+
+    margin-top: $quickview-body-margin-top;
+
+    p {
+        margin-bottom: $quickview-gutter;
+    }
+
+    .nav {
+        margin-bottom: 0px;
+
+        > li {
+            width: 140px;
+            > a {
+                text-align: center;
+                font-size: 14px;
+            }
+        }
+    }
+
+    .tab-content {
+
+        padding: $quickview-tab-content-padding;
+
+        height: $quickview-tab-content-height;
+
+        background-color: $quickview-inner-background-color;
+        border-bottom: 1px solid $quickview-border-color;
+        border-left: 1px solid $quickview-border-color;
+        border-right: 1px solid $quickview-border-color;
+
+    }
+
+    /*==========  Reviews Tab  ==========*/
+    .star-rating {
+        cursor: pointer;
+        margin-bottom: 2px;
+    }
+
+    .reviews-header {
+        overflow: hidden;
+    }
+
+    .reviews-ratings-count, .reviews-filter {
+        float: left;
+        margin-right: $quickview-gutter;
+    }
+
+    .reviews-ratings-count h1 {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold !important;
+    }
+
+    .reviews-body {
+        clear: both;
+    }
+
+    .all-reviews {
+        float: left;
+        width: $quickview-tab-left-pane-width - 12px;
+    }
+
+    .current-user-review {
+        position: absolute;
+
+        // OP-4218
+        top: 49px; // 36(tab height) + 1(tab bottom border) + 12(padding)
+
+        left: $quickview-tab-left-pane-width + (3 * $quickview-gutter);
+        width: $quickview-tab-right-pane-width;
+        height: 350px;
+    }
+
+    .current-user-review > .mask {
+        background-color: $quickview-inner-background-color;
+    }
+
+    .current-user-review > .mask-text {
+        position: absolute;
+        top: 30%;
+        padding: $quickview-tab-content-padding;
+        width: 80%;
+        color: $text-color;
+    }
+
+    .progress {
+        display: inline-block;
+        @include ie7-inline-block();
+        width: 150px;
+        margin-bottom: 0px;
+        height: 12px;
+        @include border-radius(0px);
+    }
+
+    .progress, .count, .view-all {
+        margin-left: 6px;
+    }
+
+    .count {
+        color: $quickview-faded-color;
+    }
+
+    .disabled-star-rating {
+        opacity: 0.5;
+    }
+
+    .reviews-body {
+        margin-top: 1em;
+    }
+
+    .reviews-editable {
+        &:hover {
+            .review-text {
+                background-color: $input-bg;
+                border: 1px solid $input-border;
+            }
+            .delete-review-btn {
+                display: inline;
+            }
+        }
+
+        .delete-review {
+            cursor: pointer;
+        }
+
+        .review-text {
+            cursor: pointer;
+        }
+    }
+
+    .item-review {
+        overflow: hidden;
+        margin-top: 1em;
+        color: $text-color;
+
+        &:first-child {
+            margin-top: 0;
+        }
+        .editable-inline, .editable-input {
+            width: $quickview-tab-left-pane-width - 50px;
+        }
+        .delete-review {
+            float: right;
+        }
+        .delete-review-btn {
+            display: none;
+            padding: 2px;
+            min-width: 1em;
+        }
+        .review-text {
+            padding: 4px 6px;
+            width: $quickview-tab-left-pane-width - 50px;
+            float: left;
+            border: 1px solid transparent;
+        }
+        .item-review-editable {
+            width: $quickview-tab-left-pane-width - 50px;
+        }
+
+        .editable-submit, .editable-cancel {
+            float: right;
+        }
+    }
+
+    .item-review-author {
+        display: inline;
+    }
+    .item-review-date {
+        margin-left: 6px;
+    }
+
+    .item-user-rating {
+        float: right;
+        width: auto !important;
+    }
+
+    .current-user-comment {
+        resize: none;
+        margin-top: 1em;
+        width: 235px;
+        height: 12em;
+        display: block;
+    }
+
+    .settings-pane {
+        .active {
+            //already-pressed buttons in the admin tab should not have a hand cursor
+            cursor: default;
+        }
+    }
+}
+
+.quickview-overview {
+
+    p {
+        margin: 0px;
+    }
+
+    .screenshots, .bxslider {
+        width: $quickview-tab-left-pane-width;
+        height: $quickview-tab-left-pane-height;
+    }
+
+    .screenshots {
+        position: absolute;
+        top: 49px; // 36(tab height) + 1(tab bottom border) + 12(padding)
+        color: $text-color;
+    }
+
+    .description {
+        float: right;
+        width: $quickview-tab-right-pane-width;
+        word-wrap: break-word;
+    }
+
+    .no-description {
+        color: $quickview-faded-color;
+    }
+
+    .bx-window {
+        right: 0px; // fix for FF bug OP-3256
+    }
+
+    .bx-pager {
+        position: relative;
+        bottom: -10px;
+    }
+
+    // shake fist at Bootstrap
+    .bxslider {
+        margin: 0px;
+    }
+
+    .bx-li, .bx-img {
+        max-width: 100%;
+        max-height: $quickview-tab-left-pane-height;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .screenshots:hover {
+        .icon-chevron-left, .icon-chevron-right, .enlarge {
+            visibility: visible;
+        }
+    }
+
+    .icon-chevron-left, .icon-chevron-right {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        background: none;
+        text-align: center;
+        top: 180px;
+        color: darken($quickview-inner-background-color, 5%);
+        text-shadow: 0px 0px 5px #000;
+        visibility: hidden;
+        z-index: 100000;
+
+        &:hover, &:active, &:focus {
+            background: none;
+            outline: none;
+            text-decoration: none;
+        }
+
+        &:hover, &:focus {
+            color: $headings-color;
+        }
+    }
+
+    .icon-chevron-left {
+        left: 0px;
+    }
+
+    .icon-chevron-right {
+        right: 0px;
+    }
+
+    .enlarge {
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        margin-top: $quickview-tab-left-pane-height/2;
+        height: $quickview-tab-left-pane-height/2;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        font-size: 120%;
+        visibility: hidden;
+    }
+
+}
+
+.quickview-details {
+
+    .specifications {
+        width: $quickview-tab-left-pane-width;
+    }
+    .required-items {
+        width: $quickview-tab-right-pane-width;
+    }
+
+    .required-container {
+        margin-bottom: 15px;
+    }
+
+
+    p {
+        margin: 0px;
+    }
+
+    .contact {
+        margin-bottom: 8px;
+    }
+
+    .specifications-content {
+        margin-bottom: $quickview-gutter;
+    }
+
+    // the rows should huddle as close to each other as possible
+    .row-fluid [class*="span"] {
+        min-height: 0px;
+    }
+
+    .specifications-key p {
+        vertical-align: top;
+        color: $quickview-faded-color;
+    }
+
+    .specifications-value {
+        word-wrap: break-word;
+    }
+
+    h5 {
+        margin-top: 0px;
+        font-size: 16px;
+        padding-bottom: 5px;
+    }
+
+    .required-item-icon {
+        margin-right: 5px;
+        width: 64px;
+        height: 64px;
+    }
+
+    .required-item {
+        line-height: 64px;
+        font-size: 14px;
+    }
+
+    .arrow {
+        @extend .arrow-down;
+    }
+
+    .specifications-title.collapsed .arrow {
+        @extend .arrow-right;
+    }
+
+    .specifications-additional{
+        padding-top: 5px;
+        margin-top: 5px !important;
+        margin-bottom: 3px !important;
+    }
+
+    .specifications-title{
+        margin-top: 1px !important;
+        margin-bottom: 3px !important;
+        padding-bottom: 5px;
+    }
+
+    .sub-section-body{
+        padding-top: 5px;
+        margin-top: 5px !important;
+    }
+
+    .screenshot > span:first-child {
+        margin-right: $quickview-gutter/2;
+        color: $quickview-faded-color;
+        font-size: 90%;
+    }
+
+    .icon-picture {
+        font-size: 16px;
+        line-height: 16px;
+        width: 16px;
+        height: 16px;
+        margin-left: $quickview-gutter/2;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .scorecard-icon-details-small {
+        height: 16px;
+        padding: 2px;
+    }
+
+}
+
+.quickview-scorecard {
+    > ul {
+        margin: 0;
+    }
+
+    .scorecard-icon {
+        font-size: 40px !important;
+        line-height: 40px !important;
+    }
+
+    .question {
+        margin-bottom: 0;
+    }
+
+    .description {
+        color: $quickview-faded-color;
+    }
+
+    img {
+        width: 36px !important;
+        height: 36px !important;
+    }
+}
+
+
+
+.changelog-pane {
+  $timestamp-width: 120px;
+  color: $text-color;
+
+  i {
+    color: $text-color;
+    font-size: 12px;
+  }
+
+  .timestamp {
+    width: $timestamp-width;
+  }
+  .action {
+    width: 315px;
+    height: auto;
+  }
+  .author {
+    width: 125px;
+    float: right;
+    text-align: right;
+    @extend .ellipsis;
+  }
+
+  .changelog-details {
+    > li {
+      padding: 4px 0;
+    }
+    margin-left: $timestamp-width + 20px; // timestamp + margin
+    color: $quickview-faded-color;
+
+    .old-value {
+      text-decoration: line-through;
+    }
+  }
+
+  .requires {
+    display: inline;
+  }
+}
+
+.recent-activity {
+  .action {
+    width: 375px;
+    height: auto;
+  }
+
+  .author {
+        width: 250px;
+  }
+}
+
+.quickview-admin {
+    > .span4 {
+        position: absolute;
+        left: 0px;
+        top: 49px;
+        bottom: $quickview-gutter;
+        width: $quickview-tab-right-pane-width;
+    }
+    > .span8 {
+        float: right;
+        width: $quickview-tab-left-pane-width;
+    }
+    .btn.active {
+        @extend .btn-primary;
+    }
+    .settings-pane {
+        .btn-group {
+            top: 3px;
+        }
+    }
+    .admin-actions {
+        position: absolute;
+        width: 100%;
+        bottom: 0px;
+
+        .btn-copy {
+            margin-left: 4px;
+        }
+    }
+
+    .title {
+        display: inline-block;
+        @include ie7-inline-block();
+    }
+    .description {
+        color: $quickview-faded-color;
+        font-weight: normal;
+    }
+    .help-inline {
+        padding: 0;
+    }
+}
+
+.quickview-footer {
+    margin-top: $quickview-footer-margin-top;
+    line-height: $quickview-footer-height;
+    height: $quickview-footer-height;
+    font-weight: bold;
+}
+
+.ie {
+    .quickview-overview {
+        .icon-chevron-left, .icon-chevron-right {
+            color: darken($quickview-inner-background-color, 20%);
+
+            &:hover, &:focus {
+                color: $headings-color;
+            }
+        }
+    }
+}
+
+.ie7 {
+    .quickview-details {
+        // OP-4066
+        .collapse {
+            position: static;
+        }
+
+    }
+    .rejection-confirm {
+        textarea, .bootstrap-select {
+            width: 220px;
+        }
+    }
+    .quickview-admin {
+        .settings-pane {
+            .visible, .enabled, .approved {
+                position: relative;
+            }
+            .pull-right {
+                float: none;
+                position: absolute;
+                right: 0px;
+            }
+        }
+    }
+}
+
+.collapsible:hover{
+    cursor:pointer
+}
+
+.rejection-justification-popover, .rejection-justification-confirm {
+    max-width: 500px !important;
+    .form-horizontal {
+        .control-label {
+            width: 50px;
+        }
+        .controls {
+            margin-left: 70px;
+            width: auto !important;
+            padding-top: 5px;
+        }
+    }
+}
+
+.rejection-justification-confirm {
+    .controls {
+        padding-top: 0px;
+    }
+    textarea {
+        width: 100%;
+        height: 6em;
+    }
+    .bootstrap-select {
+        width: 100%;
+    }
+    .remaining {
+        text-align: right;
+    }
+}
+
+//----------
+// </RULES>
+//----------

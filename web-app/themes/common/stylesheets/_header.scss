@@ -1,0 +1,247 @@
+#widget_header, #header {
+	background-image: theme-image($theme-name, 'header_bkg_rpt-x.gif');
+	background-repeat: repeat-x;
+}
+
+@media (max-width: 939px) {
+		html {
+			#header {
+				.omp_header_nav {
+					.omp_user_box {
+						position: relative;
+		    			right: 78%;
+					}
+				}
+			}
+		}
+	}
+
+#header {
+
+	.omp_header_logo {
+		float: left;
+		padding-top: 12px;
+
+		#omp_market_box_img_link,
+		#omp_market_box_text_link {
+			cursor:pointer;
+		}
+		
+		.omp_header_logo_img {
+			float: left;
+		}
+
+		.omp_header_logo_img_cls {
+			height: auto;
+      		width: auto;
+      		max-height: 70px;
+      		max-width: 350px;
+		}
+		
+		.omp_header_logo_text {
+			  // Not allowing text for now
+			  display: none;
+			  float:left;
+			  margin-top: 10px;
+			  a {
+					font-size: 36px;
+					color: $logo-color;
+					text-decoration:none;
+			  }
+		}
+	}
+	
+	
+	/***
+	** Search & User Menu Drop down section
+	***********/
+	.omp_header_nav {
+		float: right;
+		width: 376px;
+		
+		.omp_user_box {
+			float:right;
+
+			.omp_item_right {
+				width: 376px;
+			}
+
+			.omp_user_search {
+				position: relative;
+				left: 13px;
+			}
+		}
+
+		.omp_nav_item {
+
+			color: #FFFFFF;
+
+			.omp_item_right {
+				text-align: right;
+			}
+		}
+	}
+}//END OF OMP HEADER
+
+/* SEARCH CONTROLS & INPUT */
+
+.search-bar-left{
+  background:none;
+  width: 23px;
+  height: 39px;
+  border: 0 none transparent;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  float: left;
+  clear: both;
+}
+
+.search-bar-middle {
+  height: 39px;
+  width: 290px;
+  background-image: theme-image($theme-name, 'icons/search_rpt-x.png') !important;
+  background-repeat: repeat-x;
+  border: 0 none transparent;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  float:left;
+
+}
+
+input.searchField {
+	height: 30px;
+    width: 265px;
+	//font-size: ceil($mp-font-size * 1.2);
+	font-size: $mp-font-size;
+    color: $mp-color;
+    background: none;
+    float: left;
+    padding: 12px 4px 4px 0px;
+    border: none;
+}
+
+input.widgetSearchField {
+	height: 23px;
+	width: 300px;
+}
+
+.input.searchField, input.widgetSearchField {
+	-moz-border-radius: 3px 0 0 3px;
+	-webkit-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
+}
+
+input.clearField {
+  width: 25px;
+  background: transparent;
+  cursor: pointer;
+  background-image: theme-image($theme-name, 'icons/search_x_up.png') !important;
+  background-repeat: no-repeat;
+  background-position: 50% 70%;
+  border: 0 none transparent;
+  padding: 12px 4px 4px 4px;
+  float:left;
+
+}
+
+input.clearFieldHidden {
+  visibility: hidden;
+}
+
+.simple_search_form {
+	float: left;
+    border: 0 none transparent;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    text-align: left;
+}
+
+
+
+
+.search_controls {
+    border: 0 none transparent;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+	left: -1px;
+	position: relative;
+	float: left;
+	-moz-border-bottom-colors: none;
+	-moz-border-image: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	//border-color: $mp-form-field-border-color $mp-form-field-border-color $mp-form-field-border-color -moz-use-text-color;
+	//border-style: solid solid solid none;
+	//border-width: 1px 1px 1px 0;
+    height: 39px;
+    width: 45px;
+
+	.icon_search, .icon_adv_search {
+		cursor: pointer;
+		float: left;
+		a {
+			display: block;
+            height: 39px;
+            width: 45px;
+		}
+	}
+
+	#icon_search, #icon_adv_search{
+		background-color: $search-controls-background;
+		display: block;
+        height: 39px;
+        width: 45px;
+	}
+
+	.imgAdvSearchDflt {
+		background: $button-sprite-search no-repeat -172px 0;
+		height:20px;
+		width:20px;
+	}
+
+	.imgSearchDflt {
+		background: $button-sprite-search no-repeat 0 0;
+		height:20px;
+		width:20px;
+	}
+}
+
+// IE Fixes
+.ie {
+  input.searchField {
+    width: 270px;
+    line-height: 30px;
+    height: 38px;
+    padding-top: 6px;
+  }
+
+  input.clearField {
+    width: 15px;
+    background-position: 50% 60%;
+
+  }
+}
+
+.ie {
+  .search_controls {
+    #icon_search, #icon_adv_search{
+      height: 39px;
+    }
+  }
+}
+
+.ie7 {
+  input.searchField {
+    width: 258px;
+    line-height: 30px;
+    height: 31px;
+    margin-top: -1px;
+    background-position: bottom right;
+    padding-top: 6px;
+  }
+}

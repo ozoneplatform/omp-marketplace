@@ -1,0 +1,27 @@
+#access-alert {
+    .modal-header, .modal-footer {
+        background: $quickview-inner-background-color;
+        border-color: $quickview-background-color;
+    }
+
+    .modal-header {
+        border-bottom-width: 0px;
+    }
+
+    .modal-body {
+        padding: 20px 200px;
+        font-size: 12pt;
+        text-align: left;
+        line-height: 1.5em;
+        max-height: 800px;
+    }
+
+    .modal-footer {
+        padding: 10px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+}

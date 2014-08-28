@@ -1,0 +1,87 @@
+//color
+$mp-tabbar-base-color: adjust-color($mp-base-color, $hue: 0deg, $saturation: -3.156%, $lightness: -5.294%) !default;
+$mp-tabbar-background-gradient: 'matte' !default;
+
+//background
+$mp-tab-base-color: adjust-color($mp-base-color, $hue: 0deg, $saturation: 33.016%, $lightness: 9.02%) !default; //#deecfd
+$mp-tab-base-color-over: adjust-color($mp-tab-base-color, $hue: 0deg, $saturation: 11.429%, $lightness: 2.353%) !default;
+$mp-tab-base-color-active: $mp-tab-base-color !default;
+$mp-tab-base-color-disabled: adjust-color($mp-base-color, $hue: 0deg, $saturation: 15.873%, $lightness: 9.02%) !default; //E1ECFA
+
+$mp-tab-background: $mp-tab-base-color !default;
+$mp-tab-background-over: $mp-tab-base-color-over !default;
+$mp-tab-background-active: $mp-tab-base-color-active !default;
+$mp-tab-background-disabled: $mp-tab-base-color-disabled !default;
+
+$mp-tab-color: adjust-color($mp-tab-base-color, $hue: 0deg, $saturation: -45.589%, $lightness: -48.431%) !default;
+$mp-tab-color-over: $mp-tab-color !default;
+$mp-tab-color-active: adjust-color($mp-tab-color, $hue: 0deg, $saturation: 30.768%, $lightness: -13.333%) !default;
+$mp-tab-color-disabled: #c3b3b3 !default;
+
+$mp-tab-font-size: ceil($mp-font-size * .9) !default; //11px
+$mp-tab-font-size-over: $mp-tab-font-size !default;
+$mp-tab-font-size-active: $mp-tab-font-size !default;
+$mp-tab-font-size-disabled: $mp-tab-font-size !default;
+
+$mp-tab-font-family: $mp-font-family;
+$mp-tab-font-family-over: $mp-tab-font-family;
+$mp-tab-font-family-active: $mp-tab-font-family;
+$mp-tab-font-family-disabled: $mp-tab-font-family;
+
+$mp-tab-font-weight: bold !default;
+$mp-tab-font-weight-over: $mp-tab-font-weight !default;
+$mp-tab-font-weight-active: $mp-tab-font-weight !default;
+$mp-tab-font-weight-disabled: $mp-tab-font-weight !default;
+
+$mp-tab-background-gradient: 'tab' !default;
+$mp-tab-background-gradient-over: 'tab-over' !default;
+$mp-tab-background-gradient-active: 'tab-active' !default;
+$mp-tab-background-gradient-disabled: 'tab-disabled' !default;
+
+//borders
+$mp-tab-inner-border: true !default;
+
+$mp-tab-top-border-radius: 4px 4px 0 0 !default;
+$mp-tab-top-border-width: 1px 1px 0 1px !default;
+$mp-tab-top-inner-border-width: 1px 1px 0 !default;
+
+$mp-tab-bottom-border-radius: 0 0 4px 4px !default;
+$mp-tab-bottom-border-width: 0 1px 1px 1px !default;
+$mp-tab-bottom-inner-border-width: 0 1px 1px 1px !default;
+
+$mp-tab-border-color: adjust-color($mp-tab-base-color, $hue:0deg, $saturation: -28.008%, $lightness: -20.98%) !default;
+$mp-tab-border-color-over: $mp-tab-border-color !default;
+$mp-tab-border-color-active: $mp-tab-border-color !default;
+$mp-tab-border-color-disabled: adjust-color($mp-base-color, $hue:0deg, $saturation: 6.349%, $lightness: -0.588%) !default;
+
+$mp-tab-inner-border-color: adjust-color($mp-tab-base-color, $hue: 0deg, $saturation: -8.571%, $lightness: 8.941%) !default;
+
+$mp-tabbar-border-color: $mp-tabbar-base-color !default;
+
+//size
+$mp-tab-height: $mp-font-size + 8px !default;
+$mp-tab-spacing: 2px;
+
+//tab bar body border and padding
+$mp-tabbar-top-body-border-width: 1px 1px 0 !default;
+$mp-tabbar-top-body-padding: 1px 0 3px !default;
+$mp-tabbar-top-plain-body-border-width: 0 !default;
+$mp-tabbar-top-plain-body-padding: 0 0 3px !default;
+$mp-tabbar-bottom-body-border-width: 0 1px 1px !default;
+$mp-tabbar-bottom-body-padding: 3px 0 1px !default;
+$mp-tabbar-bottom-plain-body-border-width: 0 !default;
+$mp-tabbar-bottom-plain-body-padding: 3px 0 0 !default;
+
+//closable tab
+$mp-tab-closable-icon: 'tab/tab-default-close.gif' !default;
+$mp-tab-closable-icon-width: 11px !default;
+$mp-tab-closable-icon-height: 11px !default;
+$mp-tab-closable-icon-top: 3px !default;
+$mp-tab-closable-icon-right: 3px !default;
+
+//tab bar strip
+$mp-tabbar-strip-height: 3px !default;
+$mp-tabbar-strip-border-color: $mp-tabbar-base-color !default;
+$mp-tabbar-strip-background-color: $mp-tab-base-color !default;
+$mp-tabbar-top-strip-border-width: 1px 1px 0 !default;
+$mp-tabbar-bottom-strip-border-width: 0 1px 1px !default;

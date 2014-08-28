@@ -1,0 +1,46 @@
+package ozone.restInterceptor
+
+import java.io.IOException
+import java.util.Map
+
+import javax.servlet.FilterChain
+import javax.servlet.FilterConfig
+import javax.servlet.ServletException
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+
+import org.codehaus.groovy.grails.web.json.JSONObject
+
+public class MP_RESTInterceptor implements RESTInterceptor {
+
+	@Override
+	public Map processIncoming(JSONObject json) {
+		return [continueProcessing : true, message: "JSON is Valid"]
+	}
+
+	@Override
+	public String decorateOutgoing(JSONObject json) {
+		//no change to Outgoing JSON
+		return null
+	}
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void doFilter(ServletRequest arg0, ServletResponse arg1,
+			FilterChain arg2) throws IOException, ServletException {
+			//Set attributes as necessary for arg0
+			arg2.doFilter(arg0, arg1);
+	}
+
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
+		// TODO Auto-generated method stub
+
+	}
+
+}

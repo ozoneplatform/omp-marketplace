@@ -1,0 +1,2 @@
+OZONE_Overview;guide;80;This presentation explains how the Store enables users to search, discover, create and use a variety of applications or software components that are known as “listings.” Like commercial software stores, the Store offers quick, easy access to business, mission and convenience applications.
+OZONE_Content_Management_&_App_Building;guide;69;This presentation explains the main concepts of OZONE, a framework that allows users to create, customize and manage the applications they need to do their jobs.

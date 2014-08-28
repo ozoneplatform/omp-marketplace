@@ -1,0 +1,139 @@
+// This file contains scss for general carousel display
+
+$border-height: 10px;
+
+$media-length-height: 49px;
+$media-length-top-padding: 13px;
+
+#landingPageTopCarousel > .carousel {
+    padding-top: 0px;
+
+    ul {
+        height: 270px;
+        margin-top: 0;
+    }
+}
+
+.widget_shoppe_items > .carousel ul {
+    margin: 10px 0 35px 0;
+}
+
+
+//this selector might not be used anymore, consider removing
+.media_length_medium {
+  margin-top: 130px;
+}
+
+.video-page {
+    padding: 5%;
+    overflow: hidden;
+
+    a {
+        color: $heading-color;
+    }
+}
+
+.video-container {
+    position: relative;
+
+    float: left;
+
+    video {
+        display: block;
+    }
+
+    .ie7 & {
+        width: 300px;
+    }
+}
+
+.media-length-medium {
+    position: absolute;
+    right: -18px;
+    top: 113px;
+    background-image: theme-image($theme-name, 'media_page/medium_ribbon.png');
+
+    font-size: 18px;
+    color: #FFFAFA;
+
+    height: $media-length-height;
+    width: 141px;
+
+    padding-top: $media-length-top-padding;
+
+    .ie7 & {
+        height: $media-length-height - $media-length-top-padding;
+    }
+}
+
+
+
+.media-type-icon {
+    padding-right: 8px;
+}
+
+.video-shadow-medium {
+    background-image: theme-image($theme-name, 'media_page/video_shadow_medium.png');
+    height: 20px;
+
+    .ie7 & {
+        display: none;
+    }
+}
+
+.video-info {
+    float: right;
+
+    text-align: left;
+
+}
+
+#contentInfo {
+  height: 145px !important;
+  margin-left: -20px !important;
+  *width: 375px !important;
+  *height: 135px !important;
+}
+
+#video-title {
+  *padding-left: 0px !important;
+}
+
+
+.border-top {
+  height: $border-height;
+  background: theme-image($theme-name, 'carousel/border-top.png');
+  background-position:center;
+}
+
+.border-bottom {
+  height: $border-height;
+  background: theme-image($theme-name, 'carousel/border-bottom.png');
+  background-position:center;
+}
+
+div.dummy-filter-menu {
+    overflow: auto;
+    font-size: 24px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.dummy-filter-menu > div {
+    float: left;
+    margin-left: 0px
+}
+
+/* Divs after the first div under dummy-filter-menu */
+div.dummy-filter-menu > div + div {
+    float: left;
+    margin-left: 140px
+}
+
+.carousel-content {
+
+  h1 {
+    color: $carousel-heading-color !important;
+    font-weight: bold !important;
+  }
+}

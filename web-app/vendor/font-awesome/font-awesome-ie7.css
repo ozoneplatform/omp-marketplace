@@ -1,0 +1,105 @@
+/*
+ *  Font Awesome 3.2.1
+ *  the iconic font designed for Bootstrap
+ *  ------------------------------------------------------------------------------
+ *  The full suite of pictographic icons, examples, and documentation can be
+ *  found at http://fontawesome.io.  Stay up to date on Twitter at
+ *  http://twitter.com/fontawesome.
+ *
+ *  License
+ *  ------------------------------------------------------------------------------
+ *  - The Font Awesome font is licensed under SIL OFL 1.1 -
+ *    http://scripts.sil.org/OFL
+ *  - Font Awesome CSS, LESS, and SASS files are licensed under MIT License -
+ *    http://opensource.org/licenses/mit-license.html
+ *  - Font Awesome documentation licensed under CC BY 3.0 -
+ *    http://creativecommons.org/licenses/by/3.0/
+ *  - Attribution is no longer required in Font Awesome 3.0, but much appreciated:
+ *    "Font Awesome by Dave Gandy - http://fontawesome.io"
+ *
+ *  Author - Dave Gandy
+ *  ------------------------------------------------------------------------------
+ *  Email: dave@fontawesome.io
+ *  Twitter: http://twitter.com/davegandy
+ *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
+ */
+.icon-large {
+  font-size: 1.333em;
+  margin-top: -4px;
+  padding-top: 3px;
+  margin-bottom: -4px;
+  padding-bottom: 3px;
+  vertical-align: middle; }
+
+.nav [class^="icon-"],
+.nav [class*=" icon-"] {
+  vertical-align: inherit;
+  margin-top: -4px;
+  padding-top: 3px;
+  margin-bottom: -4px;
+  padding-bottom: 3px; }
+  .nav [class^="icon-"].icon-large,
+  .nav [class*=" icon-"].icon-large {
+    vertical-align: -25%; }
+
+.nav-pills [class^="icon-"].icon-large,
+.nav-pills [class*=" icon-"].icon-large, .nav-tabs [class^="icon-"].icon-large, .nav-tabs [class*=" icon-"].icon-large {
+  line-height: .75em;
+  margin-top: -7px;
+  padding-top: 5px;
+  margin-bottom: -5px;
+  padding-bottom: 4px; }
+
+.btn [class^="icon-"].pull-left, .btn [class^="icon-"].pull-right,
+.btn [class*=" icon-"].pull-left,
+.btn [class*=" icon-"].pull-right {
+  vertical-align: inherit; }
+.btn [class^="icon-"].icon-large,
+.btn [class*=" icon-"].icon-large {
+  margin-top: -0.5em; }
+
+a [class^="icon-"],
+a [class*=" icon-"] {
+  cursor: pointer; }
+
+.icon-ok {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf00c;'); }
+
+.icon-remove {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf00d;'); }
+
+.icon-off {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf011;'); }
+
+.icon-time {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf017;'); }
+
+.icon-edit {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf044;'); }
+
+.icon-chevron-left {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf053;'); }
+
+.icon-chevron-right {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf054;'); }
+
+.icon-minus {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf068;'); }
+
+.icon-leaf {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf06c;'); }
+
+.icon-chevron-up {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf077;'); }
+
+.icon-chevron-down {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf078;'); }
+
+.icon-external-link {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf08e;'); }
+
+.icon-thumbs-up {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf164;'); }
+
+.icon-thumbs-down {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf165;'); }

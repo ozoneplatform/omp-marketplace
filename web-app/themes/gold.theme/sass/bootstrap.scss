@@ -1,0 +1,9 @@
+// Creates themed Bootstrap css
+
+$theme-name: 'gold';
+
+// Theme-specific bootstrap variable overrides
+@import "variables/bootstrap-variables";
+
+@import "bootstrap_all";
+

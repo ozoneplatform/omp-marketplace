@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Pre-push hooks
+
+# Lint stuff before committing
+grunt continuous

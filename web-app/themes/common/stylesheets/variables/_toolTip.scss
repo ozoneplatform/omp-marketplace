@@ -1,0 +1,32 @@
+$mp-tip-base-color: adjust-color($mp-base-color, $hue: 2.121deg, $saturation: 44.444%, $lightness: 11.569%) !default;
+
+//background
+$mp-tip-background-color: $mp-tip-base-color !default;
+$mp-tip-background-gradient: null !default;
+
+//text
+$mp-tip-body-color      : getHighContrastColor($mp-tip-background-color) !default;
+$mp-tip-body-font-size  : ceil($mp-font-size * .9) !default;
+$mp-tip-body-font-weight: normal !default;
+$mp-tip-body-padding: 3px !default;
+$mp-tip-body-link-color: darken($mp-tip-body-color, 10%) !default;
+
+$mp-tip-header-color      : $mp-tip-body-color !default;
+$mp-tip-header-font-size  : $mp-tip-body-font-size !default;
+$mp-tip-header-font-weight: bold !default;
+$mp-tip-header-padding    : 3px 3px 0 !default;  
+
+//borders
+$mp-tip-border-color: $mp-tip-background-color !default;
+$mp-tip-border-width: 1px !default;
+$mp-tip-border-radius: 3px !default;
+
+//error tips
+$mp-tip-error-inner-border-color: #d87166 !default;
+$mp-tip-error-border-color: #a1311f !default;
+$mp-tip-error-border-radius: 5px !default;
+$mp-tip-error-border-width: 1px !default;
+$mp-tip-error-background-color: $mp-tip-background-color !default;
+
+//custom
+$mp-anchor-border-width: 10px !default;

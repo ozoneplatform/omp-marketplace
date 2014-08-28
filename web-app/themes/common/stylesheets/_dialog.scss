@@ -1,0 +1,79 @@
+$dialog-width: 300px !default;
+$dialog-background-color: $quickview-inner-background-color !default;
+
+//copied from popovers
+$dialog-border-color: rgba(0,0,0,.2);
+
+$dialog-shadow-color: $headings-color !default;
+
+.bootstrap-active.dialog {
+    position: fixed;
+
+    top: 30%;
+    left: 50%;
+    margin-left: -($dialog-width / 2);
+
+
+    width: $dialog-width;
+
+    border: 1px solid $dialog-border-color;
+    background-color: $dialog-background-color;
+
+    font-family: $font-family-base;
+
+    word-wrap: break-word;
+
+    z-index: 20000;
+
+    @include box-shadow(0 0 1em 1px $dialog-shadow-color);
+
+    h3 {
+        @extend .popover-title;
+    }
+
+    .close {
+        font-size: 36px;
+    }
+
+    p {
+        margin: 10px 14px;
+    }
+
+    .dialog-footer {
+        margin-top: 8px;
+        text-align: right;
+
+        padding: 0 $quickview-gutter $quickview-gutter $quickview-gutter;
+
+        > button {
+            margin-left: 3px;
+        }
+    }
+}
+
+.ie7 {
+    .bootstrap-active.dialog {
+        h3 {
+            overflow: hidden;
+
+            > .title {
+                display: block;
+                position: relative;
+                float: left;
+            }
+
+            > .close {
+                display: block;
+                position: relative;
+                float: right;
+            }
+        }
+    }
+}
+
+.ie7, .ie8 {
+    .bootstrap-active.dialog {
+        //match the header bottom border
+        border: 1px solid darken($popoverTitleBackground, 5%);
+    }
+}

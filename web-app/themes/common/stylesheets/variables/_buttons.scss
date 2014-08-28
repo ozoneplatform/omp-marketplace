@@ -1,0 +1,102 @@
+/*
+ * The base color for buttons. Defaults to being derived from the marketplace-base color, but
+ * can be overriden to be anything
+ */
+$mp-button-base-color: adjust-color($mp-base-color, $saturation: 10%) !default;
+$mp-button-small-icon-size: 16px;
+$mp-button-medium-icon-size: 24px;
+$mp-button-large-icon-size: 32px;
+
+$mp-button-border-radius: 2px !default;
+
+/****
+ * TOOLBAR PAGING ICONS
+ */
+//UP state
+$button-toolbar-paging-first: theme-image($theme-name, 'grid/first_up.png');
+$button-toolbar-paging-next: theme-image($theme-name, 'grid/next_up.png');
+$button-toolbar-paging-prev: theme-image($theme-name, 'grid/previous_up.png');
+$button-toolbar-paging-last: theme-image($theme-name, 'grid/last_up.png');
+
+//Disabled state
+$button-toolbar-paging-first-disabled: theme-image($theme-name, 'grid/first_disabled.png');
+$button-toolbar-paging-next-disabled: theme-image($theme-name, 'grid/next_disabled.png');
+$button-toolbar-paging-prev-disabled: theme-image($theme-name, 'grid/previous_disabled.png');
+$button-toolbar-paging-last-disabled: theme-image($theme-name, 'grid/last_disabled.png');
+
+//Over state
+$button-toolbar-paging-first-over: theme-image($theme-name, 'grid/first_over.png');
+$button-toolbar-paging-next-over: theme-image($theme-name, 'grid/next_over.png');
+$button-toolbar-paging-prev-over: theme-image($theme-name, 'grid/previous_over.png');
+$button-toolbar-paging-last-over: theme-image($theme-name, 'grid/last_over.png');
+
+$toolbar-paging-button-delimiter: theme-image($theme-name, 'grid/paging_delimiter.png');
+
+
+@if $mp-font-size >= 17px and $mp-font-size < 19px {
+    $mp-button-small-icon-size : 17px;
+}
+@else if $mp-font-size >= 19px and $mp-font-size < 21px {
+    $mp-button-small-icon-size : 21px;
+}
+@else if $mp-font-size >= 21px {
+    $mp-button-small-icon-size : 24px;
+}
+
+/*
+ * Buttons themes are 3-element lists.  This theme is applied to buttons that are not pressed
+ * or hovered over
+ */
+$default_button_theme: (
+    /*
+     *  background gradient. Can have one or more colors optionally
+     * including gradient stop percentages
+     */
+    (adjust-color($mp-button-base-color, $lightness: 50%), $mp-button-base-color),
+
+    getHighContrastColor($mp-button-base-color),	// text color
+    getHighContrastColor($mp-button-base-color)	// border color
+) !default;
+
+/*
+ * Theme for buttons that are currently being hovered over
+ */
+$over_button_theme: (
+    ((adjust-color($mp-alt-base-color, $lightness: 20%)), $mp-alt-base-color),	// background gradient
+    getHighContrastColor($mp-alt-base-color),	// text color
+    getHighContrastColor($mp-alt-base-color)	// border color
+) !default;
+
+
+/*
+ * Theme for buttons that are depressed
+ */
+$pressed_button_theme: (
+    ($mp-alt-base-color, (adjust-color($mp-alt-base-color, $lightness: 20%))),	// background gradient
+    getHighContrastColor($mp-alt-base-color),	// text color
+    getHighContrastColor($mp-alt-base-color)	// border color
+) !default;
+
+
+/*
+ * Theme for buttons that are disabled
+ */
+$disabled_button_theme: (
+    (adjust-color($mp-button-base-color, $saturation: -75%, $lightness: 10%), adjust-color($mp-button-base-color, $saturation: -50%, $lightness: 10%)),	// background gradient
+    getHighContrastColor($mp-button-base-color),	// text color
+    getHighContrastColor($mp-button-base-color)	// border color
+) !default;
+
+/*
+ * Theme for buttons that are focused
+ */
+$focused_button_theme: $over_button_theme !default;
+
+/*
+ * Sprite Icons
+ */
+$button-sprite-add-remove: theme-image($theme-name, 'sprites/sprite-AddRemove.png');
+$button-sprite-breadcrumbs: theme-image($theme-name, 'sprites/sprite-breadcrumbs.png');
+$button-sprite-forward-back: theme-image($theme-name, 'sprites/sprite-ForwardBack.png');
+$button-sprite-icons: theme-image($theme-name, 'sprites/sprite-icons.png');
+$button-sprite-search: theme-image($theme-name, 'sprites/sprite-search.png');

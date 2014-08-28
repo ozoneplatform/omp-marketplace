@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+@import 'functions/marketplace_functions';
+
+/*
+ * This variable is required.  It must be equal to the name property in the
+ * theme.json file
+ */
+$theme-name: 'YOUR_THEME_NAME';
+
+/*****************************************************************
+ * Put yor theme customizations here.  If you hava many customizations,
+ * you may want to put them in a separate filoe which you import here.
+ * The import statements in this file reference stylesheets
+ * from the themes/common folder. You can look at
+ * themes/common/stylesheets/variables/_defaults in order to see what variables
+ * may be changed.
+ */
+
+/*
+ * Note that you MUST define a background here, as the default is to have none.
+ * For examples of how to do this, look in the themes that already exist
+ */
+
+
+//MARKETPLACE VARIABLES
+@import 'variables/constants';
+@import 'variables/defaults';
+@import 'variables/ext_overrides';
+
+@import 'compass'; //pull in base functions and mixins provided by the compass framework
+
+/*
+ * These imports create the marketplace-specific stylesheets, based on the values of the
+ * variables that are defined in variables/defaults (which can be overridden in this
+ * file).If extensive changes are required, you can delete some of these imports and
+ * reimplement them as necessary
+ */
+//MARKETPLACE STYLESHEETS
+@import 'main';
+@import 'themeSwitcher';

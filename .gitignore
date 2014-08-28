@@ -1,0 +1,96 @@
+
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+#*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+#*.sql
+*.sqlite
+mktplDevDB.properties
+mktplDevDB.script
+mktplTestDB.properties
+mktplTestDB.script
+mktplDevDb.h2.db
+mktplDevDb.trace.db
+mktplDevDb.lock.db
+mktplTestDb.h2.db
+mktplTestDb.trace.db
+mktplTestDb.lock.db
+mktplProdDb.trace.db
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+#Icon?
+ehthumbs.db
+Thumbs.db
+
+# Directories
+######################
+.idea/*
+build-base*/*
+target/*
+target-eclipse/*
+logs/*
+.settings/*
+out/*
+plugins/*
+!plugins/audit-trail-*
+node_modules
+js-build
+.vagrant
+data/
+
+# Project files
+######################
+*.iml
+*.ipr
+*.ids
+*.iws
+*.tmproj
+.classpath
+.project
+
+# local backup files
+*.bak
+.*.swp
+
+# Compass generated files
+#########################
+*.sass-cache
+
+#Build generated files and directories
+######################################
+build.number
+jsdoc/
+src/assemble/docs/jsdoc/
+staging/
+web-app/WEB-INF/classes/
+web-app/js-min/
+web-app/js/mp-api.js
+cobertura.ser
+
+Vagrantfile

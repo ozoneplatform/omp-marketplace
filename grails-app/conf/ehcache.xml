@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <cacheManagerEventListenerFactory class="" properties=""/>
+
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
+            properties="connect=TCP(bind_addr=127.0.0.1;bind_port=7800):
+                        TCPPING(timeout=3000;initial_hosts=
+                        ;port_range=1;num_initial_members=24):
+                        VERIFY_SUSPECT(timeout=1500):
+                        pbcast.NAKACK(use_mcast_xmit=false;gc_lag=100;retransmit_timeout=300,600,1200,2400,4800;discard_delivered_msgs=true):
+                        pbcast.STABLE(stability_delay=1000;desired_avg_gossip=50000;max_bytes=400000):
+                        pbcast.GMS(print_local_addr=true;join_timeout=5000;shun=false;view_bundling=true):
+                        FRAG2(frag_size=60000)"
+            propertySeparator="::"/>
+
+    <defaultCache maxElementsInMemory="100000"
+                  eternal="false"
+                  timeToLiveSeconds="1200"
+                  overflowToDisk="false"
+                  memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </defaultCache>
+
+    <cache name="marketplace.UserAccount"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="1200"
+           eternal="false"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <cache name="marketplace.ServiceItem"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <cache name="marketplace.ItemComment"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <cache name="marketplace.Text"
+           maxElementsInMemory="1000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+    <cache name="marketplace.Category"
+           maxElementsInMemory="1000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+    <cache name="marketplace.State"
+           maxElementsInMemory="1000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+    <cache name="marketplace.Types"
+           maxElementsInMemory="1000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <cache name="org.hibernate.cache.StandardQueryCache"
+           maxElementsInMemory="10000"
+           timeToIdleSeconds="1200">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <cache name="org.hibernate.cache.UpdateTimestampsCache"
+           maxElementsInMemory="5000"
+           eternal="true"
+           overflowToDisk="true">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <!-- Setup Spring Caches here -->
+    <cache name="serviceItemBadgeCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <cache name="serviceItemIconImageCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+
+    <cache name="serviceItemDescriptionCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+
+    <cache name="typeIconImageCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+
+    <cache name="nuggetCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+
+    <cache name="org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration"
+           maxElementsInMemory="100"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <cache name="query.org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration.findByCode"
+           maxElementsInMemory="100"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>
+    </cache>
+
+    <!-- Caches required by the security project for sharing security information between
+         cluster nodes. Do not modify these settings -->
+    <cache name="sessionIds"
+           maxElementsInMemory="100000"
+           eternal="true"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                                   properties="replicateUpdatesViaCopy=true"/>
+    </cache>
+    <cache name="allowedSessions"
+           maxElementsInMemory="1"
+           eternal="true"
+           overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                                   properties="replicateUpdatesViaCopy=true"/>
+    </cache>
+</ehcache>

@@ -1,0 +1,68 @@
+
+//Styles for the Affiliated "See All" page
+.affiliated-results-grid-view {
+    > .load_more_link {
+        display: block;
+        clear: both;
+    }
+
+    margin: 10px 0;
+}
+
+//extra #marketContent part to handle specificity issue
+.header, #marketContent .header {
+    margin-left: 20px;
+    margin-top: 5px;
+
+    > .search_results_title {
+        float: none;
+        display: inline-block;
+
+        background-image: none;
+        text-indent: 0;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .subtext {
+        margin-left: 5px;
+        font-size: 14px;
+        color: #a7a8ab;
+    }
+
+    .serverIcon {
+        height: 24px;
+        width: 24px;
+    }
+}
+
+.listings-grid-view {
+    .discover_market_items_table {
+        display: inline-block;
+        vertical-align: top;
+
+        margin: 30px 14px;
+    }
+}
+
+//IE7 inline-block hack
+.ie7 {
+    #marketContent .header > .search_results_title, .header > .search_results_title,
+    .listings-grid-view .discover_market_items_table {
+        display: inline;
+        zoom: 1;
+    }
+
+    .affiliated-store-info {
+        > * {
+            display: inline;
+            zoom: 1;
+        }
+    }
+}
+
+.affiliated-store-info {
+    > * {
+        display: inline-block;
+    }
+}

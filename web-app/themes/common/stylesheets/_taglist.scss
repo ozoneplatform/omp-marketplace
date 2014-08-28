@@ -1,0 +1,142 @@
+//-------------
+// <VARIABLES>
+//-------------
+
+$tag-list-item-color:                   $mp-blue !default;
+$tag-view-icon-hover:                   $link-over-color;
+
+//--------------
+// </VARIABLES>
+//--------------
+
+//---------
+// <RULES>
+//---------
+
+.tag-list {
+  font-size: 14px;
+  width: 900px;
+
+  .cloud-item {
+    margin-left: 8px;
+    color: $mp-color;
+
+    &:hover {
+      color: $tag-list-item-color;
+      text-decoration: none;
+    }
+  }
+
+  h1, h2, h4 {
+    display: inline-block;
+    margin: 0px !important;
+  }
+
+  .tag-list-header {
+    margin-bottom: 30px;
+  }
+
+  ul {
+    float: left;
+    width: 200px;
+  }
+
+  .btn-field-remove {
+    display: none !important;
+    position: static;
+    cursor: pointer;
+    margin-left: 5px;
+    margin-right: 2px;
+    top: 0;
+    padding-top: 0;
+  }
+
+  .btn-field-remove > .btn {
+    font-family: monospace;
+    line-height: 14px;
+    padding: 2px 5px;
+    font-size: 1em;
+    min-width: 1px;
+  }
+
+  .tag-list-item {
+    line-height: 25px;
+
+    .item-link {
+      padding-left: 25px;
+      color: $mp-color;
+
+      &:hover {
+        color: $tag-list-item-color;
+        text-decoration: none;
+      }
+    }
+
+    .item-count {
+      color: $meta-info-color;
+    }
+
+    &:hover {
+      .btn-field-remove {
+        display: inline-block !important;
+      }
+    }
+  }
+
+  .tag-list-index {
+    margin-bottom: -35px;
+
+    h2 {
+      color: $meta-info-color;
+    }
+  }
+
+  .tag-list-item + .tag-list-index {
+    margin-top: 15px;
+  }
+
+  .tag-list-selector {
+    i {
+      cursor: pointer;
+    }
+
+    h4 {
+      color: $mp-color;
+    }
+
+    left: 700px;
+    top: 0px;
+    position: relative;
+    vertical-align: bottom;
+  }
+}
+
+.ie7 {
+  .btn-field-remove {
+    display: inline;
+    zoom: 1;
+  }
+}
+
+.icon-cloud, .icon-list {
+    &:hover {
+    color: $tag-view-icon-hover;
+  }
+}
+
+.icon-active {
+  color: $tag-list-item-color;
+}
+
+.tag-cloud {
+  text-align: center;
+}
+
+.tag-list-item-container {
+  float: right;
+  width: 45px;
+}
+
+//----------
+// </RULES>
+//----------

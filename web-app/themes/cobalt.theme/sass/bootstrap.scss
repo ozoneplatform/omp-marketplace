@@ -1,0 +1,90 @@
+// Creates themed Bootstrap css
+$theme-name: 'cobalt';
+
+// Theme-specific bootstrap variable overrides
+@import "variables/bootstrap-variables";
+
+// Other variable overrides
+// Wizard
+$wizardHeaderBackground:      $comp_dark;
+
+//$wizardNavBackground:        $wizardHeaderBackground !default;
+//$wizardNavBackgroundActive:  $modalBackground !default;
+
+$wizardNavColor:            $comp_light1;
+$wizardNavColorActive:      $accent_base;
+$wizardNavColorVisited:     $comp_light2;
+$wizardNavColorVisitedHover: $comp_light2;
+
+$wizardHeaderBorder:        #070C16;
+
+$wizardSelectBackground:    $gray_light2 ;
+$wizardSelectBackgroundHover: $gray_light1 ;
+
+$wizardSelectColor:         $gray_light1 ;
+$wizardSelectHoverColor:    $gray_base ;
+
+$wizardSelectBorder:        $gray_base ;
+
+$caretColor:                $gray_base ;
+
+$progressBarBackground:     $comp_dark ;
+$dataExchangeSubHeaderColor: #afcefc;
+$wizard-h3-color:             #d8e8fe ;
+
+
+
+//---------------------
+// QuickView variables
+//---------------------
+
+$quickview-background-color:            #1f3256;
+$quickview-color:                       #EFEFEF;
+$quickview-border-color:                #0d182c;
+$quickview-inner-background-color:      #0d182c;
+$quickview-header-color:                #A8CAE6;
+$quickview-faded-color:                 #899CAB;
+$quickview-free-text-warning-color:     red;
+
+//-------------------------
+// END QuickView variables
+//-------------------------
+
+// Quickview-like Modal variables
+$modal-back-background-color: #263D65;
+
+
+@import "bootstrap_all";
+
+// Element overrides where we do not have the colors or other values variablized yet
+// For each one, identify the bootstrap .scss file where it originates
+.bootstrap-active {
+
+  // From _close.scss
+  .close {
+
+    color: #fff;
+    @include opacity(35);
+    &:hover,
+    &:focus {
+      color: #fff;
+
+      @include opacity(55);
+    }
+  }
+
+}
+
+.list-group > .list-item {
+    border-bottom: 1px solid #263d65;
+}
+
+
+#create-edit-listing.modal,
+#create-edit-partner-store,
+#access-alert {
+    .modal-header, .modal-footer {
+        background: #1f3256;
+        border-color: #1f3256;
+    }
+}

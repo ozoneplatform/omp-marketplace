@@ -1,0 +1,21 @@
+@import 'main';
+@import 'listings';
+@import 'header';
+@import 'buttons';
+@import 'widget';
+@import 'error';
+@import 'carousel';
+@import 'applicationConfiguration';
+@import 'tutorial';
+@import 'admin';
+@import 'settingsPanel';
+@import 'landing';
+@import 'loadmask';
+@import 'agency';
+@import 'taglist';
+@import 'tag';
+
+
+//generic styles for carousels.  The styles specific to the
+//shoppe page carousels are still in _carousel.scss
+@import 'carousel_component';

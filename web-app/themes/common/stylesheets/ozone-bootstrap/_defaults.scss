@@ -1,0 +1,88 @@
+// Base colors
+
+$comp_base: #3989C9 !default;
+$comp_dark: #2B6797 !default;
+$comp_dark1: #1D4565 !default;
+$comp_dark2: #0E2232 !default;
+$comp_light: #61a1d4 !default;
+$comp_light1: #88b8Df !default;
+$comp_light2: #b0d0e9 !default;
+$comp_light3: #d7e7f4 !default;
+
+$text_light: #FFF !default;
+$text_dark: #000 !default;
+
+$accent_base: #8cc640 !default;
+$accent_dark: #699530 !default;
+$accent_dark1: #466320 !default;
+$accent_dark2: #233210 !default;
+$accent_light: #a3d166 !default;
+$accent_light1: #badd8c !default;
+$accent_light2: #d1e8b3 !default;
+$accent_light3: #e8f4d9 !default;
+
+$gray_base: #7d7e80 !default;
+$gray_dark: #4d4d4d !default;
+$gray_dark1: #272727 !default;
+$gray_dark2: #212121 !default;
+$gray_light: #a7a8ab !default;
+$gray_light1: #bfbfbf !default;
+$gray_light2: #e5e5e5 !default;
+$gray_light3: #f2f2f2 !default;
+
+$text_color: $gray_dark !default;
+$heading_color: $comp_dark !default;
+
+// Variables added by ozone
+$modalBackground: #fff !default;
+
+
+// Brand colors
+// -------------------------
+$brand-success:         #b8d413;
+
+
+// Component sizing
+// -------------------------
+$border-radius-base:    0px !default;
+$border-radius-large:   0px !default;
+$border-radius-small:   0px !default;
+
+
+//--------------
+// Input Colors
+//--------------
+
+$input-color:                               #555 !default;
+$uneditable-input-color:                    #aaa !default;
+
+
+
+//------------------
+// END Input Colors
+//------------------
+
+
+//------------
+// Nav Colors
+//------------
+
+$nav-tab-hover-border-color:        #eee !default;
+$nav-hover-background-color:        #eee !default;
+$nav-tab-color:                     #555 !default;
+$nav-tab-border-color:              white !default;
+
+//----------------
+// END Nav Colors
+//----------------
+
+//-------------
+// Link Colors
+//-------------
+
+$link-color:             #08c !default;
+$link-color-hover:        darken($link-color, 15%) !default;
+
+//-----------------
+// END Link Colors
+//-----------------

@@ -1,0 +1,103 @@
+	/* Agency main view setup  */
+   .agency-menu {
+		float: left;
+		width: 20%;
+		padding-top: 2px;
+		height: auto;
+		margin-top: 20px;
+   }
+
+   .agency-summary{
+		margin-left: 30%;
+	}
+
+	.agency-row{
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+
+	.agency-add-new{
+		padding-top: 10px;
+	}
+
+	/* Agency read only view section  */
+
+   .agency-element {
+  		cursor: pointer;
+  		display:inline-block;
+   }
+
+   .agency-element-img{
+		width:5%;
+
+		img{
+			width: 20px;
+			height: 20px;
+   			vertical-align: bottom;
+		}
+   }
+
+   .agency-image{
+   		width: 20px !important;
+		height: 20px !important;
+   }
+
+   .agency-element-name{
+		font-size:15px;
+		overflow:hidden;
+		width:90%;
+   }
+
+
+  	/*  Agency edit view section  */
+
+  	.agency-title{
+  		font-size: 11pt;
+  		color: #4D4D4D;
+  	}
+
+   .agency-row-edit{
+  		padding-top:10px;
+  		padding-bottom:16px;
+  		width:100%;
+   }
+
+   .agency-edit-url-title{
+  		float:left;
+  		padding-right:10px;
+  		padding-left:10px;
+    }
+
+	.agency-url-input{
+		width: 375px !important;
+		height: 22px !important;
+		padding-bottom: 2px !important;
+		padding-top: 2px !important;
+	}
+
+	.agency-name-input{
+		height: 22px !important;
+		padding-bottom: 2px !important;
+		padding-top: 2px !important;
+	}
+
+	/*   Action menu section   */
+	.agency-action-menu{
+		background:url('../../common/images/icons/InlineEditing.png') no-repeat;
+		display:inline-block;
+		width:20px;
+		margin-left: 5px;
+	}
+
+	.agency-save{
+		margin-left:10px;
+	}
+
+	.sprite-cancel-down{background-position: 0 0; width: 19px; height: 15px;}
+	.sprite-cancel-out{ background-position: -29px 0; width: 19px; height: 15px;}
+	.sprite-cancel-over{background-position: -58px 0; width: 19px; height: 15px;}
+	.sprite-ok-down{ background-position: -87px 0; width: 19px; height: 15px;}
+	.sprite-ok-out{ background-position: -116px 0; width: 19px; height: 15px;}
+	.sprite-ok-over{ background-position: -145px 0; width: 19px; height: 15px;}
+
+

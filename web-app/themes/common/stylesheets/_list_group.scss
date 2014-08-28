@@ -1,0 +1,24 @@
+ul.list-group {
+    margin-left: 0;
+}
+
+.list-group > .list-item {
+    border-bottom: 1px solid #ccc;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    &:last-child {
+        border-bottom: 0px;
+    }
+}
+
+.list-item > .list-group {
+    padding-left: 1em;
+}
+
+.list-group-load-more {
+	> .load-more {
+		text-align: center;
+    border-style: none;
+	}
+}

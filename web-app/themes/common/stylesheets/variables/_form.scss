@@ -1,0 +1,46 @@
+//forms
+$mp-form-field-height: 22px !default;
+$mp-form-toolbar-field-height: 20px !default;
+$mp-form-field-font-size: $mp-font-size !default;
+
+$mp-form-field-empty-color: gray !default;
+
+$mp-form-field-border-width: 1px !default;
+$mp-form-field-border-color: #B5B8C8 !default;
+$mp-form-field-background-color: #fff !default;
+$mp-form-field-background-image: 'form/text-bg.gif' !default;
+$mp-form-field-color: #000 !default;
+$mp-form-checkbox-size: 13px !default;
+
+$mp-form-field-focus-border-color: adjust-color($mp-base-color, $hue: -4.322deg, $saturation: -1.065%, $lightness: -16.863%) !default;
+
+$mp-form-field-invalid-background-color: #fff !default;
+$mp-form-field-invalid-border-color: #C30 !default;
+
+$mp-form-trigger-width: 17px !default;
+$mp-form-trigger-border-bottom-width: 1px !default;
+$mp-form-trigger-border-bottom-color: $mp-form-field-border-color !default;
+$mp-form-trigger-border-bottom-color-over: $mp-form-field-focus-border-color !default;
+$mp-form-trigger-border-bottom-color-focus: $mp-form-field-border-color !default;
+$mp-form-trigger-border-bottom-color-focus-over: $mp-form-field-focus-border-color !default;
+$mp-form-trigger-border-bottom-color-pressed: null !default;
+
+//htmleditor
+$mp-html-editor-border-color: #737b8c !default;
+
+/**
+ * Fieldsets
+ */
+$mp-fieldset-header-font-size: $mp-font-size + 2px !default;
+$mp-fieldset-header-font-weight: bold !default;
+$mp-fieldset-header-font-family: $mp-font-family !default;
+$mp-fieldset-header-font: $mp-fieldset-header-font-weight $mp-fieldset-header-font-size $mp-fieldset-header-font-family !default;
+$mp-fieldset-header-color: adjust-color($mp-alt-base-color, $hue: 3.785deg, $saturation: 18.194%, $lightness: -52.745%) !default;
+
+$mp-fieldset-border-width: 1px !default;
+$mp-fieldset-border-style: solid !default;
+$mp-fieldset-border-color: $mp-form-field-border-color !default;
+$mp-fieldset-border: $mp-fieldset-border-width $mp-fieldset-border-style $mp-fieldset-border-color !default;
+
+$mp-fieldset-padding: 10px !default;
+$mp-fieldset-header-padding: 0 3px !default;
