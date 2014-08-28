@@ -439,9 +439,12 @@ function(
             renderAndShowModal(modal);
         },
         copy: function (model) {
+            var newModel = model.clone();
+            newModel.set('uuid', null);
+
             var modal = new CreateEditModal({
                 title: 'Draft',
-                model: model.clone()
+                model: newModel
             });
 
             renderAndShowModal(modal);
