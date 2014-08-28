@@ -33,7 +33,14 @@ class DropDownCustomField extends CustomField {
             if (StringUtils.isBlank(newValue)) {
                 this.value = null
                 newValueIsValid = true
-            } else {
+            } else if (!(customFieldDefinition instanceof DropDownCustomFieldDefinition)) {
+                //if the CustomFieldDefinition isn't in place or is just a placeholder,
+                //findFieldValueForString won't work right.  In that case just save a dto;
+                //It should get marshalled properly later on in marshallAllFieldValues
+                this.value = new FieldValue(displayText: newValue)
+                newValueIsValid = true
+            }
+            else {
                 FieldValue fieldValue = findFieldValueForString(newValue)
                 if (fieldValue) {
                     this.value = fieldValue
@@ -94,12 +101,21 @@ class DropDownCustomField extends CustomField {
                     this.@value = null
                     removeAllFromFieldValueList()
                     newValue.each {
-                        FieldValue fieldValue = findFieldValueForString(it)
-                        if (fieldValue) {
-                            addToFieldValueList(fieldValue)
-                        } else {
-                            def validationExceptionMsg = "DROP_DOWN custom field '${this.customFieldDefinition?.name}', with value provided, '${it}', requires a fieldValue with a valid Field Value Option value, from ${FieldValue.dolist(this.customFieldDefinition?.id)}"
-                            throw new ValidationException(message: validationExceptionMsg)
+                       if (!(this.customFieldDefinition instanceof DropDownCustomFieldDefinition)) {
+                            //if the CustomFieldDefinition isn't in place or is just a
+                            //placeholder, findFieldValueForString won't work right.  In that
+                            //case just save the string; It should get marshalled properly later
+                            //on in marshallAllFieldValues
+                            addToFieldValueList(it)
+                        }
+                        else {
+                            FieldValue fieldValue = findFieldValueForString(it)
+                            if (fieldValue) {
+                                addToFieldValueList(fieldValue)
+                            } else {
+                                def validationExceptionMsg = "DROP_DOWN custom field '${this.customFieldDefinition?.name}', with value provided, '${it}', requires a fieldValue with a valid Field Value Option value, from ${FieldValue.dolist(this.customFieldDefinition?.id)}"
+                                throw new ValidationException(message: validationExceptionMsg)
+                            }
                         }
                     }
             }
