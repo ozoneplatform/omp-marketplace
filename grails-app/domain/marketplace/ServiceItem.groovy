@@ -439,15 +439,17 @@ class ServiceItem implements Serializable {
      * required for backwards compatibility for export and extserviceitems
      */
     JSONObject asLegacyJSON() {
-        DateFormat legacyDateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
-        legacyDateFormat.setTimeZone(TimeZone.getTimeZone('UTC'))
 
         JSONObject json = this.asJSON()
 
         transformAgencyToLegacy(json)
         transformScreenshotsToLegacy(json)
 
-        json.releaseDate = legacyDateFormat.format(this.releaseDate)
+        if (this.releaseDate) {
+            DateFormat legacyDateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
+            legacyDateFormat.setTimeZone(TimeZone.getTimeZone('UTC'))
+            json.releaseDate = legacyDateFormat.format(this.releaseDate)
+        }
 
         json
     }

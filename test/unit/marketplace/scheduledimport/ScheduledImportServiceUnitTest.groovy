@@ -33,6 +33,7 @@ import marketplace.Constants
 import ozone.marketplace.enums.RelationshipType
 
 import marketplace.AccountService
+import marketplace.AuditLoggingService
 import marketplace.rest.ProfileRestService
 import marketplace.rest.CategoryRestService
 import marketplace.rest.TypeRestService
@@ -277,7 +278,9 @@ class ScheduledImportServiceUnitTest {
         if (!except.contains('categories')) service.metaClass.importCategories = doNothing
         if (!except.contains('types')) service.metaClass.importTypes = doNothing
         if (!except.contains('states')) service.metaClass.importStates = doNothing
-        if (!except.contains('serviceItems')) service.metaClass.importServiceItems = doNothing
+        if (!except.contains('serviceItems'))
+            service.metaClass.importServiceItems = { Collection c, Collection c2, ImportStatus s->
+            }
         if (!except.contains('relationships')) service.metaClass.importRelationships = doNothing
         if (!except.contains('customFieldDefinitions'))
             service.metaClass.importCustomFieldDefinitions = doNothing
@@ -493,11 +496,14 @@ class ScheduledImportServiceUnitTest {
         resetEditedDates()
 
         service.scheduledImportHttpService = mockHttpService()
+        mockRestServices()
+        mockListMethods()
         service.accountService = [
             loginSystemUser: {}
         ] as AccountService
-        mockRestServices()
-        mockListMethods()
+        service.auditLoggingService = [
+            logImport: {}
+        ] as AuditLoggingService
 
         FieldValue.metaClass.'static'.dolist = {
             def dropDownCustomFieldDefinition = importData.customFieldDefs.find { cfd ->
@@ -523,6 +529,20 @@ class ScheduledImportServiceUnitTest {
 
         assert task.id == taskPassedIn.id
         assert task.name == taskPassedIn.name
+    }
+
+    void testCallsLogImport() {
+        ImportTask passedInTask
+
+        mockImportMethods([])
+
+        service.auditLoggingService = [
+            logImport: { passedInTask = it }
+        ] as AuditLoggingService
+
+        service.executeScheduledImport(task)
+
+        assert passedInTask == task
     }
 
     void testImportProfiles() {
