@@ -402,17 +402,17 @@ class ScheduledImportService {
             ServiceItem existingServiceItem = ServiceItem.findByUuid(si.uuid)
 
             if (existingServiceItem) {
-                //the uuids of all listings required by this one
-                Collection<String> existingRelatedUuids = existingServiceItem.relationships
+                //the listings already required by this one
+                Collection<String> existingRelatedItems = existingServiceItem.relationships
                     .grep { it.relationshipType == RelationshipType.REQUIRE }
                     .collect { it.relatedItems }.flatten()
-                    .collect { it.uuid }
 
-                //the service item DTOs for this service item, from the relationships section
-                //of the import
-                Collection<ServiceItem> related = relationships.grep {
+                //the uuids of service item DTOs for this service item,
+                //from the relationships section of the import
+                Collection<ServiceItem> relatedUuids = relationships.grep {
                     it.owningEntity.uuid == si.uuid
                 }.collect { it.relatedItems }.flatten()
+                .collect { it.uuid }
 
                 //the relationship object on this service item DTO to add to
                 Relationship relationshipToAddTo = si.relationships.find {
@@ -427,7 +427,7 @@ class ScheduledImportService {
                 //add a service item DTO for each relationship that is both in the
                 //import and already existing
                 relationshipToAddTo.relatedItems.addAll(
-                    related.grep { it.uuid in existingRelatedUuids })
+                    existingRelatedItems.grep { it.uuid in relatedUuids })
             }
         }
     }
