@@ -398,6 +398,11 @@ class ScheduledImportService {
             Collection<Relationship> relationships) {
         serviceItems.each { si ->
 
+            //when importing from a 7.16, relationships may be present on the
+            //serviceItem json, but they will be id refs (from the other system's db)
+            //not uuid refs so they are useless here
+            si.relationships.clear()
+
             //the existing copy of this service item in the database
             ServiceItem existingServiceItem = ServiceItem.findByUuid(si.uuid)
 
@@ -486,10 +491,13 @@ class ScheduledImportService {
                     }
 
                     relatedItems.each { relatedItem ->
-                        retval << (relationship.relatedItems.contains(relatedItem) ?
-                            CreationStatus.UPDATED : CreationStatus.CREATED)
-
-                        relationship.addToRelatedItems(relatedItem)
+                        if (relationship.relatedItems.contains(relatedItem)) {
+                            return CreationStatus.NOT_UPDATED
+                        }
+                        else {
+                            relationship.addToRelatedItems(relatedItem)
+                            return CreationStatus.CREATED
+                        }
                     }
 
                     return retval
