@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /*
 This CSS is for specific style for the MARKETPLACE UI.  This does not include the Admin UI.  This CSS is also for
-specifically overriding any default ExtJS css rules for MARKETPLACE specific elements.
+specifically overriding any default css rules for MARKETPLACE specific elements.
 */
 
 html {
@@ -1562,9 +1562,6 @@ a.read_more_link {
 	@include opacity(0.5);
 }
 
-//--------------------
-// END Ext Mask Color
-//--------------------
 
 .modal-open {
 	overflow: hidden;

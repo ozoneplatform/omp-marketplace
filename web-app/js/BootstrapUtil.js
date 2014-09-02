@@ -4,13 +4,13 @@
 
 BootstrapUtil = {
     /**
-     * Attach a bootstrap tooltip to the specified Ext component or jquery collection
+     * Attach a bootstrap tooltip to the specified component or jquery collection
      * @param $el A jquery collection to either attach the tooltip to, or to apply the selector to
      * @param options bootstrap tooltip option. See: http://getbootstrap.com/2.3.2/javascript.html#tooltips
      */
     attachTooltip: function($el, options) {
         var $ = jQuery;
-        
+
         options = _.extend({
             placement: 'left',
             trigger: 'hover',

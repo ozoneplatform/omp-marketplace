@@ -17,7 +17,7 @@ function(BaseView, HeaderView, BodyView, TagPanelView, ServiceItemModel, EventBu
 
     return SuperClass.extend({
 
-        // the Ext modal
+        // the modal
         modal: null,
 
         // whether the service item is from an affiliated marketplace

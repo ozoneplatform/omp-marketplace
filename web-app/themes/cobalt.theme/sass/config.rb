@@ -1,7 +1,3 @@
-# $ext_sdk_path: This should be the path of where the ExtJS SDK is installed
-# Generally this will be in a lib/extjs folder in your applications root
-# <root>/lib/extjs
-$ext_sdk_path = "../../../vendor/ext-4.0.7/"
 $common_theme_path = "../../common" #location of marketplace's stylesheets and images that are common to mutiple themes
 $image_path = "../images"  #path to the images directory in this theme
 
@@ -16,9 +12,6 @@ css_path = File.join(sass_path, "..", "css")
 # nested, expanded, compact, compressed
 # More information can be found here http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#output_style
 output_style = :expanded
-
-# We need to load in the Ext4 themes folder, which includes all it's default styling, images, variables and mixins
-load File.join(File.dirname(__FILE__), $ext_sdk_path, 'resources', 'themes')
 
 #We need to load the MARKETPLACE Common Stylesheets
 load File.join(File.dirname(__FILE__), $common_theme_path)

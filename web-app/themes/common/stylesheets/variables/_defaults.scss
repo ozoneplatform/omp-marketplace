@@ -29,8 +29,8 @@ $mp-font-family: Helvetica, Verdana, Arial, sans-serif !default;
 
 /*
  * The font size.  This should be specified in pixels or another absolute unit.
- * Because of the way that Ext-js uses this value, relative sizes will be compounded
- * on nested elements, which is almost definetly not what you want
+ * Relative sizes will be compounded on nested elements,
+ * which is almost definetly not what you want
  */
 $mp-font-size: 12px !default;
 
@@ -198,15 +198,6 @@ $star-empty-color:    #ccc !default;
 // END FontAwesome Star Colors
 //-----------------------------
 
-//----------------
-// Ext Mask Color
-//----------------
-
-$ext-mask-color:        black !default;
-
-//--------------------
-// END Ext Mask Color
-//--------------------
 
 //import more default variables from other files in this directory
 @import 'toolbar';

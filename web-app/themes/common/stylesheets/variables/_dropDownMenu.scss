@@ -17,7 +17,6 @@ $mp-boundlist-item-selected-border-color: darken($mp-boundlist-item-over-border-
 $mp-boundlist-item-over-background-color: adjust-color($mp-base-color, $hue: 3.188deg, $saturation: 0.542%, $lightness: 7.843%) !default;
 $mp-boundlist-item-selected-background-color: darken($mp-boundlist-item-over-background-color, 5) !default;
 
-//custom properties, not supported by ExtJS
 $mp-boundlist-item-color: #000 !default;
 $mp-boundlist-item-over-color: $mp-boundlist-item-color !default;
-$mp-boundlist-item-selected-color: $mp-boundlist-item-color !default
+$mp-boundlist-item-selected-color: $mp-boundlist-item-color !default;
