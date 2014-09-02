@@ -445,7 +445,7 @@ class ServiceItem implements Serializable {
         transformAgencyToLegacy(json)
         transformScreenshotsToLegacy(json)
 
-        json.author = this.owners[0].asJSONRef()
+        json.author = this.owners[0]?.username
 
         if (this.releaseDate) {
             DateFormat legacyDateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
