@@ -103,8 +103,13 @@ class ScheduledImportHttpService {
 
             queryParamDateFormat.setTimeZone(TimeZone.getTimeZone('UTC'))
 
-            uriBuilder.addQueryParam(Constants.OMP_IMPORT_DELTA_DATE_FIELD,
-                queryParamDateFormat.format(lastRunDate))
+            String formattedDate = queryParamDateFormat.format(lastRunDate)
+
+            uriBuilder.addQueryParam(Constants.OMP_IMPORT_DELTA_DATE_FIELD, formattedDate)
+
+            //newer stores apparently use lastPull instead of editedSinceDate.  For compatibility
+            //we include both in the URL
+            uriBuilder.addQueryParam('lastPull', formattedDate)
         }
 
         //skip access alert
