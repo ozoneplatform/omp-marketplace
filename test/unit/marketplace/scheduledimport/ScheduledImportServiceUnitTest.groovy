@@ -898,17 +898,12 @@ class ScheduledImportServiceUnitTest {
         assert importStatus.serviceItems.updated == 0
         assert importStatus.serviceItems.notUpdated == 0
 
-        assert importStatus.relationships.created == 1
-        assert importStatus.relationships.updated == 0
-        assert importStatus.relationships.notUpdated == 0
-
         assert importStatus.agencies.created == 1
         assert importStatus.agencies.updated == 0
         assert importStatus.agencies.notUpdated == 0
 
         ImportTaskResult result = task.lastRunResult
         assert result.message == importStatus.summaryMessage
-
 
         makeUpdate()
         mockFindByMethods()
@@ -943,16 +938,52 @@ class ScheduledImportServiceUnitTest {
         assert importStatus.serviceItems.updated == 1
         assert importStatus.serviceItems.notUpdated == 1
 
-        assert importStatus.relationships.created == 0
-        assert importStatus.relationships.updated == 1
-        assert importStatus.relationships.notUpdated == 0
-
         assert importStatus.agencies.created == 0
         assert importStatus.agencies.updated == 0
         assert importStatus.agencies.notUpdated == 1
 
         result = task.lastRunResult
         assert result.message == importStatus.summaryMessage
+    }
+
+    void testImportStatusRelationships() {
+        ImportStatus importStatus = new ImportStatus()
+
+        //for use in the update phase of the test
+        ImportStatus anotherImportStatus = new ImportStatus()
+
+        //instead of a new importstatus return the one we have here in the test
+        ImportStatus.metaClass.constructor = { importStatus }
+
+        ServiceItem.metaClass.'static'.findByUuid = { uuid ->
+            serviceItemList.find { it.uuid == uuid }
+        }
+
+        service.executeScheduledImport(task)
+
+        assert importStatus.relationships.created == 1
+        assert importStatus.relationships.updated == 0
+        assert importStatus.relationships.notUpdated == 0
+
+        ImportTaskResult result = task.lastRunResult
+        assert result.message == importStatus.summaryMessage
+
+        //makeUpdate()
+
+        //serviceItemList.each { si ->
+            //si.relationships?.each { rel -> rel.metaClass.clear = {} }
+        //}
+
+        //importStatus = anotherImportStatus
+
+        //service.executeScheduledImport(task)
+
+        //assert importStatus.relationships.created == 0
+        //assert importStatus.relationships.updated == 0
+        //assert importStatus.relationships.notUpdated == 1
+
+        //result = task.lastRunResult
+        //assert result.message == importStatus.summaryMessage
     }
 
     void testExceptions() {

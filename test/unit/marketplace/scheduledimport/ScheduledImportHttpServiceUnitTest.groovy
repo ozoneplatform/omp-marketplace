@@ -62,7 +62,7 @@ class ScheduledImportHttpServiceUnitTest {
 
         task.addToRuns(new ImportTaskResult(runDate: runDate, result: true))
         assert service.getRemoteUri(task) ==
-            new URI('https://localhost/test-store?editedSinceDate=2014-08-20T12%3A28%3A17Z&accessAlertShown=true')
+            new URI('https://localhost/test-store?editedSinceDate=2014-08-20T12%3A28%3A17Z&lastPull=2014-08-20T12%3A28%3A17Z&accessAlertShown=true')
 
         //add another result, dated 1 second later, that failed.  Failed results should
         //have no effect
@@ -70,7 +70,7 @@ class ScheduledImportHttpServiceUnitTest {
             new ImportTaskResult(runDate: new Date(runDate.time + 1000), result: false))
 
         assert service.getRemoteUri(task) ==
-            new URI('https://localhost/test-store?editedSinceDate=2014-08-20T12%3A28%3A17Z&accessAlertShown=true')
+            new URI('https://localhost/test-store?editedSinceDate=2014-08-20T12%3A28%3A17Z&lastPull=2014-08-20T12%3A28%3A17Z&accessAlertShown=true')
     }
 
     private static class FakeFileInputStream {
