@@ -10,6 +10,16 @@ import marketplace.JSONUtil as JS
 @gorm.AuditStamp
 class CustomFieldDefinition implements Serializable {
 
+    static bindableProperties = [
+        'name', 'label',
+        'tooltip', 'description',
+        'isRequired', 'uuid',
+        'allTypes', 'isPermanent',
+        'section', 'types'
+    ]
+
+    static modifiableReferenceProperties = []
+
     String name
     String label
     String tooltip
@@ -53,7 +63,7 @@ class CustomFieldDefinition implements Serializable {
         tablePerHierarchy false
     }
 
-    String toString() { name }
+    String toString() { "${this.class} : ${name}" }
 
     String prettyPrint() {
         toString()

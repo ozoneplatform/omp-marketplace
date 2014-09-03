@@ -15,7 +15,11 @@ class CheckBoxCustomField extends CustomField {
         cache true
     }
 
-    def setValue(String valueIn) {
+    void setFieldValueText(String fieldValueText) {
+            setValue((String)fieldValueText)
+    }
+
+    void setValue(String valueIn) {
         if (valueIn == null) {
             value = false
         }

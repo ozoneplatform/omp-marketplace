@@ -91,7 +91,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <g:each in="${importTaskHistory.runs}">
+                      <g:each in="${importTaskHistory}">
                         <tr>
                           <td><g:formatDate format="MM/dd/yyyy HH:mm" date="${it.runDate}" locale="${Locale.US}"/></td>
                           <td>${it.message.encodeAsHTML()}</td>

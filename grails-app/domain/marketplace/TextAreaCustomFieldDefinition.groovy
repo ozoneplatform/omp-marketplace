@@ -2,6 +2,9 @@ package marketplace
 
 class TextAreaCustomFieldDefinition extends CustomFieldDefinition {
 
+    static bindableProperties = CustomFieldDefinition.bindableProperties
+    static modifiableReferenceProperties = []
+
     static constraints = {
         styleType(nullable: false, validator: {
             if (it != Constants.CustomFieldDefinitionStyleType.TEXT_AREA) {

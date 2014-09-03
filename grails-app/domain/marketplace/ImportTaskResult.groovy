@@ -2,7 +2,7 @@ package marketplace
 
 class ImportTaskResult implements Comparable {
 
-    Date runDate
+    Date runDate = new Date()
     Boolean result
     String message
 
@@ -43,5 +43,13 @@ class ImportTaskResult implements Comparable {
 
     String toString() {
         "ImportTaskResult[id: $id, runDate: $runDate, result: $result, message: $message]"
+    }
+
+    /**
+     * handle truncation of message
+     */
+    public void setMessage(String message) {
+        this.message = message.size() <= MESSAGE_MAX_SIZE ? message :
+            message[0..MESSAGE_MAX_SIZE - 4] + '...'
     }
 }

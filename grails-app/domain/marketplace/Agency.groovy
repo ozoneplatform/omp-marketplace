@@ -56,6 +56,10 @@ class Agency implements Serializable {
         other instanceof Agency && this.title == other.title
     }
 
+    int hashCode() {
+        title?.hashCode() ?: 0
+    }
+
     /**
      * This method is used by the import logic to create a Domain object.
      */

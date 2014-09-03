@@ -57,6 +57,7 @@ class ServiceItemRestServiceUnitTest {
 
     private static final exampleServiceItemProps = [
         id: 1,
+        uuid: '9256761f-5741-4043-9c91-436558f47bd2',
         title: "test service item",
         types: [ id: 1 ],
         state: [ id: 1 ],
@@ -67,6 +68,7 @@ class ServiceItemRestServiceUnitTest {
         isEnabled: true,
         isOutside: true,
         approvalStatus: Constants.APPROVAL_STATUSES['IN_PROGRESS'],
+        techPocs: ['poc'],
         owfProperties: [
             height: 200,
             width: 300

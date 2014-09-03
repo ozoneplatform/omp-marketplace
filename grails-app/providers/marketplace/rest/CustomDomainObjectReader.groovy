@@ -1,5 +1,8 @@
 package marketplace.rest
 
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
 import grails.converters.JSON
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
@@ -24,6 +27,9 @@ import static org.grails.jaxrs.support.ConverterUtils.getDefaultXMLEncoding
 import static org.grails.jaxrs.support.ProviderUtils.isJsonType
 import static org.grails.jaxrs.support.ProviderUtils.isXmlType
 import static ozone.utils.Utils.collectEntries
+
+import marketplace.Constants
+import marketplace.Helper
 
 @Provider
 @Consumes(['text/x-json', 'application/json'])
@@ -123,7 +129,19 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
 
             Map instantiatedMap = instantiateSubObjects(type, map)
 
-            def retval = type.metaClass.invokeConstructor(instantiatedMap)
+            def retval = type.metaClass.invokeConstructor()
+
+            //map constructor doesn't work well with overloaded setters, so use the setters
+            //explicitly
+            instantiatedMap.each { k, v ->
+                String method = "set${k.capitalize()}"
+                if (retval.respondsTo(method, v.getClass())) {
+                    retval."$method"(v)
+                }
+                else {
+                    log.debug "Discarding unusable property in JSON - $k: $v"
+                }
+            }
 
             // Workaround for http://jira.codehaus.org/browse/GRAILS-1984
             if (!retval.id) {
@@ -155,7 +173,19 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
             }
             //instantiate enums
             else if (Enum.isAssignableFrom(valueType) && value instanceof String) {
-                valueType.valueOf(value)
+                try {
+                    valueType.valueOf(value)
+                }
+                catch (IllegalArgumentException e) {
+                    //toUpperCase needed for backwards compat with things like import, where
+                    //the description is passed instead of the enum constant.  Luckily the
+                    //description is just the enum constant in capitalized-lower-case
+                    valueType.valueOf(value.toUpperCase())
+                }
+            }
+            else if (valueType == Date) {
+                !(value == null || value.isAllWhitespace()) ?
+                    Helper.parseExternalDate(value) : null
             }
             else {
                 value
@@ -172,9 +202,24 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
 
                     //the instantiated domain object or list of domain objects, or primitive or
                     //list of primitives
-                    def retval = value instanceof Collection ?
-                        value.collect(domainOrPrimitive.curry(property?.referencedPropertyType)) :
-                        domainOrPrimitive(property?.type, value)
+                    def retval
+                    if (property) {
+                        if (value instanceof Collection) {
+                            retval = value.collect(
+                                domainOrPrimitive.curry(property.referencedPropertyType))
+
+                            if (Set.isAssignableFrom(property.type)) {
+                                retval = retval as Set
+                            }
+                        }
+                        else {
+                            retval = domainOrPrimitive(property.type, value)
+                        }
+                    }
+                    else {
+                        retval = value
+                    }
+
 
                     [key, retval]
                 }

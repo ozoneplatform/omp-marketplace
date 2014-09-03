@@ -1,5 +1,10 @@
 package marketplace
 
+import java.text.ParseException
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
+
 import gorm.AuditStamp
 import org.codehaus.groovy.grails.web.json.JSONObject
 import marketplace.Constants.Action
@@ -33,6 +38,14 @@ class ServiceItemActivity implements Serializable {
 
     String prettyPrint() {
         toString()
+    }
+
+    public void setActivityDate(String dateString) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
+        activityDate = dateFormat.parse(dateString)
+    }
+    public void setActivityDate(Date activityDate) {
+        this.activityDate = activityDate
     }
 
     JSONObject asJSON() {

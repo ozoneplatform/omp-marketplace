@@ -23,6 +23,10 @@ class ImageURLCustomField extends CustomField {
         toString()
     }
 
+    void setFieldValueText(String valueIn) {
+        setValue(valueIn)
+    }
+
     public void setValue(String valueIn) {
         if (valueIn != null && valueIn.trim().size() > 0 && !valueIn.matches(Constants.URL_PATTERN)) {
             throw new ValidationException(message: "Image URL custom field '${customFieldDefinition?.name}' requires a properly formatted URL.")

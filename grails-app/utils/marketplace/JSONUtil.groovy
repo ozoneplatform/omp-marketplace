@@ -4,6 +4,7 @@ import org.codehaus.groovy.grails.web.json.JSONObject
 import ozone.utils.Utils
 
 import java.text.SimpleDateFormat
+import java.text.ParseException
 
 /**
  * JSON utilities to assist in binding from JSON to domain objects
@@ -70,10 +71,14 @@ class JSONUtil {
                     obj[prop] = ""
                 } else {
                     def parseSdf = new SimpleDateFormat(parseFmt, Locale.US)
-                    def targetSdf = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT, Locale.US)
+                    def targetSdf = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT,
+                        Locale.US)
+
                     if (val[-1..-1] == 'Z') {
+                        //Java 6 doesn't support 'Z'
                         val = "${val[0..-2]}UTC"
                     }
+
                     //TODO Ensure that using system-local timezone is correct
                     //targetSdf.setCalendar Calendar.getInstance(new SimpleTimeZone(0, "GMT"))
                     obj[prop] = targetSdf.format(parseSdf.parse(val))

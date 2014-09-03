@@ -289,7 +289,7 @@ environments {
                 rollingFile name: "marketplaceCefAudit", maxFileSize: "10000KB", maxBackupIndex: 10, file: "logs/marketplace-cef-audit.log", layout: pattern(conversionPattern: '%d{yyyy-MM-dd HH:mm:ss,SSS z} [%t] %-5p[%c]: %m%n')
                 rollingFile name: "elasticsearch", maxFileSize: "10000KB", maxBackupIndex: 10, file: "logs/elasticsearch.log", layout: pattern(conversionPattern: '%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n')
             }
-            info marketplaceCefAudit: 'ozone.marketplace.util.AuditLogListener', 'org.ozoneplatform'
+            info marketplaceCefAudit: 'ozone.marketplace.util.AuditLogListener', 'marketplace.AuditLoggingService', 'org.ozoneplatform'
             info marketplace: 'grails.app.bootstrap'
             info marketplace: 'grails.app'
             info elasticsearch: 'org.grails.plugins.elasticsearch', additivity: false
@@ -397,3 +397,4 @@ elasticSearch {
 println "Config loaded"
 
 notifications.enabled = false
+

@@ -99,4 +99,27 @@ cef {
     version = 0
 }
 
+
+/**
+ * Example scheduledImport configuration
+ * marketplace.scheduledImports = [[
+ *     name: 'Test Import',
+ *     enabled: true,
+ *     url: 'https://localhost:8443/marketplace/public/exportAll',
+ *     keyStore: [
+ *         file: null, //set null to use javax.net.ssl.keyStore system var
+ *         password: null //set null to use javax.net.ssl.keyStorePassword system var
+ *     ],
+ *     trustStore: [
+ *         file: null //set null to use javax.net.ssl.trustStore system var
+ *     ],
+ *     partial: true,
+ *     frequency: [
+ *         count: 1,
+ *         unit: 'minutes' //one of 'minutes', 'hours', 'days'
+ *     ]
+ * ]]
+ */
+marketplace.scheduledImports = []
+
 println "MarketplaceConfig.groovy completed successfully."

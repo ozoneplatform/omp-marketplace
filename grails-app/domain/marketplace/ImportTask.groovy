@@ -19,8 +19,9 @@ class ImportTask implements Serializable {
     transient def json  // Use this in place of a url when this is all we have
     //    e.g. file-based imports
 
-    static transients = ['inHours', 'inDays', 'json', 'remoteImport']
+    static transients = ['inHours', 'inDays', 'json', 'remoteImport', 'lastSuccessfulRunResult']
     static hasMany = [runs: ImportTaskResult]
+    SortedSet runs = new TreeSet()
 
     static constraints = {
         name(blank: false, nullable: false, unique: true, maxSize: 50)
@@ -39,6 +40,8 @@ class ImportTask implements Serializable {
         batchSize 50
         sort name: "asc"
         interfaceConfig lazy: false
+
+        //note: since runs is a sorted set, It sorts by compareTo and thus I don't think this mapping does anything
         runs sort: "runDate", order: "desc"
     }
 
@@ -118,5 +121,44 @@ class ImportTask implements Serializable {
         println t.prettyPrint()
     }
 
+    /**
+     * Sets the execInterval from a base interval and units
+     * @param units The units which the baseInterval is in.
+     *  Valid values: "minutes", "hours", "days"
+     * @param baseInterval The number of <units> that the interval should be
+     * @throws IllegalArugmentException if the units are not one of the expected values
+     */
+    public void setExecInterval(Integer baseInterval, String units) {
+        int multFactor
 
+        switch (units) {
+            case 'minutes':
+                multFactor = 1
+                break
+            case 'hours':
+                multFactor = 60
+                break
+            case 'days':
+                multFactor = 1440
+            default:
+                throw new IllegalArgumentException(
+                    "ImportTask units must be one of 'minutes', 'hours', or 'days'")
+        }
+
+        execInterval = baseInterval * multFactor
+    }
+
+    public ImportTaskResult getLastSuccessfulRunResult() {
+        //runs are sorted by least recent (due to being a SortedSet and their impl of compareTo),
+        //so just find the last one that was successful
+        runs?.size() ? runs.grep { it.result }[-1] : null
+    }
+
+    public boolean equals(Object other) {
+        other instanceof ImportTask && other.name == this.name
+    }
+
+    public int hashCode() {
+        name.hashCode()
+    }
 }

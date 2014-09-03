@@ -9,9 +9,7 @@ import marketplace.JSONUtil as JS
 @gorm.AuditStamp
 class Profile implements Serializable {
 
-    //nothing is updateable for now.  If the mess with User and UserDomainInstance gets
-    //consolidated that may change
-    static bindableProperties = ['bio']
+    static bindableProperties = ['bio', 'username', 'displayName', 'email', 'uuid']
     static modifiableReferenceProperties = []
 
     static searchable = {

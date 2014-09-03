@@ -25,6 +25,10 @@ class TextAreaCustomField extends CustomField {
         return value
     }
 
+    void setFieldValueText(String fieldValueText) {
+        value = fieldValueText
+    }
+
     void scrubCR() {
 
     }

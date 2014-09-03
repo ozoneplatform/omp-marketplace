@@ -2,6 +2,9 @@ package marketplace
 
 class ImageURLCustomFieldDefinition extends CustomFieldDefinition {
 
+    static bindableProperties = CustomFieldDefinition.bindableProperties
+    static modifiableReferenceProperties = []
+
     static constraints = {
         styleType(nullable: false, validator: {
             if (it != Constants.CustomFieldDefinitionStyleType.IMAGE_URL) {

@@ -14,9 +14,8 @@ import gorm.AuditStamp
 @AuditStamp
 class ServiceItem implements Serializable {
 
-    public static final String RELEASE_DATE_FORMAT_STRING= 'MM/dd/yyyy'
     private final DateFormat RELEASE_DATE_FORMAT =
-        new SimpleDateFormat(RELEASE_DATE_FORMAT_STRING)
+        new SimpleDateFormat(Constants.RELEASE_DATE_FORMAT_STRING)
 
     //these two fields are used by the RestService to determine
     //how to handle marshalling of this domain
@@ -35,7 +34,8 @@ class ServiceItem implements Serializable {
         'isEnabled', 'techPocs',
         'organization', 'relationships',
         'isHidden', 'recommendedLayouts',
-        'opensInNewBrowserTab', 'satisfiedScoreCardItems'
+        'opensInNewBrowserTab', 'satisfiedScoreCardItems',
+        'uuid'
     ]
 
     final static modifiableReferenceProperties = [
@@ -374,6 +374,53 @@ class ServiceItem implements Serializable {
     }
 
     /**
+     * Legacy compat method
+     */
+    public void setAgencyIcon(String agencyIcon) {
+        if (agencyIcon) {
+            if (!agency) {
+                agency = new Agency()
+            }
+
+            agency.iconUrl = agencyIcon
+        }
+    }
+
+    /**
+     * Legacy compat method
+     */
+    public void setAgency(String agencyName) {
+        if (agencyName) {
+            if (!agency) {
+                agency = new Agency()
+            }
+
+            agency.title = agencyName
+        }
+    }
+    public void setAgency(Agency agency) {
+        this.agency = agency
+    }
+
+    /**
+     * Screenshot legacy screenshots format
+     */
+    public void setScreenshot1Url(String url) {
+        if (!screenshots) {
+            screenshots = []
+        }
+
+        screenshots[0] = new Screenshot(smallImageUrl: url)
+    }
+    public void setScreenshot2Url(String url) {
+        if (!screenshots) {
+            screenshots = []
+        }
+
+        screenshots[1] = new Screenshot(smallImageUrl: url)
+    }
+
+    /**
      * Service Item screenshots are now stored internally as separate objects.
      * However, for compatibility, the import/export format still needs to have
      * the old format
@@ -392,10 +439,19 @@ class ServiceItem implements Serializable {
      * required for backwards compatibility for export and extserviceitems
      */
     JSONObject asLegacyJSON() {
+
         JSONObject json = this.asJSON()
 
         transformAgencyToLegacy(json)
         transformScreenshotsToLegacy(json)
+
+        json.author = this.owners[0]?.username
+
+        if (this.releaseDate) {
+            DateFormat legacyDateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_FORMAT)
+            legacyDateFormat.setTimeZone(TimeZone.getTimeZone('UTC'))
+            json.releaseDate = legacyDateFormat.format(this.releaseDate)
+        }
 
         json
     }
@@ -656,7 +712,31 @@ class ServiceItem implements Serializable {
     }
 
     public void setReleaseDate(String dateString) throws ParseException {
-        releaseDate = RELEASE_DATE_FORMAT.parse(dateString)
+        if (dateString && dateString != '') {
+            try {
+                releaseDate = RELEASE_DATE_FORMAT.parse(dateString)
+            }
+            catch (ParseException e) {
+                try {
+                    DateFormat dateFormat =
+                        new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
+                    releaseDate = dateFormat.parse(dateString)
+                }
+                catch (ParseException e2) {
+                    //throw the original exception
+                    throw e
+                }
+            }
+        }
+    }
+
+    public void setApprovedDate(String dateString) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
+        approvedDate = dateFormat.parse(dateString)
+    }
+
+    public void setApprovedDate(Date date) {
+        approvedDate = date
     }
 
     public void setReleaseDate(Date date) {
@@ -696,6 +776,13 @@ class ServiceItem implements Serializable {
 
     boolean isAuthor(String username) {
         this.owners?.find { it.username == username }
+    }
+
+    /**
+     * Legacy support for JSON from single-owner stores
+     */
+    public void setOwner(Profile owner) {
+        this.owners = [owner]
     }
 
     void addScreenshot(Screenshot screenshot) {

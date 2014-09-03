@@ -21,6 +21,10 @@ class CustomField implements Serializable {
 
     CustomFieldDefinition customFieldDefinition
 
+    //This field is only used when this class is used directly, generally as a DTO.
+    //It should not be used by the actual subclass CustomField impls
+    private String value
+
     static transients = ['fieldValueText', 'customFieldName', 'empty']
 
     static mapping = {
@@ -30,7 +34,11 @@ class CustomField implements Serializable {
     }
 
     String getFieldValueText(){
-        return null
+        return value
+    }
+
+    public void setValue(def value) {
+        this.value = value == null ? null : value.toString()
     }
 
     boolean isEmpty() {
@@ -60,5 +68,12 @@ class CustomField implements Serializable {
 
     boolean equals(other) {
         this.customFieldDefinition.equals(other?.customFieldDefinition)
+    }
+
+    /**
+     * Legacy import format compat
+     */
+    public void setCustomFieldDefinitionUuid(String uuid) {
+        this.customFieldDefinition = new CustomFieldDefinition(uuid: uuid)
     }
 }

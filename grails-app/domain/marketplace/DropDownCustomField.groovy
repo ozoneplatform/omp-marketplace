@@ -33,7 +33,14 @@ class DropDownCustomField extends CustomField {
             if (StringUtils.isBlank(newValue)) {
                 this.value = null
                 newValueIsValid = true
-            } else {
+            } else if (!(customFieldDefinition instanceof DropDownCustomFieldDefinition)) {
+                //if the CustomFieldDefinition isn't in place or is just a placeholder,
+                //findFieldValueForString won't work right.  In that case just save a dto;
+                //It should get marshalled properly later on in marshallAllFieldValues
+                this.value = new FieldValue(displayText: newValue)
+                newValueIsValid = true
+            }
+            else {
                 FieldValue fieldValue = findFieldValueForString(newValue)
                 if (fieldValue) {
                     this.value = fieldValue
@@ -57,6 +64,13 @@ class DropDownCustomField extends CustomField {
 
     String prettyPrint() {
         toString()
+    }
+
+    void setFieldValueText(String value) {
+        //if it is a multiselect field, split on commas.
+        //this method may either call setValue(String) or setValue(String[])
+        def val = customFieldDefinition.isMultiSelect ? value.split(',') as String[] : value
+        setValue(val)
     }
 
     //this method will only ever be called if there is only one selection
@@ -87,12 +101,21 @@ class DropDownCustomField extends CustomField {
                     this.@value = null
                     removeAllFromFieldValueList()
                     newValue.each {
-                        FieldValue fieldValue = findFieldValueForString(it)
-                        if (fieldValue) {
-                            addToFieldValueList(fieldValue)
-                        } else {
-                            def validationExceptionMsg = "DROP_DOWN custom field '${this.customFieldDefinition?.name}', with value provided, '${it}', requires a fieldValue with a valid Field Value Option value, from ${FieldValue.dolist(this.customFieldDefinition?.id)}"
-                            throw new ValidationException(message: validationExceptionMsg)
+                       if (!(this.customFieldDefinition instanceof DropDownCustomFieldDefinition)) {
+                            //if the CustomFieldDefinition isn't in place or is just a
+                            //placeholder, findFieldValueForString won't work right.  In that
+                            //case just save the string; It should get marshalled properly later
+                            //on in marshallAllFieldValues
+                            addToFieldValueList(it)
+                        }
+                        else {
+                            FieldValue fieldValue = findFieldValueForString(it)
+                            if (fieldValue) {
+                                addToFieldValueList(fieldValue)
+                            } else {
+                                def validationExceptionMsg = "DROP_DOWN custom field '${this.customFieldDefinition?.name}', with value provided, '${it}', requires a fieldValue with a valid Field Value Option value, from ${FieldValue.dolist(this.customFieldDefinition?.id)}"
+                                throw new ValidationException(message: validationExceptionMsg)
+                            }
                         }
                     }
             }
@@ -105,14 +128,23 @@ class DropDownCustomField extends CustomField {
      * DTOs
      */
     void marshallAllFieldValues() {
-        if (value && value.customFieldDefinition == null) {
-            def val = findFieldValueForString(value.displayText)
-            if (!val) {
-                throw new IllegalArgumentException(
-                    "Invalid DropDownCustomField value ${value.displayText}")
+        if (value) {
+            if (value instanceof String) {
+                value = new FieldValue(displayText: value)
+            }
+
+            if (value.customFieldDefinition == null) {
+                def val = findFieldValueForString(value.displayText)
+                if (!val) {
+                    throw new IllegalArgumentException(
+                        "Invalid DropDownCustomField value ${value.displayText}")
+                }
+                else {
+                    value = val
+                }
             }
             else {
-                value = val
+                value?.refresh()
             }
         }
 
@@ -122,6 +154,11 @@ class DropDownCustomField extends CustomField {
 
             while (listIter.hasNext()) {
                 currValue = listIter.next()
+
+                if (currValue instanceof String) {
+                    currValue = new FieldValue(displayText: currValue)
+                }
+
                 if (currValue.customFieldDefinition == null) {
                     def val = findFieldValueForString(currValue.displayText)
                     if (!val) {
@@ -132,12 +169,15 @@ class DropDownCustomField extends CustomField {
                         listIter.set(val)
                     }
                 }
+                else {
+                    currValue?.refresh()
+                }
             }
         }
     }
 
     FieldValue findFieldValueForString(String strValue) {
-        return FieldValue.findByDisplayTextAndCustomFieldDefinition(strValue, this.customFieldDefinition)
+        FieldValue.findByDisplayTextAndCustomFieldDefinition(strValue, this.customFieldDefinition)
     }
 
     String getFieldValueText() {

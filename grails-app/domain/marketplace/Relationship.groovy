@@ -11,8 +11,8 @@ class Relationship implements Serializable {
     static modifiableReferenceProperties = []
 
 
-    List<ServiceItem> relatedItems
-    RelationshipType relationshipType
+    List<ServiceItem> relatedItems = []
+    RelationshipType relationshipType = RelationshipType.REQUIRE
 
     static hasMany = [relatedItems: ServiceItem]
     static belongsTo = [owningEntity: ServiceItem]
@@ -37,5 +37,24 @@ class Relationship implements Serializable {
                 eq('id', related.id)
             }
         }
+    }
+
+    /**
+     * Setters for legacy format compatibility (scheduled import)
+     */
+
+    public void setRequires(Collection<ServiceItem> serviceItems) {
+        if (relatedItems == null) {
+            relatedItems = []
+        }
+        else {
+            relatedItems.clear()
+        }
+
+        relatedItems += serviceItems.collect { new ServiceItem(it) }
+    }
+
+    public void setServiceItem(ServiceItem owningEntity) {
+        this.owningEntity = owningEntity
     }
 }

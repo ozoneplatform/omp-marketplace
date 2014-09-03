@@ -9,6 +9,9 @@ import org.codehaus.groovy.grails.web.json.JSONObject
 @gorm.AuditStamp
 class FieldValue implements Serializable {
 
+    static bindableProperties = ['displayText', 'isEnabled']
+    static modifiableReferenceProperties = []
+
 	String displayText
 
 	Integer isEnabled = 1

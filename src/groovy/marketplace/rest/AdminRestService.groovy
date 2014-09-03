@@ -29,12 +29,12 @@ class AdminRestService<T> extends RestService<T> {
     }
 
     @RolesAllowed('ROLE_ADMIN')
-    public T updateById(Long id, T dto) {
-        return super.updateById(id, dto)
+    public T updateById(Long id, T dto, boolean skipValidation=false) {
+        return super.updateById(id, dto, skipValidation)
     }
 
     @RolesAllowed('ROLE_ADMIN')
-    public T createFromDto(T dto) {
-        return super.createFromDto(dto)
+    public T createFromDto(T dto, boolean skipValidation=false) {
+        return super.createFromDto(dto, skipValidation)
     }
 }

@@ -36,6 +36,7 @@ class Constants {
     public static final String OPT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
     public static final String EXTERNAL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
     public static final String EXTERNAL_DATE_PARSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssz"
+    public static final String RELEASE_DATE_FORMAT_STRING= 'MM/dd/yyyy'
 
     public static final def APPROVAL_STATUSES = ["IN_PROGRESS": "In Progress", "PENDING": "Pending", "APPROVED": "Approved", "REJECTED": "Rejected"]
 
@@ -69,6 +70,9 @@ class Constants {
     public static final String INSIDE_OUTSIDE_ADMIN_SELECTED = 'ADMIN_SELECTED'
     public static final String INSIDE_OUTSIDE_ALL_OUTSIDE = 'ALL_OUTSIDE'
     public static final String INSIDE_OUTSIDE_ALL_INSIDE = 'ALL_INSIDE'
+
+    public static final String JOB_ID_KEY = 'importTaskId'
+    public static final String JOB_SERVICE_KEY = 'importService'
 
     /** Defines relative location of an image served by OMP ImageService; append image ID */
     public static final String OMP_IMAGE_URL_PREFIX = "/images/get/"

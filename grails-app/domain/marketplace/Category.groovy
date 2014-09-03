@@ -14,7 +14,7 @@ class Category implements Serializable {
         only = ['id', 'title']
     }
 
-    static bindableProperties = ['title', 'description']
+    static bindableProperties = ['title', 'description', 'uuid']
     static modifiableReferenceProperties = []
 
     String title

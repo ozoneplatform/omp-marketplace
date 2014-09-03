@@ -135,7 +135,7 @@ grails.project.dependency.resolution = {
         }
 
         // HTTP Client
-        compile('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
+        compile('org.apache.httpcomponents:httpcore:4.3.2', 'org.apache.httpcomponents:httpclient:4.3.5')
 
         compile("org.codehaus.groovy.modules.http-builder:http-builder:0.5.0") {
             excludes "xml-apis", "asm", "groovy", "http-core", "httpclient"

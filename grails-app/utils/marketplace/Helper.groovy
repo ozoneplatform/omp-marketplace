@@ -4,6 +4,8 @@ import java.util.regex.*;
 import java.util.UUID;
 
 import java.text.SimpleDateFormat
+import java.text.DateFormat
+import java.text.ParseException
 
 class Helper {
 
@@ -92,15 +94,31 @@ class Helper {
     }
 
     // From the JSONObject class
-    static Date parseExternalDate(String dateStr) {
+    static Date parseExternalDate(String dateStr) throws ParseException {
         assert dateStr != null
+        DateFormat df = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT,
+                Locale.US)
+
         // Workaround for Java6:  ISO8601, which recognizes 'Z' as a timezone,
         //    is not supported until Java7; so we have to pretend to understand the date
-        java.text.SimpleDateFormat df = new java.text.SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT, Locale.US)
         if (dateStr[-1..-1] == 'Z') {
             dateStr = "${dateStr[0..-2]}UTC"
         }
-        return df.parse(dateStr)
+
+        try {
+            return df.parse(dateStr)
+        }
+        catch (ParseException e) {
+            //attempt to parse as simple date (with no time)
+            df = new SimpleDateFormat(Constants.RELEASE_DATE_FORMAT_STRING, Locale.US)
+
+            try {
+                return df.parse(dateStr)
+            }
+            catch (ParseException e2) {
+                throw e
+            }
+        }
     }
 
     /**

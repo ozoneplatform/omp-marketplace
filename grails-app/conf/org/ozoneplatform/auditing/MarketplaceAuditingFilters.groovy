@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest
 
 import marketplace.AccountService
+import marketplace.AuditLoggingService
 import marketplace.configuration.MarketplaceApplicationConfigurationService
 import static ozone.marketplace.enums.MarketplaceApplicationSetting.*
 
@@ -18,85 +19,56 @@ import ozone.utils.User
 
 class MarketplaceAuditingFilters extends AbstractAuditingFilters{
 
-	GrailsApplication grailsApplication
-
-	AccountService accountService
-
-	MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+    AuditLoggingService auditLoggingService
 
 	public String getApplicationVersion(){
-		return grailsApplication.metadata['app.version']
+		auditLoggingService.applicationVersion
 	}
 
 
 	@Override
 	public boolean doCefLogging() {
-		try{
-			ApplicationConfiguration doCefLogging = marketplaceApplicationConfigurationService.getApplicationConfiguration(CEF_LOGGING_ENABLED)
-			if(doCefLogging)
-				return Boolean.valueOf(doCefLogging.value)
-		} catch (Throwable t){
-			return true
-		}
-		return true
+        auditLoggingService.doCefLogging()
 	}
 
 
 	@Override
 	public String getUserName() {
-		return accountService.getLoggedInUsername()
+		auditLoggingService.userName
 	}
 
 
 	@Override
 	public String getHostClassification() {
-        String hostCls
-		try{
-		    ApplicationConfiguration securityLevel = marketplaceApplicationConfigurationService.getApplicationConfiguration(SECURITY_LEVEL)
-            hostCls = securityLevel?.value ?: Extension.UNKOWN_VALUE
-		} catch (BeansException ex){
-			hostCls = Extension.UNKOWN_VALUE
-		}
-
-        hostCls
+        auditLoggingService.hostClassification
 	}
 
 	@Override
 	public String getDeviceProduct() {
-		grailsApplication.config.cef.device.product
+        auditLoggingService.deviceProduct
 	}
 
 	@Override
 	public String getDeviceVendor() {
-		grailsApplication.config.cef.device.vendor
+		auditLoggingService.deviceVendor
 	}
 
 	@Override
 	public String getDeviceVersion() {
-	    	grailsApplication.config.cef.device.version
+        auditLoggingService.deviceVersion
 	}
 
 	@Override
 	public int getCEFVersion() {
-		grailsApplication.config.cef.version
+		auditLoggingService.getCEFVersion()
 	}
-
 
 	public HttpServletRequest getRequest()  {
         return RCH?.getRequestAttributes()?.getRequest()
     }
 
-
 	@Override
 	public Map<String, String> getUserInfo(){
-		User currentUser = accountService.getLoggedInUser()
-		def map = [:]
-		map['USERNAME'] = currentUser.username
-		map['NAME'] 	= currentUser.name
-		map['ORG'] 		= currentUser.org
-		map['EMAIL'] 	= currentUser.email
-		map['ROLES']	= accountService.getLoggedInUserRoles().collect{it instanceof String ? it : it.authority}
-		map
+        auditLoggingService.userInfo
 	}
-
 }

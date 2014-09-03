@@ -214,6 +214,10 @@ class ServiceItemRestService extends RestService<ServiceItem> {
         }
 
         updateRelationshipsServiceItemActivity(updated, original)
+
+        //this save prevents occasional TransientObjectExceptions in syncServiceItemWithOwf
+        save(updated)
+
         syncServiceItemWithOwf(updated)
 
     }
@@ -235,10 +239,7 @@ class ServiceItemRestService extends RestService<ServiceItem> {
                 case Constants.APPROVAL_STATUSES['APPROVED']:
                     doApprove(updated)
                     break
-                default:
-                    //should never happen assuming validateApprovalStatus has been run
-                    throw new IllegalStateException("Unexpected approvalStatus transition in " +
-                        "updateApprovalStatus: $oldApprovalStatus -> $newApprovalStatus")
+                //other cases are possible during import. Do nothing
             }
         }
     }
@@ -313,11 +314,11 @@ class ServiceItemRestService extends RestService<ServiceItem> {
 
     @Override
     protected void populateDefaults(ServiceItem dto) {
-        Profile profile = profileRestService.currentUserProfile
+        Profile profile = profileRestService.currentUserProfile ?: Profile.getSystemUser()
         User user = accountService.loggedInUser
         dto.with {
-            owners = owners ?: [profile]
-            techPocs = techPocs ?: [profile.username]
+            owners = owners?.size() ? owners : [profile]
+            techPocs = techPocs?.size() ? techPocs : [profile.username]
             organization = organization ?: user.org
             state = state ?: State.findByTitle("Active")
         }
