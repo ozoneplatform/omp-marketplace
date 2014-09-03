@@ -1,6 +1,6 @@
 {
   "name": "ozone-marketplace",
-  "version": "7.16.0",
+  "version": "7.16.1",
   "dependencies": {},
   "devDependencies": {
     "karma-script-launcher": "~0.1.0",
