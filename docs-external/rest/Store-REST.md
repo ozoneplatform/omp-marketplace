@@ -1,5 +1,5 @@
-# Store 7.15 REST Documentation
-The following APIs reference Marketplace 7.15. They are subject to change [in future versions].
+# Store 7.16.1 REST Documentation
+The following APIs reference Marketplace 7.16.1. They are subject to change [in future versions].
 
 # Group API
 
