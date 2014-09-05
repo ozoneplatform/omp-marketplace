@@ -183,7 +183,7 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
                     valueType.valueOf(value.toUpperCase())
                 }
             }
-            else if (valueType == Date) {
+            else if (valueType == Date && value instanceof String) {
                 !(value == null || value.isAllWhitespace()) ?
                     Helper.parseExternalDate(value) : null
             }
