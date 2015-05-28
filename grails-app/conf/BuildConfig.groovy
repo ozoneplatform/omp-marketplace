@@ -104,7 +104,8 @@ grails.project.dependency.resolution = {
         grailsPlugins()
         grailsHome()
         mavenLocal()
-        mavenRepo "https://www.owfgoss.org/nexus/content/groups/public"
+        mavenRepo 'http://maven.restlet.org'
+        mavenRepo 'http://repository.opencastproject.org/nexus/content/repositories/public'
         grailsCentral()
         mavenCentral()
     }
@@ -128,7 +129,6 @@ grails.project.dependency.resolution = {
 
         //only include these jdbc drivers for non production
         if (Environment.current != Environment.PRODUCTION) {
-            runtime 'com.oracle:ojdbc14:10.2.0.1.0'
             runtime 'mysql:mysql-connector-java:5.1.6'
             runtime 'net.sourceforge.jtds:jtds:1.2.4'
             runtime 'postgresql:postgresql:9.1-901.jdbc3'
