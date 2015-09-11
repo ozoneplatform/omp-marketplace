@@ -1,7 +1,7 @@
 package marketplace
 
 import org.apache.commons.lang.exception.ExceptionUtils
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 import org.hibernate.FlushMode
 import ozone.marketplace.domain.ValidationException
 
@@ -16,7 +16,7 @@ class ProfileController extends BaseMarketplaceRestController {
     def sessionFactory
     def messageSource
     def auditLogListener
-    def config = ConfigurationHolder.config
+    def config = Holders.config
     def themeService
 
     static allowedMethods = [edit: 'POST', editBio: 'POST', update: 'POST', updateSessionAccessAlertShown: 'POST', onBeforeLogout: 'POST']

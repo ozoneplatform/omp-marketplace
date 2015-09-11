@@ -64,7 +64,6 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
     /**
      * Custom reader that does not require the json to specify the class name.
      */
-    @Override
     protected Object readFromJson(Class type, InputStream entityStream, String charset) {
         def map
         try {

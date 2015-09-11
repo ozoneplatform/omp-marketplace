@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.*
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import static ozone.marketplace.enums.MarketplaceApplicationSetting.*
 import static ozone.marketplace.enums.MarketplaceApplicationSettingType.*
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
+import grails.util.Holders as confHolder
 
 @TestMixin(IntegrationTestMixin)
 class ApplicationConfigurationServiceTests {

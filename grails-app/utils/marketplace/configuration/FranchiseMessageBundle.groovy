@@ -11,7 +11,6 @@ class FranchiseMessageBundle extends PluginAwareResourceBundleMessageSource {
      * the application is in.
      */
 
-    @Override
     public void setBaseNameOrder(isOverlayMode) {
         if (isOverlayMode) {
             //If we are in overlay mode then favor properties from messages_franchise

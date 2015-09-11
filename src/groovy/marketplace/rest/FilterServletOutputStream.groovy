@@ -1,11 +1,20 @@
 package marketplace.rest
 
 import javax.servlet.ServletOutputStream
+import javax.servlet.WriteListener
 
 class FilterServletOutputStream extends ServletOutputStream {
 
 
     private DataOutputStream stream
+
+    public boolean isReady() {
+
+    }
+
+    public void setWriteListener(WriteListener writeListener) {
+
+    }
 
     public FilterServletOutputStream(OutputStream output) {
         stream = new DataOutputStream(output)

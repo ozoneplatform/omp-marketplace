@@ -234,7 +234,6 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
 
     //  TODO: Now that the actual creation of configurations has been moved from here to the database scripts,
     //  we should probably find somewhere else to handle metadata creation and service initialization
-    @Override
     @Transactional(readOnly = false)
     void createRequired() {
 

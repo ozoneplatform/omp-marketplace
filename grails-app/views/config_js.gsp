@@ -1,4 +1,4 @@
-<%@ page import="org.codehaus.groovy.grails.commons.ConfigurationHolder" contentType="text/javascript" %>
+<%@ page import="grails.util.Holders" contentType="text/javascript" %>
 <%@ page import="grails.converters.JSON" %>
 
 var Marketplace = Marketplace || {};

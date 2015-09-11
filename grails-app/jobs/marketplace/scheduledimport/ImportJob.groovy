@@ -1,6 +1,6 @@
 package marketplace.scheduledimport
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+import grails.util.Holders as AH
 
 import org.quartz.JobExecutionContext
 import org.quartz.JobExecutionException

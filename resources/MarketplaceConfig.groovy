@@ -1,4 +1,4 @@
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 import grails.util.*
 
 println "Loading custom Marketplace configurations."

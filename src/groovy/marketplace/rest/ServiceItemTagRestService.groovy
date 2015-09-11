@@ -99,7 +99,6 @@ class ServiceItemTagRestService extends RestService<ServiceItemTag> {
         serviceItemTag.serviceItem = serviceItemRestService.getById(serviceItemTag.serviceItem.id)
     }
 
-    @Override
     @Transactional
     protected void postprocess(ServiceItemTag updated, ServiceItemTag original = null) {
         super.postprocess(updated, original)

@@ -4,7 +4,7 @@ import grails.test.mixin.TestMixin
 import grails.test.mixin.integration.IntegrationTestMixin
 
 import ozone.marketplace.controller.*;
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 
 import ozone.marketplace.enums.ImageType
 
@@ -12,7 +12,7 @@ import ozone.marketplace.enums.ImageType
 class ImagesControllerTests extends MarketplaceIntegrationTestCase {
 	def imagesService
     def sessionFactory
-	def config = ConfigurationHolder.config
+	def config = Holders.config
 
 	void setUp() {
 		super.setUp()

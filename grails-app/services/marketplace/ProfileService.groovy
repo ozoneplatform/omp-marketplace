@@ -3,11 +3,13 @@ package marketplace
 import ozone.marketplace.domain.ValidationException
 import org.springframework.transaction.annotation.Transactional
 import ozone.utils.User
-import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
+//import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
+import grails.util.Holders
 import marketplace.AccountService
 import static marketplace.Constants.*
 class ProfileService extends OzoneService {
 
+    def config = Holders.config
 
     AccountService accountService
 

@@ -1,6 +1,7 @@
 package marketplace
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+// import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
@@ -24,7 +25,7 @@ class ImportService {
     def accountService
 
     boolean transactional = false
-    def config = ConfigurationHolder.config
+    def config = Holders.config
     def importExecutorService
 
     /**

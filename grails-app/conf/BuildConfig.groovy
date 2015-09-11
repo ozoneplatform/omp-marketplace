@@ -175,9 +175,9 @@ grails.project.dependency.resolution = {
         test ':codenarc:0.20'
         test ':gmetrics:0.3.1'
 
-        build ':tomcat:7.0.52.1'
+        build ':tomcat:8.0.22'
 
-        runtime ':cors:1.1.4' // OP-3932
-        runtime ':jaxrs:0.10'
+        runtime ':cors:1.1.8' // OP-3932
+        runtime ':jaxrs:0.11'
     }
 }

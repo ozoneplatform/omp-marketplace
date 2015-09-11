@@ -5,7 +5,8 @@ import marketplace.*
 
 import org.apache.log4j.helpers.*
 import org.apache.log4j.xml.*
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
+import grails.util.Holders
+
 import org.codehaus.groovy.grails.web.json.*
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 import org.springframework.context.ApplicationContext
@@ -180,7 +181,7 @@ class BootStrap {
         marketplaceApplicationConfigurationService.initializeConfigDependentServices()
 
         def system_user = Profile.getSystemUser()
-        confHolder.config.system_user_id = system_user.id  //What is this?  conf holder is a singleton, this is bad
+        Holders.config.system_user_id = system_user.id  //What is this?  conf holder is a singleton, this is bad
 
         preloadAvatars()
         preloadDefaultServiceItemIcon()

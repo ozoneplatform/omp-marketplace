@@ -4,9 +4,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="grailsApplication" class="org.codehaus.groovy.grails.commons.GrailsApplicationFactoryBean">
-		<description>Grails application factory bean</description>
-		<property name="grailsDescriptor" value="/WEB-INF/grails.xml" />
-		<property name="grailsResourceLoader" ref="grailsResourceLoader" />
+	    <description>Grails application factory bean</description>
+	    <property name="grailsDescriptor" value="/WEB-INF/grails.xml" />
 	</bean>
 
 	<bean id="pluginManager" class="org.codehaus.groovy.grails.plugins.GrailsPluginManagerFactoryBean">
@@ -21,8 +20,6 @@
 		</constructor-arg>
 		<property name="pluginManager" ref="pluginManager" />
 	</bean>
-
-	<bean id="grailsResourceLoader" class="org.codehaus.groovy.grails.commons.GrailsResourceLoaderFactoryBean" />
 
 	<bean id="characterEncodingFilter" class="org.springframework.web.filter.CharacterEncodingFilter">
 		<property name="encoding">

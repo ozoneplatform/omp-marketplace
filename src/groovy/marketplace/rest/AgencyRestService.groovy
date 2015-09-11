@@ -20,7 +20,6 @@ class AgencyRestService extends AdminRestService<Agency> {
     //Keep CGLIB happy
     AgencyRestService() {}
 
-    @Override
 	public Collection<Agency> getAll() {
 		def crit = Agency.createCriteria()
 		List<Agency> agencyList = crit.list{

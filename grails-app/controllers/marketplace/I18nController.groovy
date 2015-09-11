@@ -1,6 +1,6 @@
 package marketplace
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder
+import grails.util.Holders
 
 class I18nController {
 

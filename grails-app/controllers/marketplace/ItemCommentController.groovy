@@ -1,6 +1,6 @@
 package marketplace
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 import org.hibernate.FlushMode
 import org.hibernate.StaleObjectStateException
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse
 
 class ItemCommentController extends BaseMarketplaceRestController {
 
-    def config = ConfigurationHolder.config
+    def config = Holders.config
     def serviceItemService
     def itemCommentService
     def searchableService

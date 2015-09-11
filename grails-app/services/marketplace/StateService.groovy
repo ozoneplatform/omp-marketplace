@@ -5,12 +5,13 @@ import org.apache.commons.lang.exception.ExceptionUtils
 import org.hibernate.FlushMode
 import java.text.SimpleDateFormat
 import org.springframework.transaction.annotation.Transactional
-import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
-
+// import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
+import grails.util.Holders
 
 class StateService extends MarketplaceService {
 
     def sessionFactory
+    def config = Holders.config
 
     @Transactional(readOnly = true)
     def listB(def params) {

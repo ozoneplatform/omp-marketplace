@@ -1,7 +1,7 @@
 package marketplace
 
 import org.springframework.transaction.annotation.Transactional
-import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
+import grails.util.Holders
 
 class ScoreCardService {
 
@@ -9,6 +9,7 @@ class ScoreCardService {
     def accountService
     def profileService
     def serviceItemActivityInternalService
+    def config = Holders.config
     
     // Score Card Question Section
     

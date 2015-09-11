@@ -2,12 +2,12 @@ package marketplace
 
 import javax.servlet.http.HttpSession
 import org.springframework.web.context.request.RequestContextHolder
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 import grails.orm.HibernateCriteriaBuilder
 import groovy.time.TimeCategory
 
 abstract class OzoneService {
-    def config = ConfigurationHolder.config
+    def config = Holders.config
 
     /**
      * getSession() - get the session from the Spring framework RequestContextHolder

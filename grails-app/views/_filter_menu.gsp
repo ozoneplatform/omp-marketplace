@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="marketplace.*" %>
-<%@ page import="org.codehaus.groovy.grails.commons.ConfigurationHolder as configHolder" %>
+<%@ page import="grails.util.Holders as configHolder" %>
 
 <%
     def linkColor = "color: #4d4d4d"
