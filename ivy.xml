@@ -5,6 +5,14 @@
         <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}" rev="${tomcat.custom.rev}" transitive="false" >
             <artifact name="${tomcat.custom.module}" type="zip" />
         </dependency>
+
+        <dependency org="${mp.security.org}" conf="bundle->*"
+                name="${mp.security.module}-project" rev="${mp.security.rev}"
+                transitive="false" changing="true">
+            <artifact name="${mp.security.module}-project" type="zip" />
+        </dependency>
+
+
         <dependency org="${mp.security.org}" name="${mp.security.module}-project" rev="${mp.security.rev}" transitive="false">
             <artifact name="${mp.security.module}-project" type="zip" />
         </dependency>
