@@ -9,7 +9,6 @@ import marketplace.testutil.FakeAuditTrailHelper
 class IntentDataTypeTests {
     IntentDataType dataType
 
-    @Override
     void setUp() {
         FakeAuditTrailHelper.install()
 

@@ -153,6 +153,7 @@ grails.project.dependency.resolution = {
         compile("org.ozoneplatform:ozone-security:${config.mp.security.rev}") {
             excludes([group: 'org.springframework'])
         }
+        compile 'org.grails:grails-web-databinding-spring:2.4.3'
     }
 
     plugins {
@@ -166,7 +167,7 @@ grails.project.dependency.resolution = {
         compile 'org.ozoneplatform:ozone-appconfig:0.9'
         compile 'org.ozoneplatform:ozone-auditing:1.2.1'
         compile 'org.ozoneplatform:ozone-messaging:1.19'
-        compile ':elasticsearch:0.0.2.6'
+        compile ':elasticsearch:0.0.4.6'
         compile ':audit-trail:2.0.2'
         compile ':hibernate:3.6.10.12'
 

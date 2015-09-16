@@ -59,6 +59,7 @@ logs/*
 out/*
 plugins/*
 !plugins/audit-trail-*
+!plugins/ui-performance-*
 node_modules
 js-build
 .vagrant

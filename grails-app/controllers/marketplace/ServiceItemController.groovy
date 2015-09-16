@@ -506,7 +506,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
                 }
             }
         }
-        catch (org.elasticsearch.ElasticSearchException e) {
+        catch (Exception e) {
             log.error message(code: "sic.log.error.exceptionOccurred", args: ["${e.getMessage()}"])
             log.error('getListFromIndex:', e)
             handleNonJSONException(e, "sic.log.error.cannotParseSearchString", [searchBean.queryString])
