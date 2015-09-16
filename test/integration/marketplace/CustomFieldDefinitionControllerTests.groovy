@@ -175,7 +175,6 @@ class CustomFieldDefinitionControllerTests {
 //		assert "/customFieldDefinition/create" == controller.modelAndView.viewName
     }
 
-    @Override
     protected void reset() {
         // workaround from http://jira.codehaus.org/browse/GRAILS-6483
         controller.response.committed = false

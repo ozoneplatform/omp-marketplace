@@ -1,6 +1,6 @@
 package marketplace
 
-import static grails.util.Holders
+import grails.util.Holders
 import static org.junit.Assert.assertThat
 import static org.hamcrest.CoreMatchers.*
 import org.junit.Ignore
