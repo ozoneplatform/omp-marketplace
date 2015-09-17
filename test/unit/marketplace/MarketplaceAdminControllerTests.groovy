@@ -106,62 +106,80 @@ abstract class MarketplaceAdminControllerTests {
     }
 
     void testSuccessfulSave() {
+
+        when:
+        request.method = 'POST'
         controller.params.title = "title three"
         controller.save()
 
+        then:
         assert domainClass.count() == 3
-        assert controller.redirectArgs.action == 'show'
         assert controller.flash.message == "create.success"
     }
 
 
     void testFailedSave() {
+
+        when:
+        request.method = 'POST'
         controller.params.title = " "
         controller.save()
         def nonInstance = domainClass.findByTitle(" ")
 
+        then:
         assert nonInstance == null
         assert domainClass.count() == 2
-        assert controller.renderArgs.view == "create"
+        assert controller.flash.message == "create.failure"
     }
 
     void testSuccessfulUpdate() {
+
+        when:
+        request.method = 'POST'
         controller.params.id = domainInstance1.id
         controller.params.description = "new description"
         controller.update()
 
+        then: 
         assert controller.flash.message == "update.success"
-        assert controller.redirectArgs.action == 'show'
     }
 
     void testUpdateFailsOnObjectNotFound() {
+
+        when:
+        request.method = 'POST'
         controller.params.id = -1
         controller.update()
 
-        assert controller.redirectArgs.action == 'edit'
+        then: 
         assert controller.flash.message == "objectNotFound"
     }
 
 
     void testUpdateFailsOnValidationError() {
+
+        when:
+        request.method = 'POST'
         controller.params.title = tooLongTitle
         controller.params.id = domainInstance1.id
         controller.update()
 
+        then:
         assert controller.flash.message == "update.failure"
         assert controller.flash.args[0] == ": Error saving object"
-        assert controller.redirectArgs.action == 'edit'
     }
 
     protected void mocksForTestDelete() {}
 
     void testDelete() {
         mocksForTestDelete()
+
+        when:
+        request.method = 'POST'
         controller.params.id = domainInstance1.id
         controller.delete()
 
-
-        assert controller.redirectArgs.action == 'list'
+        then:
         assert controller.flash.message == "delete.success"
     }
 

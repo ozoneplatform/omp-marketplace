@@ -172,7 +172,7 @@ grails.project.dependency.resolution = {
         compile ':hibernate:3.6.10.12'
 
         test ':code-coverage:1.2.5'
-        test ':build-test-data:1.1.0'
+        test ':build-test-data:2.2.3'
         test ':codenarc:0.20'
         test ':gmetrics:0.3.1'
 

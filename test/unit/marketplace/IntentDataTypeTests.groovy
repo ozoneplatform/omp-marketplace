@@ -119,12 +119,17 @@ class IntentDataTypeTests {
 
     void testAsJSON() {
         def json = dataType.asJSON()
-        assert json.toString() == '{"id":null,"title":"test title","description":"test description","uuid":"test uuid"}'
+        assert json.toString().indexOf('"id":null') > 0
+        assert json.toString().indexOf('"title":"test title"') > 0
+        assert json.toString().indexOf('"description":"test description"') > 0
+        assert json.toString().indexOf('"uuid":"test uuid"') > 0
     }
 
     void testAsJSONRef() {
         def json = dataType.asJSONRef()
-        assert json.toString() == '{"id":null,"title":"test title","uuid":"test uuid"}'
+        assert json.toString().indexOf('"id":null') > 0
+        assert json.toString().indexOf('"title":"test title"') > 0
+        assert json.toString().indexOf('"uuid":"test uuid"') > 0
     }
 
     void testFindDuplicates(){

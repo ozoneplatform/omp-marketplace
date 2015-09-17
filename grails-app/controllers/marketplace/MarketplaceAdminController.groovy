@@ -150,7 +150,7 @@ e.printStackTrace()
             def ref = Helper.generateLogReference()
             log.warn "Error saving item. ${ref}"
             log.warn ve.getMessage()
-            flash.message = "Error saving object. Reference = ${ref}"
+            flash.message = "create.failure"
             domain.clearErrors()
             render(view: 'create', model: getDomainMap(domain))
         }
