@@ -1,4 +1,4 @@
-package ozone.marketplace.domain;
+package ozone.marketplace.domain
 
 
 class ValidationException extends RuntimeException {

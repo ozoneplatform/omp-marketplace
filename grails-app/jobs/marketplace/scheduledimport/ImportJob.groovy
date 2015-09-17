@@ -38,7 +38,7 @@ class ImportJob implements Job {
             //have to look up the service dynamically because autowiring doesn't work,
             //event though it should
             ScheduledImportService scheduledImportService =
-                AH.application.mainContext.getBean('scheduledImportService')
+                AH.getGrailsApplication().mainContext.getBean('scheduledImportService')
 
             scheduledImportService.executeScheduledImport(jobMap[Constants.JOB_ID_KEY])
         }

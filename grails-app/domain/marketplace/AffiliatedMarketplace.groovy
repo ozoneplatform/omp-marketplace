@@ -46,7 +46,7 @@ class AffiliatedMarketplace implements Serializable {
     }
 
     protected getAffiliatedMarketplaceService() {
-        Holders.application.mainContext.affiliatedMarketplaceService
+        Holders.getGrailsApplication().getMainContext().affiliatedMarketplaceService
     }
 
     def asJSON(def contextPath, def isHtmlEncoded = false) {

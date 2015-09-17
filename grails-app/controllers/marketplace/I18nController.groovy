@@ -5,7 +5,7 @@ import grails.util.Holders
 class I18nController {
 
     def index = {
-        def messagesrc = ApplicationHolder.application.getMainContext().getBean("messageSource")
+        def messagesrc = Holders.getGrailsApplication().getMainContext().getBean("messageSource")
 
 
         def locale = 'en'

@@ -1,7 +1,5 @@
 package marketplace.scheduledimport
 
-import grails.validation.ValidationException
-
 import grails.test.mixin.services.ServiceUnitTestMixin
 import grails.test.mixin.TestMixin
 import grails.test.mixin.TestFor
@@ -47,6 +45,8 @@ import marketplace.rest.ImageURLCustomFieldDefinitionRestService
 import marketplace.rest.CheckBoxCustomFieldDefinitionRestService
 
 import marketplace.testutil.FakeAuditTrailHelper
+
+import ozone.marketplace.domain.ValidationException
 
 @Mock([
     CustomFieldDefinition,
@@ -1001,7 +1001,7 @@ class ScheduledImportServiceUnitTest {
         }
 
         service.typeRestService.metaClass.createFromDto = { dto, skipValidation ->
-            throw new ValidationException("Types exception")
+            throw new ValidationException("Types exception", )
         }
 
         service.stateRestService.metaClass.createFromDto = { dto, skipValidation ->

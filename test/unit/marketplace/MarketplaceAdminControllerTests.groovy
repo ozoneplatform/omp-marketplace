@@ -169,11 +169,13 @@ abstract class MarketplaceAdminControllerTests {
 
     void testDeleteFailure() {
         mocksForTestDeleteFailure()
+
+        when:
+        request.method = 'POST'
         controller.params.id = -1
         controller.delete()
 
-        assert controller.redirectArgs.action == 'show'
-        assert controller.redirectArgs.id == -1
+        then:
         assert controller.flash.message == validationExceptionMessage
     }
 
