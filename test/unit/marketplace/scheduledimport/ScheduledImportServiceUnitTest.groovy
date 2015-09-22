@@ -1,6 +1,7 @@
 package marketplace.scheduledimport
 
 import grails.test.mixin.services.ServiceUnitTestMixin
+import grails.test.runtime.FreshRuntime
 import grails.test.mixin.TestMixin
 import grails.test.mixin.TestFor
 
@@ -254,7 +255,13 @@ class ScheduledImportServiceUnitTest {
             'serviceItems'
         ].each { prop ->
             //only update odd-indexed items
-            importData[prop].eachWithIndex { item, i -> if (i % 2) item.editedDate = new Date() }
+            def data = importData[prop]
+            
+            if (prop == 'profiles') {
+                data = data.grep { it.username != Profile.SYSTEM_USER_NAME }
+            }
+
+            data.eachWithIndex { item, i -> if (i % 2 ) item.editedDate = new Date() }
         }
     }
 
@@ -544,7 +551,8 @@ class ScheduledImportServiceUnitTest {
 
         assert passedInTask == task
     }
-
+    
+    @FreshRuntime
     void testImportProfiles() {
         mockImportMethods(['profiles'])
 
@@ -567,7 +575,8 @@ class ScheduledImportServiceUnitTest {
         profiles = service.profileRestService.updated
 
         assert profiles.size() == 1
-        assert profiles[0].username == importData.profiles[1].username
+        // Check that the correct profile was updated based on System being removed
+        assert profiles[0].username == importData.profiles[2].username
     }
 
     void testImportTypes() {
@@ -952,7 +961,6 @@ class ScheduledImportServiceUnitTest {
         //for use in the update phase of the test
         ImportStatus anotherImportStatus = new ImportStatus()
 
-        //instead of a new importstatus return the one we have here in the test
         ImportStatus.metaClass.constructor = { importStatus }
 
         ServiceItem.metaClass.'static'.findByUuid = { uuid ->
@@ -961,7 +969,7 @@ class ScheduledImportServiceUnitTest {
 
         service.executeScheduledImport(task)
 
-        assert importStatus.relationships.created == 1
+        assert importStatus.relationships.created == 2
         assert importStatus.relationships.updated == 0
         assert importStatus.relationships.notUpdated == 0
 
@@ -986,8 +994,11 @@ class ScheduledImportServiceUnitTest {
         //assert result.message == importStatus.summaryMessage
     }
 
+    @FreshRuntime
     void testExceptions() {
         ImportStatus importStatus = new ImportStatus()
+
+        //def save = ImportStatus.metaClass.constructor
 
         //instead of a new importstatus return the one we have here in the test
         ImportStatus.metaClass.constructor = { importStatus }
@@ -1065,8 +1076,11 @@ class ScheduledImportServiceUnitTest {
 
         ImportTaskResult result = task.lastRunResult
         assert result.message == importStatus.summaryMessage
+
+        //ImportStatus.metaClass.constructor = save 
     }
 
+    @FreshRuntime
     void testHttpServiceException() {
         ImportStatus importStatus = new ImportStatus()
 
