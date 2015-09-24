@@ -180,5 +180,9 @@ grails.project.dependency.resolution = {
 
         runtime ':cors:1.1.8' // OP-3932
         runtime ':jaxrs:0.11'
+
+        runtime ":elasticsearch:0.0.4.6", {
+            excludes 'groovy-all'
+        }
     }
 }
