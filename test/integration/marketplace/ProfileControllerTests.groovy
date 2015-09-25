@@ -23,6 +23,7 @@ class ProfileControllerTests {
         controller.params.id = user.id
         controller.session.username = "testUser1"
         controller.session.isAdmin = false
+        controller.request.method = 'POST'
         controller.update()
         result = controller.response.contentAsString
         assert true ==  result.contains("User is not authorized to access")
@@ -39,6 +40,7 @@ class ProfileControllerTests {
         controller.session.username = "testAdmin1"
         controller.session.isAdmin = true
         controller.session.fullname = 'Batman'
+        controller.request.method = 'POST'
         controller.update()
         assert 302 == controller.response.status
         assert 'Robin' == controller.session.fullname

@@ -67,6 +67,10 @@ class SearchableServiceTests {
         makeServiceItem(description: queryString)
 
         def searchCriteria = new SearchCriteria(queryString: queryString, typeFilters: "${typeToFilter.id}")
+        
+        println typeToFilter
+        println searchCriteria
+
         def results = search(searchCriteria)
 
         assert results.total == 1
