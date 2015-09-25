@@ -26,8 +26,14 @@ class SearchableService {
 
         while (retry) {
             try {
+                System.err.println(ops)
+                System.err.println(searchCriteria.searchClause)
+                System.err.println(searchCriteria.extraSearchSource)
+
                 retry = false
                 def results = elasticSearchService.search(ops, searchCriteria.searchClause, searchCriteria.extraSearchSource)
+                System.err.println(results)
+
                 return results
             }
             catch (QueryParsingException pe) {

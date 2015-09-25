@@ -43,6 +43,7 @@ require(['views/filter/FilterMenu', 'underscore'], function(FilterMenu, _) {
             });
         });
 	} catch (e){
+        console.log("no nugget data?")
 		//oh well, nothing here thats fine, we may be on the search page
 	}
 

@@ -4,6 +4,9 @@ class FacetsService {
 
     public Map<String, Object> extractFacetInfo(result) {
         Map<String, Object> returnValue = [:]
+
+        System.err.println result
+
         if (result.facets) {
             Map<String, Object> facets = result.facets
             def termCounts
@@ -22,10 +25,14 @@ class FacetsService {
 
             // Currently have separate procedural logic for each type of facet returned
             if (facets.types) {
+                System.err.println(facets.types)
                 termCounts = facets.types.termCounts
                 returnValue['types'] = new TreeMap<Types, Integer>(comparator)
                 termCounts.each { entry ->
                     Types type = Types.get(Integer.valueOf(entry.term))
+                    System.err.println entry
+                    System.err.println type
+                    System.err.println entry.term
                     returnValue['types'][(type)] = entry.count
                 }
             }
