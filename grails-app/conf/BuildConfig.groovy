@@ -167,7 +167,6 @@ grails.project.dependency.resolution = {
         compile 'org.ozoneplatform:ozone-appconfig:0.9'
         compile 'org.ozoneplatform:ozone-auditing:1.2.1'
         compile 'org.ozoneplatform:ozone-messaging:1.19'
-        compile ':elasticsearch:0.0.4.6'
         compile ':audit-trail:2.0.2'
         compile ':hibernate:3.6.10.12'
 
@@ -181,7 +180,7 @@ grails.project.dependency.resolution = {
         runtime ':cors:1.1.8' // OP-3932
         runtime ':jaxrs:0.11'
 
-        runtime ":elasticsearch:0.0.4.6", {
+        compile ":elasticsearch:0.0.4.6", {
             excludes 'groovy-all'
         }
     }
