@@ -22,7 +22,7 @@ class SearchController extends BaseMarketplaceRestController {
     def searchableService
     def searchNuggetService
     def serviceItemService
-    def facetsService
+    def aggregationsService
 
     final static String DEFAULT_FEED_TYPE = 'atom'
     final static List VALID_FEED_TYPES = ['atom', 'rss']
@@ -202,19 +202,19 @@ class SearchController extends BaseMarketplaceRestController {
 
     def getList = { searchBean ->
 
-        searchBean.facets = true
+        searchBean.aggregations = true
 
         def result = searchableService.searchListings(searchBean)
         def resultsList = result?.searchResults
-		def facets = facetsService.extractFacetInfo(result);
+		def aggregations = aggregationsService.extractAggregationInfo(result);
 
         def modelData = [serviceItemList:resultsList, listSize: result?.total,
                  numShownResults: resultsList.size(), numShownResultsparams:searchBean, queryString:searchBean.queryString]
 
-	    modelData['typeFacets'] =    JSONUtil.getListFromDomainObject(facets.types) as JSON
-	    modelData['categoriesFacets'] =  JSONUtil.getListFromDomainObject(facets.categories) as JSON
-		modelData['domainFacets'] = JSONUtil.getListFromDomainObject(facets.domain) as JSON
-		modelData['agenciesFacets'] = JSONUtil.getListFromDomainObject(facets.agencies) as JSON
+	    modelData['typeAggregations'] =    JSONUtil.getListFromDomainObject(aggregations.types) as JSON
+	    modelData['categoriesAggregations'] =  JSONUtil.getListFromDomainObject(aggregations.categories) as JSON
+		modelData['domainAggregations'] = JSONUtil.getListFromDomainObject(aggregations.domain) as JSON
+		modelData['agenciesAggregations'] = JSONUtil.getListFromDomainObject(aggregations.agencies) as JSON
 		modelData['nuggets'] =  searchNuggetService.nuggetize(searchBean).nuggetMap as JSON
 
         render(view: "/serviceItem/widgetList", model: modelData)

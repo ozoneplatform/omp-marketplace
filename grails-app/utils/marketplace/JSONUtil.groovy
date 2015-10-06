@@ -88,9 +88,9 @@ class JSONUtil {
     }
 
     //Takes a object that has a title (like Type, Category, etc) and assembles a map with  appropriate key/values, then returns the list as json
-	static def getListFromDomainObject(facet){
+	static def getListFromDomainObject(aggregation){
         def result = []
-        facet.each {
+        aggregation.each {
             def map = [:]
             def item = it.key
             map["id"] = item?.id
@@ -102,10 +102,10 @@ class JSONUtil {
 		result
     }
 
-    //Takes a string (like the facet.term) and assembles a map with  appropriate key/values, then returns the list as json
-	static def getListFromStringTerm(facet){
+    //Takes a string (like the aggregation.term) and assembles a map with  appropriate key/values, then returns the list as json
+	static def getListFromStringTerm(aggregation){
         def result = []
-        facet.each {
+        aggregation.each {
             if (it.term && it.count) {
                 def map = [:]
                 map["id"] = it.term

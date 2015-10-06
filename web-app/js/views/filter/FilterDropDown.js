@@ -28,7 +28,7 @@ define([
         selectedFilterViews: [],
 
         initialize: function(options) {
-            var filters = options.facets;
+            var filters = options.aggregations;
 
             var groupedFilters = _.groupBy(filters, function(filter) {
                 return filter.selected ? 'selected' : 'available';

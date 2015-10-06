@@ -15,7 +15,7 @@ class SearchCriteriaTests {
     def defaultSearchParams = [
             sort: 'score',
             order: 'desc',
-            facets: 'true',
+            aggregations: 'true',
             max: '24',
             offset: '0'
     ]
@@ -26,20 +26,20 @@ class SearchCriteriaTests {
         ApplicationContextHolder.metaClass.static.getConfig = { config }
     }
 
-    public void testFacetsAreAdded() {
-        Integer facetCount = 0
+    public void testAggregationsAreAdded() {
+        Integer aggregationCount = 0
 
-        SearchSourceBuilder.metaClass.facet = { ToXContent facetBuilder ->
-            facetCount += 1
+        SearchSourceBuilder.metaClass.aggregation = { ToXContent aggregationBuilder ->
+            aggregationCount += 1
         }
 
         def criteria = new SearchCriteria(defaultSearchParams)
-        criteria.facets = true
+        criteria.aggregations = true
 
         SearchSourceBuilder source = criteria.extraSearchSource
 
         assert source != null
-        assert facetCount == SearchCriteria.TERM_FACETS.size()
+        assert aggregationCount == SearchCriteria.TERM_AGGREGATIONS.size()
     }
 
     public void testSortByScore() {

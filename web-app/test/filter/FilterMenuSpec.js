@@ -11,7 +11,7 @@ define([
     describe('FilterMenu', function() {
         var view,
             filterConfig = [{
-                "facets": [{
+                "aggregations": [{
                     "count": 68,
                     "description": "app component",
                     "id": 2,
@@ -42,7 +42,7 @@ define([
                 "id": "Type",
                 "title": "Type"
             }, {
-                "facets": [{
+                "aggregations": [{
                     "count": 19,
                     "description": "Services, tools and solutions to analyze data",
                     "id": 8,

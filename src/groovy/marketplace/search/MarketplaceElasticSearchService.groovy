@@ -21,6 +21,7 @@ import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
+import org.elasticsearch.search.aggregations.bucket.filter.Filter;
 import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg;
 import org.elasticsearch.search.aggregations.metrics.max.InternalMax;
 import org.elasticsearch.search.aggregations.metrics.min.InternalMin;
@@ -97,10 +98,10 @@ class MarketplaceElasticSearchService extends ElasticSearchService {
                             aggregationInfo.type = "range"
                             aggregationInfo.rangeCounts << [from: countEntry.getFrom(), to: countEntry.getTo(), count: countEntry.getCount()]
                         }
-                    }/* else if (aggregation instanceof Query)  {
-                        aggregationInfo.type = "query"
+                    } else if (aggregation instanceof Filter)  {
+                        aggregationInfo.type = "filter"
                         aggregationInfo.termCounts << [term: aggregation.getName(), count: aggregation.getCount()]
-                    }*/
+                    }
 
                     result.aggregations[(entry.key)] = aggregationInfo
                 }

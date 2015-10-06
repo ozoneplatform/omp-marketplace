@@ -11,13 +11,13 @@ require(['views/filter/FilterMenu', 'underscore'], function(FilterMenu, _) {
     var filterConfig = [{
             'id' : 'Type',
             'title' : 'Type',
-            'facets' : JSON.parse("${typeFacets.toString().encodeAsJavaScript()}"),
+            'aggregations' : JSON.parse("${typeAggregations.toString().encodeAsJavaScript()}"),
             'filterKind' : 'filterType',
             'filterRemoveField' : 'typeFilters'
         }, {
             'id' : 'Category',
             'title' : 'Category',
-            'facets' : JSON.parse("${categoriesFacets.toString().encodeAsJavaScript()}"),
+            'aggregations' : JSON.parse("${categoriesAggregations.toString().encodeAsJavaScript()}"),
             'filterKind' : 'filterCategory',
             'filterRemoveField' : 'categoryFilters'
         }],
@@ -38,8 +38,8 @@ require(['views/filter/FilterMenu', 'underscore'], function(FilterMenu, _) {
                     return [nugget.id, true];
                 }));
 
-            _.each(conf.facets, function(facet) {
-                facet.selected = selectedIds[facet.id];
+            _.each(conf.aggregations, function(aggregation) {
+                aggregation.selected = selectedIds[aggregation.id];
             });
         });
 	} catch (e){

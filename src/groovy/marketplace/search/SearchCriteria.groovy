@@ -4,8 +4,7 @@ import org.apache.log4j.Logger
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.builder.SearchSourceBuilder
-import org.elasticsearch.search.facet.query.QueryFacetBuilder
-import org.elasticsearch.search.facet.terms.TermsFacetBuilder
+import org.elasticsearch.search.aggregations.AggregationBuilder
 import org.elasticsearch.search.sort.FieldSortBuilder
 import org.elasticsearch.search.sort.ScoreSortBuilder
 import org.elasticsearch.search.sort.SortOrder
@@ -19,15 +18,15 @@ class SearchCriteria implements Cloneable, Serializable {
     static final String TERTIARY_SORT = 'sortTitle'
     static final SortOrder TERTIARY_ORDER = SortOrder.ASC
 
-    static final Integer DEFAULT_FACET_SIZE = 100
+    static final Integer DEFAULT_AGGREGATION_SIZE = 100
 
     static final Collection<String> TYPES_TO_SEARCH = ['marketplace.ServiceItem', 'marketplace.ExtServiceItem']
 
-    static final String[] TERM_FACETS = ['types', 'categories', 'agency']
+    static final String[] TERM_AGGREGATIONS = ['types', 'categories', 'agency']
 
     String sort
     String order = "asc"
-    boolean facets = false
+    boolean aggregations = false
     def max
     def offset
 
@@ -48,7 +47,7 @@ class SearchCriteria implements Cloneable, Serializable {
         order = params.order
         max = params.max
         offset = params.offset
-        facets = params.facets
+        aggregations = params.aggregations
     }
 
     public updateBean(params) {
@@ -64,8 +63,8 @@ class SearchCriteria implements Cloneable, Serializable {
         if (params.offset) {
             offset = params.offset
         }
-        if(params.facets) {
-            facets = params.facets
+        if(params.aggregations) {
+            aggregations = params.aggregations
         }
 
         // Add predicates from parameter map
@@ -85,8 +84,8 @@ class SearchCriteria implements Cloneable, Serializable {
         if (offset) {
             params.offset = offset
         }
-        if(facets) {
-            params.facets = facets
+        if(aggregations) {
+            params.aggregations = aggregations
         }
         params
     }
@@ -152,12 +151,14 @@ class SearchCriteria implements Cloneable, Serializable {
             result = {
                 filtered {
                     if (queries) {
-                        query {
-                            bool {
-                                queries.each { Predicate query ->
-                                    Closure searchClause = (Closure) query.getSearchClause()
-                                    searchClause.delegate = delegate.delegate
-                                    searchClause()
+                        filter {
+                            query {
+                                bool {
+                                    queries.each { Predicate query ->
+                                        Closure searchClause = (Closure) query.getSearchClause()
+                                        searchClause.delegate = delegate.delegate
+                                        searchClause()
+                                    }
                                 }
                             }
                         }
@@ -215,7 +216,7 @@ class SearchCriteria implements Cloneable, Serializable {
         SearchSourceBuilder source = new SearchSourceBuilder()
 
         addSort(source)
-        addFacets(source)
+        addAggregations(source)
 
         return source
     }
@@ -242,10 +243,13 @@ class SearchCriteria implements Cloneable, Serializable {
         }
     }
 
-    def addFacets(SearchSourceBuilder source) {
-        if(facets) {
-            TERM_FACETS.each { String term ->
-                source.facet(new TermsFacetBuilder(term).field("${term}.id").size(DEFAULT_FACET_SIZE))
+    def addAggregations(SearchSourceBuilder source) {
+        if(aggregations) {
+            TERM_AGGREGATIONS.each { String term ->        
+                System.err.println("Test:addAggregations"+term)
+                AggregationBuilder aggregationBuilder
+                source.aggregation(aggregationBuilder.terms(term).field("${term}.id").size(DEFAULT_AGGREGATION_SIZE))
+                System.err.println("Test:addAggregations2"+term)
             }
         }
     }

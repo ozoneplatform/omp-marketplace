@@ -33,7 +33,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
     def customFieldDefinitionService
     def relationshipService
     def importStackService
-    def facetsService
+    def aggregationsService
 
     static SLASHES_DATE_FORMAT = 'MM/dd/yyyy'
 
@@ -140,7 +140,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
             params.accessType = session.accessType ?: Constants.VIEW_USER
             params.username = session.username
             def filterSearchBean = new SearchCriteria(params)
-            filterSearchBean.facets = true
+            filterSearchBean.aggregations = true
             def filterSearch = searchableService.searchListings(filterSearchBean)
 
 
@@ -162,7 +162,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
             params.sort = 'avgRate'
             def higestRated = searchableService.searchListings(new SearchCriteria(params))
 
-            def facets = facetsService.extractFacetInfo(filterSearch);
+            def aggregations = aggregationsService.extractAggregationInfo(filterSearch);
 
             def modelData = [
                 recentlyAdded: recentlyAdded.searchResults,
@@ -174,10 +174,10 @@ class ServiceItemController extends BaseMarketplaceRestController {
             //video page for carousel can be removed
 //            modelData['carouselContent'] << "carousel_content/page4"
 
-            modelData['typeFacets'] =    JSONUtil.getListFromDomainObject(facets.types) as JSON
-            modelData['categoriesFacets'] =  JSONUtil.getListFromDomainObject(facets.categories) as JSON
-            modelData['domainFacets'] = JSONUtil.getListFromDomainObject(facets.domain) as JSON
-            modelData['agenciesFacets'] = JSONUtil.getListFromDomainObject(facets.agencies) as JSON
+            modelData['typeAggregations'] =    JSONUtil.getListFromDomainObject(aggregations.types) as JSON
+            modelData['categoriesAggregations'] =  JSONUtil.getListFromDomainObject(aggregations.categories) as JSON
+            modelData['domainAggregations'] = JSONUtil.getListFromDomainObject(aggregations.domain) as JSON
+            modelData['agenciesAggregations'] = JSONUtil.getListFromDomainObject(aggregations.agencies) as JSON
 
 
             render(view: 'widgetShoppe', model: modelData)
@@ -445,7 +445,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
     private void getListFromIndex (boolean remote, def searchBean) {
         log.debug "getListFromIndex:"
         try {
-            searchBean.facets = true
+            searchBean.aggregations = true
             def resultsList
             def result
             def modelData = [:]
@@ -479,10 +479,10 @@ class ServiceItemController extends BaseMarketplaceRestController {
                 if (resultsList) {
                     log.debug "render list with ${resultsList.size()} items"
                     log.debug "SearchBean before search list ${searchBean}"
-					def facets = facetsService.extractFacetInfo(result)
+					def aggregations = aggregationsService.extractAggregationInfo(result)
 
                     modelData['serviceItemList'] = resultsList
-                    modelData['facets'] = facets
+                    modelData['aggregations'] = aggregations
                     modelData['nuggets'] = nuggets
                     modelData['listSize'] = result?.total
                     modelData['numShownResults'] = resultsList.size()
@@ -490,10 +490,10 @@ class ServiceItemController extends BaseMarketplaceRestController {
                     modelData['queryString'] = searchBean.queryString?.encodeAsHTML()
                     modelData['searchCriteria'] = searchBean
 
-					modelData['typeFacets'] =    JSONUtil.getListFromDomainObject(facets.types) as JSON
-					modelData['categoriesFacets'] =  JSONUtil.getListFromDomainObject(facets.categories) as JSON
-					modelData['domainFacets'] = JSONUtil.getListFromDomainObject(facets.domain) as JSON
-					modelData['agenciesFacets'] = JSONUtil.getListFromDomainObject(facets.agencies) as JSON
+					modelData['typeAggregations'] =    JSONUtil.getListFromDomainObject(aggregations.types) as JSON
+					modelData['categoriesAggregations'] =  JSONUtil.getListFromDomainObject(aggregations.categories) as JSON
+					modelData['domainAggregations'] = JSONUtil.getListFromDomainObject(aggregations.domain) as JSON
+					modelData['agenciesAggregations'] = JSONUtil.getListFromDomainObject(aggregations.agencies) as JSON
                     // Changed to fix bug AML-1085
                     render(view: "/serviceItem/${listView}", model: modelData)
                 } else {

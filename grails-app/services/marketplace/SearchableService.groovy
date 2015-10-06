@@ -28,8 +28,9 @@ class SearchableService {
             try {
                 System.err.println(ops)
                 System.err.println(searchCriteria.searchClause)
+                System.err.println("Test:SearchableService")
                 System.err.println(searchCriteria.extraSearchSource)
-
+                System.err.println("Test:SearchableServiceEnd")
                 retry = false
                 def results = elasticSearchService.search(ops, searchCriteria.searchClause, searchCriteria.extraSearchSource)
                 System.err.println(results)
