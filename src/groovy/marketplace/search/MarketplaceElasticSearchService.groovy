@@ -53,72 +53,32 @@ class MarketplaceElasticSearchService extends ElasticSearchService {
         search(request, params)
     }
 
-    /**
-     * We need to get the aggregations out of the response.
-     * This method is otherwise the same as the
-     * one it overrides.
-     *
-     * @param request The SearchRequest to compute
-     * @param params Search parameters
-     * @return A Map containing the search results
-     */
-    @Override
     def search(SearchRequest request, Map params) {
         resolveIndicesAndTypes(request, params)
         elasticSearchHelper.withElasticSearch { Client client ->
             LOG.debug 'Executing search request.'
             def response = client.search(request).actionGet()
             LOG.debug 'Completed search request.'
+
             def searchHits = response.getHits()
             def result = [:]
             result.total = searchHits.totalHits()
 
-            LOG.debug "Search returned ${result.total ?: 0} result(s)."
+            LOG.debug 'Search returned ${result.total ?: 0} result(s).'
 
-            // Convert the hits back to their initial type
             result.searchResults = domainInstancesRebuilder.buildResults(searchHits)
 
-            if (response.getAggregations()) {
-                result.aggregations = [:]
-                AggregationBuilders aggregations = response.getAggregations()
-                aggregations.aggregationsAsMap().each { entry ->
-                    def aggregationInfo = new Expando(name: entry.key)
-                    Aggregation aggregation = entry.value
-                    aggregationInfo.termCounts = []
-                    aggregationInfo.rangeCounts = []
-                    if (aggregation instanceof Terms) {
-                        aggregationInfo.type = "term"
-                        aggregationInfo.missing = aggregation.getMissingCount()
-                        aggregationInfo.total = aggregation.getTotalCount()
-                        aggregation.getEntries().each { countEntry ->
-                            aggregationInfo.termCounts << [term: "${countEntry.getTerm()}", count: countEntry.getCount()]
-                        }
-                    } else if (aggregation instanceof Range) {
-                        (aggregation as Range).getEntries().each { countEntry ->
-                            aggregationInfo.type = "range"
-                            aggregationInfo.rangeCounts << [from: countEntry.getFrom(), to: countEntry.getTo(), count: countEntry.getCount()]
-                        }
-                    } else if (aggregation instanceof Filter)  {
-                        aggregationInfo.type = "filter"
-                        aggregationInfo.termCounts << [term: aggregation.getName(), count: aggregation.getCount()]
-                    }
-
-                    result.aggregations[(entry.key)] = aggregationInfo
-                }
-            }
-
-            // Extract highlight information.
-            // Right now simply give away raw results...
             if (params.highlight) {
                 def highlightResults = []
+
                 for (SearchHit hit : searchHits) {
                     highlightResults << hit.highlightFields
                 }
+
                 result.highlight = highlightResults
             }
 
             LOG.debug 'Adding score information to results.'
-
             //Extract score information
             //Records a map from hits of (hit.id, hit.score) returned in 'scores'
             if (params.score) {
@@ -136,6 +96,13 @@ class MarketplaceElasticSearchService extends ElasticSearchService {
                 }
                 result.sort = sortValues
             }
+
+            if (response.getAggregations()) {
+                Map<String, Aggregation> aggregations = response.getAggregations().asMap()
+                if (aggregations) {
+                    result.aggregations = aggregations
+                }
+            }            
 
             result
         }

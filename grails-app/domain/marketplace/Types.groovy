@@ -13,6 +13,7 @@ class Types implements Serializable {
         root false
         title index: 'analyzed', excludeFromAll: false
         ozoneAware index: 'not_analyzed', excludeFromAll: true
+        id index: 'analyzed', excludeFromAll: false
         only = ['id', 'title', 'ozoneAware']
     }
 

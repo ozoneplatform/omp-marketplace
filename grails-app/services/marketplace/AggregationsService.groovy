@@ -1,11 +1,12 @@
 package marketplace
 
+import org.elasticsearch.search.aggregations.bucket.terms.Terms
+
+
 class AggregationsService {
 
     public Map<String, Object> extractAggregationInfo(result) {
         Map<String, Object> returnValue = [:]
-
-        System.err.println result
 
         if (result.aggregations) {
             Map<String, Object> aggregations = result.aggregations
@@ -25,49 +26,45 @@ class AggregationsService {
 
             // Currently have separate procedural logic for each type of aggregation returned
             if (aggregations.types) {
-                System.err.println(aggregations.types)
-                termCounts = aggregations.types.termCounts
+                termCounts = aggregations.types.getAggregations().id.buckets
                 returnValue['types'] = new TreeMap<Types, Integer>(comparator)
                 termCounts.each { entry ->
-                    Types type = Types.get(Integer.valueOf(entry.term))
-                    System.err.println entry
-                    System.err.println type
-                    System.err.println entry.term
-                    returnValue['types'][(type)] = entry.count
+                    Types type = Types.get(Integer.valueOf(entry.getKey()))
+                    returnValue['types'][(type)] = entry.getDocCount()
                 }
             }
 
             if (aggregations.state) {
-                termCounts = aggregations.state.termCounts
+                termCounts = aggregations.state.getAggregations().id.buckets
                 returnValue['states'] = new TreeMap<State, Integer>(comparator)
                 termCounts.each { entry ->
-                    State state = State.get(Integer.valueOf(entry.term))
-                    returnValue['states'][(state)] = entry.count
+                    State state = State.get(Integer.valueOf(entry.getKey()))
+                    returnValue['states'][(state)] = entry.getDocCount()
                 }
             }
 
             if (aggregations.categories) {
-                termCounts = aggregations.categories.termCounts
+                termCounts = aggregations.categories.getAggregations().id.buckets
                 returnValue['categories'] = new TreeMap<Category, Integer>(comparator)
                 termCounts.each { entry ->
-                    Category category = Category.get(Integer.valueOf(entry.term))
-                    returnValue['categories'][(category)] = entry.count
+                    Category category = Category.get(Integer.valueOf(entry.getKey()))
+                    returnValue['categories'][(category)] = entry.getDocCount()
                 }
             }
 
             // AML-680  agency attribute for a listing - Extract the agency aggregation data
-            if (aggregations.agency) {
-                termCounts = aggregations.agency.termCounts
+            if (aggregations.agency) {                
+                termCounts = aggregations.types.getAggregations().id.buckets
                 returnValue['agencies'] = new TreeMap<String, Integer>(comparator)
                 termCounts.each { entry ->
-                    Agency agency = Agency.get(Integer.valueOf(entry.term))
-                    returnValue['agencies'][(agency)] = entry.count
+                    Agency agency = Agency.get(Integer.valueOf(entry.getKey()))
+                    returnValue['agencies'] = entry.getDocCount()
                 }
             }
 
             // Get custom field aggregations. Currently these are the only queryaggregations  AML-726
             Map customFieldAggregations = aggregations.findAll {
-                it.value.type == 'query'
+                it.value.name == 'query'
             }
 
             // Get domain aggregation subset of custom field aggregations.  AML-726
@@ -80,7 +77,7 @@ class AggregationsService {
                 if (domainAggregations.size() > 0) {
                     returnValue['domain'] = new TreeMap<String, Integer>(comparator)
                     for (it in domainAggregations) {
-                        termCounts = it.value.termCounts
+                        termCounts = it.value.buckets
                         termCounts.each { entry ->
                             // QueryAggregations are retrieved for every defined value of a custom field.
                             // We ignore any counts that are not greater than 0, since we don't
@@ -113,6 +110,7 @@ class AggregationsService {
                 }
             }
         }
+
         returnValue
     }
 

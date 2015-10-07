@@ -4,6 +4,8 @@ import org.apache.log4j.Logger
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.builder.SearchSourceBuilder
+import org.elasticsearch.search.aggregations.AggregationBuilders
+import org.elasticsearch.search.aggregations.AbstractAggregationBuilder
 import org.elasticsearch.search.aggregations.AggregationBuilder
 import org.elasticsearch.search.sort.FieldSortBuilder
 import org.elasticsearch.search.sort.ScoreSortBuilder
@@ -22,7 +24,7 @@ class SearchCriteria implements Cloneable, Serializable {
 
     static final Collection<String> TYPES_TO_SEARCH = ['marketplace.ServiceItem', 'marketplace.ExtServiceItem']
 
-    static final String[] TERM_AGGREGATIONS = ['types', 'categories', 'agency']
+    static final String[] TERM_AGGREGATIONS = ['types', 'categories', 'agencies']
 
     String sort
     String order = "asc"
@@ -99,7 +101,6 @@ class SearchCriteria implements Cloneable, Serializable {
      */
     def addSearch(String field, String val) {
         log.info "OP-3759: addSearch $field, $val"
-
         if (this.predicateMap[(field)] && this.predicateMap[(field)] instanceof MultiValuePredicate) {
             MultiValuePredicate multiValueFilter = this.predicateMap[(field)]
             multiValueFilter.addValue(val)
@@ -143,35 +144,18 @@ class SearchCriteria implements Cloneable, Serializable {
      */
     def getSearchClause() {
         List<Predicate> allPredicates = predicateMap.values().toList()
-        List<Predicate> filters = allPredicates.findAll {it.isFilter()}
-        List<Predicate> queries = allPredicates - filters
-
-        def result
+        def result 
         if (allPredicates) {
             result = {
                 filtered {
-                    if (queries) {
-                        filter {
-                            query {
-                                bool {
-                                    queries.each { Predicate query ->
-                                        Closure searchClause = (Closure) query.getSearchClause()
-                                        searchClause.delegate = delegate.delegate
-                                        searchClause()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (filters) {
-                        filter {
-                            query {
-                                bool {
-                                    filters.each { Predicate filter ->
-                                        Closure searchClause = (Closure) filter.getSearchClause()
-                                        searchClause.delegate = delegate.delegate
-                                        searchClause()
-                                    }
+                    filter {
+                        query {
+                            bool {
+                                allPredicates.each { Predicate query ->
+                                    Closure searchClause = (Closure) query.getSearchClause()
+                                    searchClause.delegate = delegate.delegate
+                                    searchClause()
+
                                 }
                             }
                         }
@@ -187,6 +171,7 @@ class SearchCriteria implements Cloneable, Serializable {
                 }
             }
         }
+
         result
     }
 
@@ -216,7 +201,14 @@ class SearchCriteria implements Cloneable, Serializable {
         SearchSourceBuilder source = new SearchSourceBuilder()
 
         addSort(source)
-        addAggregations(source)
+
+        if (aggregations) {
+            TERM_AGGREGATIONS.each { String term -> 
+                source.aggregation(AggregationBuilders.nested("${term}").path("${term}").subAggregation(
+                    AggregationBuilders.terms("id").field("${term}.id").size(DEFAULT_AGGREGATION_SIZE)
+                ))
+            }
+        }
 
         return source
     }
@@ -243,14 +235,4 @@ class SearchCriteria implements Cloneable, Serializable {
         }
     }
 
-    def addAggregations(SearchSourceBuilder source) {
-        if(aggregations) {
-            TERM_AGGREGATIONS.each { String term ->        
-                System.err.println("Test:addAggregations"+term)
-                AggregationBuilder aggregationBuilder
-                source.aggregation(aggregationBuilder.terms(term).field("${term}.id").size(DEFAULT_AGGREGATION_SIZE))
-                System.err.println("Test:addAggregations2"+term)
-            }
-        }
-    }
 }
