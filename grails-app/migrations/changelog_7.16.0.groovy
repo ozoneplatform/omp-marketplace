@@ -32,7 +32,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: 'marketplace', dbms: 'mssql, mysql, postgresql, hsqldb, oracle', id: '7.16.0-5', context: 'create, 7.16.0') {
+    changeSet(author: 'marketplace', dbms: 'mysql, postgresql, hsqldb, oracle', id: '7.16.0-5', context: 'create, 7.16.0') {
         createTable(tableName: 'service_item_score_card_item') {
           column(name: 'service_item_id', type: '${marketplace.legacyIdField}')
           column(name: 'score_card_item_id', type: 'java.sql.Types.BIGINT')
@@ -48,6 +48,32 @@ databaseChangeLog = {
         dropForeignKeyConstraint(baseTableName: 'score_card_item_response', constraintName: 'FK80A6CBCB190E00BC')
         dropForeignKeyConstraint(baseTableName: 'score_card_item_response', constraintName: 'FK80A6CBCBEF469C97')
         dropForeignKeyConstraint(baseTableName: 'service_item', constraintName: 'FK1571565D190E00BC')
+
+        dropColumn(columnName: 'is_standard_question', tableName: 'score_card_item')
+        dropColumn(columnName: 'weight', tableName: 'score_card_item')
+        dropColumn(columnName: 'score_card_id', tableName: 'service_item')
+
+        dropTable(tableName: 'score_card')
+        dropTable(tableName: 'score_card_item_response')
+    }
+	
+    changeSet(author: 'marketplace', dbms: 'mssql', id: '7.16.0-5', context: 'create, 7.16.0') {
+        createTable(tableName: 'service_item_score_card_item') {
+          column(name: 'service_item_id', type: '${marketplace.legacyIdField}')
+          column(name: 'score_card_item_id', type: 'java.sql.Types.BIGINT')
+        }
+
+        addForeignKeyConstraint(baseColumnNames: 'score_card_item_id', baseTableName: 'service_item_score_card_item', constraintName: 'FKBF91F93EF469C97', deferrable: 'false', initiallyDeferred: 'false', referencedColumnNames: 'id', referencedTableName: 'score_card_item', referencesUniqueColumn: 'false', onDelete: 'CASCADE')
+        addForeignKeyConstraint(baseColumnNames: 'service_item_id', baseTableName: 'service_item_score_card_item', constraintName: 'FKBF91F939C51FA9F', deferrable: 'false', initiallyDeferred: 'false', referencedColumnNames: 'id', referencedTableName: 'service_item', referencesUniqueColumn: 'false')
+
+        dropForeignKeyConstraint(baseTableName: 'score_card', constraintName: 'FK5E60409D7666C6D2')
+        dropForeignKeyConstraint(baseTableName: 'score_card', constraintName: 'FK5E60409DE31CB353')
+        dropForeignKeyConstraint(baseTableName: 'score_card_item_response', constraintName: 'FK80A6CBCB7666C6D2')
+        dropForeignKeyConstraint(baseTableName: 'score_card_item_response', constraintName: 'FK80A6CBCBE31CB353')
+        dropForeignKeyConstraint(baseTableName: 'score_card_item_response', constraintName: 'FK80A6CBCB190E00BC')
+        dropForeignKeyConstraint(baseTableName: 'score_card_item_response', constraintName: 'FK80A6CBCBEF469C97')
+        dropForeignKeyConstraint(baseTableName: 'service_item', constraintName: 'FK1571565D190E00BC')
+		dropIndex(indexName: 'FK1571565D190E00BC', tableName: 'service_item')
 
         dropColumn(columnName: 'is_standard_question', tableName: 'score_card_item')
         dropColumn(columnName: 'weight', tableName: 'score_card_item')
@@ -79,7 +105,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: 'marketplace', dbms: 'mssql, mysql, postgresql, hsqldb, oracle', id: '7.16.0-7', context: 'create, 7.16.0') {
+    changeSet(author: 'marketplace', dbms: 'mssql, mysql, hsqldb', id: '7.16.0-7', context: 'create, 7.16.0') {
         renameTable(oldTableName: 'U_DOMAIN_preferences', newTableName: 'u_domain_preferences')
     }
 

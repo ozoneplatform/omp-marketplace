@@ -8,14 +8,14 @@
  */
 
 databaseChangeLog = {
-    changeSet(author: "marketplace", dbms: "hsqldb, mssql, mysql, postgresql", id: "7.10.0-1", context: "create, 7.10.0") {
+    changeSet(author: "marketplace", dbms: "hsqldb, mssql, mysql, oracle,postgresql", id: "7.10.0-1", context: "create, 7.10.0") {
         addColumn(tableName: "service_item") {
             column(name: "opens_in_new_browser_tab", type: "java.sql.Types.BOOLEAN")
         }
     }
 
 
-    changeSet(author: "marketplace", dbms: "hsqldb, mssql, mysql, postgresql", id: "7.10.0-2", context: "create, 7.10.0") {
+    changeSet(author: "marketplace", dbms: "hsqldb, mssql, mysql, oracle, postgresql", id: "7.10.0-2", context: "create, 7.10.0") {
         addColumn(tableName: "profile") {
             column(name: "user_roles", type: "java.sql.Types.VARCHAR(255)")
         }

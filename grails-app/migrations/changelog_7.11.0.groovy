@@ -46,7 +46,7 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: 'marketplace', dbms: 'hsqldb, mssql, mysql, postgresql', id: '7.11.0-2', context: 'create, 7.11.0') {
+    changeSet(author: 'marketplace', dbms: 'hsqldb, mssql, mysql, oracle, postgresql', id: '7.11.0-2', context: 'create, 7.11.0') {
         addColumn(tableName: 'change_detail') {
             column(name: 'service_item_activity_id', type: '${marketplace.legacyIdField}') {
                 constraints(nullable: 'false')
