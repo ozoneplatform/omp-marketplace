@@ -20,7 +20,7 @@ Released under the [Apache License, Version 2](http://www.apache.org/licenses/LI
  
 ## Community
 
-[Support Guidance] (https://github.com/ozoneplatform/owf-framework/wiki/Support-Guidance) : Provides information about resources including related projects.
+[Support Guidance] (https://github.com/ozoneplatform/owf-framework/wiki/Support-Guidance): Provides information about resources including related projects.
 
 ### Google Group
 
