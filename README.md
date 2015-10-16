@@ -16,6 +16,19 @@ While the Store can operate independently, using it with OWF provides users with
  - [owf-security](https://github.com/ozoneplatform/owf-security): security plugin
  - [owf-omp-docs](https://github.com/ozoneplatform/owf-omp-docs): repository of Marketplace user guides and help documentation
 
+![Discovery Page](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/OMP_DiscoveryPage.png)
+
+**Marketplace Discovery Page**
+
+![Listing Quick View](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/OMP_ListingQuickView.png)
+
+**Listing Quick View**
+
+![Marketplace Scorecard Feature](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/OMP_Scorecard.png)
+
+**Scorecard Feature**
+
+
 ##DEPENDENCY & DEPENDENCY MODIFICATIONS
 Marketplace uses a modified the Audit Trail Plugin File. It is a version of the Audit Trail library
 (http://grails.org/plugin/audit-trail). The change was made to AuditStampASTTransformation.java.
