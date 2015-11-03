@@ -1,3 +1,9 @@
+import org.codehaus.groovy.grails.plugins.GrailsPluginUtils
+
+def databaseMigrationPluginDir = GrailsPluginUtils.pluginInfos.find {
+    it.name == "database-migration"
+}.pluginDir
+
 includeTargets << new File("$databaseMigrationPluginDir/scripts/_DatabaseMigrationCommon.groovy")
 
 target(dbmChangelogGormDiff: "Convenience script to generate the diff between the schema represented by the changesets and GORM") {

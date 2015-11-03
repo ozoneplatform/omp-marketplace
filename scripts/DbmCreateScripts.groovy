@@ -1,4 +1,9 @@
 import groovy.sql.Sql
+import org.codehaus.groovy.grails.plugins.GrailsPluginUtils
+
+def databaseMigrationPluginDir = GrailsPluginUtils.pluginInfos.find {
+    it.name == "database-migration"
+}.pluginDir
 
 includeTargets << new File("$databaseMigrationPluginDir/scripts/_DatabaseMigrationCommon.groovy")
 
