@@ -18,9 +18,7 @@ class SearchableService {
         log.debug 'searchListings:'
 
 
-        def ops = [size: searchCriteria.max,
-                   from: searchCriteria.offset,
-                   types: searchCriteria.TYPES_TO_SEARCH]
+        def ops = [types: searchCriteria.TYPES_TO_SEARCH]
 
         def retry = true
 
@@ -40,7 +38,7 @@ class SearchableService {
                 retry = true
             }
             catch (SearchPhaseExecutionException spee) {
-                log.debug "SearchPhaseExecutionException: ${spee.getMessage()}"
+                System.err.println "SearchPhaseExecutionException: ${spee.getMessage()}"
                 throw new IllegalArgumentException()
             }
             catch (Exception e) {

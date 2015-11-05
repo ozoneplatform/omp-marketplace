@@ -12,7 +12,7 @@ define([
     describe('FilterDropDown', function() {
         var view,
             filterConfig = {
-                "facets": [{
+                "aggregations": [{
                     "count": 68,
                     "description": "app component",
                     "id": 2,

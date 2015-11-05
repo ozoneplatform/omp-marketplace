@@ -7,13 +7,14 @@ import org.springframework.transaction.annotation.Transactional
 import ozone.marketplace.domain.ThemeDefinition
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 
-import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
+import grails.util.Holders
 
 class ThemeService extends OzoneService implements ApplicationContextAware {
 
     def applicationContext
     def accountService
     def marketplaceApplicationConfigurationService
+    def config = Holders.config
 
     def getImageURL(def params) {
         def imageName = params.img_name

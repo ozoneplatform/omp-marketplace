@@ -1,7 +1,7 @@
 package marketplace
 
 import org.codehaus.groovy.grails.web.json.JSONObject
-import org.codehaus.groovy.grails.commons.ApplicationHolder
+import grails.util.Holders
 import gorm.AuditStamp
 
 @AuditStamp
@@ -46,7 +46,7 @@ class AffiliatedMarketplace implements Serializable {
     }
 
     protected getAffiliatedMarketplaceService() {
-        ApplicationHolder.application.mainContext.affiliatedMarketplaceService
+        Holders.getGrailsApplication().getMainContext().affiliatedMarketplaceService
     }
 
     def asJSON(def contextPath, def isHtmlEncoded = false) {

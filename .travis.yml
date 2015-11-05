@@ -1,10 +1,10 @@
 language: groovy
 
 jdk:
-- oraclejdk7
+- oraclejdk8
 
 env:
-  - GRAILS_VERSION=2.3.7
+  - GRAILS_VERSION=2.4.2
 
 before_install:
 - rm -rf ~/.sdkman
@@ -19,4 +19,4 @@ branches:
   only:
     - master
 
-script: grails clean && grails compile && grails dbm-drop-create && grails test-app --non-interactive --stacktrace
+script: grails clean && grails compile && grails dbm-drop-create && grails test-app -integration --non-interactive --stacktrace

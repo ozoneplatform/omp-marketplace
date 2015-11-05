@@ -1,6 +1,7 @@
 package marketplace
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as configHolder
+// import org.codehaus.groovy.grails.commons.ConfigurationHolder as configHolder
+import grails.util.Holders as configHolder
 
 class CustomFieldUtility {
     /**

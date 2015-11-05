@@ -1,7 +1,7 @@
 package marketplace
 
 import org.apache.commons.lang.exception.ExceptionUtils
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 import org.apache.commons.lang.StringUtils
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 import ozone.marketplace.enums.RelationshipType
@@ -10,7 +10,7 @@ import ozone.utils.Utils;
 import grails.converters.JSON
 
 class RelationshipController extends BaseMarketplaceRestController {
-    def config = ConfigurationHolder.config
+    def config = Holders.config
 
     def genericQueryService
     def relationshipService

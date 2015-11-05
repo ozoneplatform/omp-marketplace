@@ -14,7 +14,6 @@ class IntentDataTypeServiceTests {
 
     IntentDataTypeService testService
 
-    @Override
     void setUp() {
         FakeAuditTrailHelper.install()
 

@@ -1,6 +1,6 @@
 package marketplace
 
-import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
+import grails.util.Holders
 import static org.junit.Assert.assertThat
 import static org.hamcrest.CoreMatchers.*
 import org.junit.Ignore
@@ -17,6 +17,8 @@ class ScoreCardServiceTests extends MarketplaceIntegrationTestCase{
 	def initialScoreCardItemCount
 
     def owner
+
+    def config = Holders.config
 
 	void setUp() {
 		super.setUp();

@@ -1,7 +1,8 @@
 import grails.util.*
 
 import org.springframework.web.context.request.RequestContextHolder as RCH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
+
 
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
@@ -89,7 +90,7 @@ grails {
                     return marketplace.Profile.get(returnValue)
                 else
                     return marketplace.Profile.get(
-                        ConfigurationHolder.config.system_user_id)
+                        Holders.config.system_user_id)
             }
         }
     }

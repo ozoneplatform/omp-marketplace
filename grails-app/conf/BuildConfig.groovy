@@ -153,6 +153,7 @@ grails.project.dependency.resolution = {
         compile("org.ozoneplatform:ozone-security:${config.mp.security.rev}") {
             excludes([group: 'org.springframework'])
         }
+        compile 'org.grails:grails-web-databinding-spring:2.4.3'
     }
 
     plugins {
@@ -166,18 +167,21 @@ grails.project.dependency.resolution = {
         compile 'org.ozoneplatform:ozone-appconfig:0.9'
         compile 'org.ozoneplatform:ozone-auditing:1.2.1'
         compile 'org.ozoneplatform:ozone-messaging:1.19'
-        compile ':elasticsearch:0.0.2.6'
         compile ':audit-trail:2.0.2'
         compile ':hibernate:3.6.10.12'
 
         test ':code-coverage:1.2.5'
-        test ':build-test-data:1.1.0'
+        test ':build-test-data:2.2.3'
         test ':codenarc:0.20'
         test ':gmetrics:0.3.1'
 
-        build ':tomcat:7.0.52.1'
+        build ':tomcat:8.0.22'
 
-        runtime ':cors:1.1.4' // OP-3932
-        runtime ':jaxrs:0.10'
+        runtime ':cors:1.1.8' // OP-3932
+        runtime ':jaxrs:0.11'
+
+        compile ":elasticsearch:0.0.4.6", {
+            excludes 'groovy-all'
+        }
     }
 }

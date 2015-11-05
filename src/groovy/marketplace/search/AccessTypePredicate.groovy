@@ -9,11 +9,8 @@ class AccessTypePredicate extends SingleValuePredicate {
         super.initializeFromParameters(params)
         this.username = params.username
         this.accessType = params.accessType
-        if (accessType != Constants.VIEW_ADMIN)
-            return this
-        else
-            // No access restrictions for admin
-            return null
+
+        return this
     }
 
     @Override

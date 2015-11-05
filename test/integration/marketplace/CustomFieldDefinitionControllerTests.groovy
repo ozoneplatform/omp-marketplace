@@ -78,6 +78,7 @@ class CustomFieldDefinitionControllerTests {
         CustomFieldDefinition customFieldDefinition = new TextCustomFieldDefinition(name: "Custom Field Definition A", label: 'lbl')
         customFieldDefinition.save(flush:true, failOnError: true)
         controller.params.id = customFieldDefinition.id
+        controller.request.method = 'POST'
         def model = controller.show()
         assert "Custom Field Definition A" == model.customFieldDefinitionInstance.name
     }
@@ -86,6 +87,7 @@ class CustomFieldDefinitionControllerTests {
         CustomFieldDefinition customFieldDefinition = new TextCustomFieldDefinition()
         customFieldDefinition.save(flush:true)
         controller.params.id = 7878787878
+        controller.request.method = 'POST'
         controller.show()
         assert controller.flash.message == "specificObjectNotFound"
     }
@@ -94,6 +96,7 @@ class CustomFieldDefinitionControllerTests {
         CustomFieldDefinition customFieldDefinition = new TextCustomFieldDefinition(name: 'field', label: 'lbl')
         customFieldDefinition.save(flush:true, failOnError: true)
         controller.params.id = customFieldDefinition.id
+        controller.request.method = 'POST'
         controller.delete()
         assert "delete.success" == controller.flash.message
     }
@@ -118,6 +121,7 @@ class CustomFieldDefinitionControllerTests {
         serviceItem.save(failOnError:true)
 
         controller.params.id = cfd.id
+        controller.request.method = 'POST'
         controller.delete()
         assert "delete.success" == controller.flash.message
     }
@@ -129,6 +133,7 @@ class CustomFieldDefinitionControllerTests {
         customFieldDefinition.save(flush:true, failOnError: true)
         controller.params.id = customFieldDefinition.id
         controller.params.name = "Custom Field Definition B"
+        controller.request.method = 'POST'
         controller.update()
         assert "update.success" == controller.flash.message
         CustomFieldDefinition updatedCustomFieldDefinition = CustomFieldDefinition.get(customFieldDefinition.id)
@@ -141,6 +146,7 @@ class CustomFieldDefinitionControllerTests {
         customFieldDefinition.save(flush:true)
         controller.params.name = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
         controller.params.id = customFieldDefinition.id
+        controller.request.method = 'POST'
         controller.update()
 // TODO: is this test still valid?
 //		assert "/customFieldDefinition/edit" == controller.modelAndView.viewName
@@ -151,6 +157,7 @@ class CustomFieldDefinitionControllerTests {
         customFieldDefinition.save(flush:true)
         controller.params.id = 7878787878
         controller.params.name = "gghfgh"
+        controller.request.method = 'POST'
         controller.update()
         assert controller.flash.message == "objectNotFound"
     }
@@ -161,6 +168,7 @@ class CustomFieldDefinitionControllerTests {
         controller.params.description = "Description of Custom Field Definition A"
         controller.params.tooltip = ""
 		controller.params.styleType = Constants.CustomFieldDefinitionStyleType.TEXT.name()
+        controller.request.method = 'POST'
         controller.save()
         assert "create.success" == controller.flash.message
     }
@@ -170,12 +178,12 @@ class CustomFieldDefinitionControllerTests {
         controller.params.name = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
         controller.params.description = "Description of Custom Field Definition A"
 		controller.params.styleType = Constants.CustomFieldDefinitionStyleType.TEXT.name()
+        controller.request.method = 'POST'
 		controller.save()
 // TODO: is this test still valid?
 //		assert "/customFieldDefinition/create" == controller.modelAndView.viewName
     }
 
-    @Override
     protected void reset() {
         // workaround from http://jira.codehaus.org/browse/GRAILS-6483
         controller.response.committed = false
@@ -210,6 +218,7 @@ class CustomFieldDefinitionControllerTests {
         // update customFieldDefinition to not have type desktop
         controller.params.id = cfd.id
         controller.params.types = [desktop]
+        controller.request.method = 'POST'
         controller.update()
 
         //Changed for grails 2.
@@ -262,6 +271,7 @@ class CustomFieldDefinitionControllerTests {
         customFieldDefinition.label =  "Custom Field Definition A"
         customFieldDefinition.save(failOnError:true)
         controller.params.id = customFieldDefinition.id
+        controller.request.method = 'POST'
         def model = controller.show()
         assert "Custom Field Definition A" == model.customFieldDefinitionInstance.name
     }
@@ -273,6 +283,7 @@ class CustomFieldDefinitionControllerTests {
         controller.params.description = "Description of Custom Field Definition A"
         controller.params.tooltip = ""
 		controller.params.styleType = styleType.name()
+        controller.request.method = 'POST'
         controller.save()
         assert "create.success" == controller.flash.message
     }
@@ -284,6 +295,7 @@ class CustomFieldDefinitionControllerTests {
         customFieldDefinition.label = 'custom field'
         customFieldDefinition.save(flush:true, failOnError: true)
         controller.params.id = customFieldDefinition.id
+        controller.request.method = 'POST'
         controller.delete()
         assert "delete.success" == controller.flash.message
     }
@@ -296,6 +308,7 @@ class CustomFieldDefinitionControllerTests {
         customFieldDefinition.save(flush:true, failOnError: true)
         controller.params.id = customFieldDefinition.id
         controller.params.name = "Custom Field Definition B"
+        controller.request.method = 'POST'
         controller.update()
         assert "update.success" == controller.flash.message
         CustomFieldDefinition updatedCustomFieldDefinition = CustomFieldDefinition.get(customFieldDefinition.id)

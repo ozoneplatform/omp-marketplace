@@ -258,20 +258,16 @@
         <copy file="${staging.dir}/${mp.security.module}-project-${mp.security.rev}.zip"
             tofile="${staging.dir}/${mp.security.module}/${mp.security.module}-project.zip" />
 
-        <!-- Unzip sample Spring configuration files -->
-        <unzip src="${staging.dir}/${mp.security.module}/${mp.security.module}-project.zip"
-            dest="${staging.dir}/${mp.security.module}">
-            <patternset>
-                <include name="src/main/resources/spring/**" />
-            </patternset>
-            <filtermapper>
-                <replacestring from="src/main/resources/spring/" to="" />
-            </filtermapper>
-        </unzip>
+        <unzip src="${staging.dir}/${mp.security.module}-project-${mp.security.rev}.zip"
+            dest="${staging.dir}/${mp.security.module}" />
 
-        <delete dir="${staging.dir}/${mp.security.module}/src" />
+        <copy todir="${staging.dir}/${mp.security.module}">
+            <fileset dir="${staging.dir}/${mp.security.module}/src/main/resources/spring" />
+        </copy>
 
-        <!-- Add default sample Spring configuration to Tomcat CLASSPATH -->
+        <delete dir="${staging.dir}/${owf.security.module}/ozone-security-3.27" />
+        <delete dir="${staging.dir}/${owf.security.module}/src" />
+
         <copy todir="${tomcat.dir}/lib">
             <fileset dir="${staging.dir}/${mp.security.module}"
                 includes="OWFsecurityContext.xml,MPsecurityContext.xml,MetricSecurityContext.xml,users.properties,ozone-security-beans/**" />

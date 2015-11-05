@@ -1,7 +1,7 @@
 import grails.util.Environment
 import org.apache.commons.lang.StringEscapeUtils
 import static ozone.marketplace.enums.MarketplaceApplicationSetting.*
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper
 import ozone.marketplace.util.event.LogInEvent
 
@@ -23,7 +23,7 @@ class UserFilters {
 
     def marketplaceApplicationConfigurationService
 
-    def config = ConfigurationHolder.config
+    def config = Holders.config
 
 
     def filters = {

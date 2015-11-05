@@ -19,7 +19,6 @@ class IntentActionServiceTests {
     @Rule
     public final ExpectedException exception = ExpectedException.none()
 
-    @Override
     void setUp() {
         FakeAuditTrailHelper.install()
 

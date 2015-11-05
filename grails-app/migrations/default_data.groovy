@@ -4,6 +4,11 @@ import marketplace.ScoreCardItem
 import ozone.utils.Utils
 
 databaseChangeLog = {
+
+	property([name:"showOnListing", value:"true", dbms:"postgresql"])
+	property([name:"showOnListing", value:"1", dbms:"mysql, oracle, mssql, h2"])
+
+
     changeSet(author: 'marketplace', dbms: 'postgresql', id: 'defaultData-1',
                 context: 'defaultData') {
         comment('Ensure that the category table has auto-incrementing ids')
@@ -27,61 +32,58 @@ databaseChangeLog = {
 
     changeSet(author: 'marketplace', dbms: 'mssql, mysql, oracle, postgresql, hsqldb, h2',
                 id: 'defaultData-2', context: 'defaultData') {
-        def createdDate = new Date()
         def defaultCategories = [
             new Category(
                 title: "Category A",
-                description: "Example Category A",
-                createdDate: createdDate,
-                editedDate: createdDate
+                description: "Example Category A"
             ),
             new Category(
                 title: "Category B",
-                description: "Example Category B",
-                createdDate: createdDate,
-                editedDate: createdDate
+                description: "Example Category B"
             ),
             new Category(
                 title: "Category C",
-                description: "Example Category C",
-                createdDate: createdDate,
-                editedDate: createdDate
+                description: "Example Category C"
             ),
             new Category(
                 title: "Geospatial",
-                description: "Analytics based on geographic data",
-                createdDate: createdDate,
-                editedDate: createdDate
+                description: "Analytics based on geographic data"
             ),
             new Category(
                 title: "Query",
-                description: "Data set retrieval",
-                createdDate: createdDate,
-                editedDate: createdDate
+                description: "Data set retrieval"
             ),
             new Category(
                 title: "Reporting",
-                description: "Data set summarization",
-                createdDate: createdDate,
-                editedDate: createdDate
+                description: "Data set summarization"
             ),
             new Category(
                 title: "Temporal",
-                description: "Amaltics based on temporal data",
-                createdDate: createdDate,
-                editedDate: createdDate
+                description: "Amaltics based on temporal data"
             )
         ]
 
         defaultCategories.each { cat ->
-            insert(tableName: 'category') {
-                column name: 'title', value: "${escapeSql(cat.title)}"
-                column name: 'description', value: "${escapeSql(cat.description)}"
-                column name: 'uuid', value: "${Utils.generateUUID()}"
-                column name: 'version', valueNumeric: 0
-                column name: 'created_date', value: "${escapeSql(cat.createdDate.format('yyyy-MM-dd HH:mm:ss'))}"
-                column name: 'edited_date', value: "${escapeSql(cat.editedDate.format('yyyy-MM-dd HH:mm:ss'))}"
+            update(tableName: 'category') {
+                column(name: 'description', value: cat.description)
+				where("title = '${escapeSql(cat.title)}'")
             }
+            //insert rows where the title does not already exist.
+            //
+            //NOTE: the FROM line doesn't actually do anything, it is
+            //just there to keep liquibase/oracle from complaining about a
+            //SELECT-WHERE without a FROM. application_configuration table is
+            //used simply because we can guarantee that it will have at least one row
+            sql("""
+                INSERT INTO category (title, description, version, uuid, created_date, edited_date)
+                    SELECT DISTINCT '${escapeSql(cat.title)}', '${escapeSql(cat.description)}', 0,
+                        '${Utils.generateUUID()}', \${currentDateFunction},
+                        \${currentDateFunction}
+                    FROM application_configuration
+                    WHERE NOT EXISTS (SELECT id FROM category
+                        WHERE title = '${escapeSql(cat.title)}'
+                    )
+            """)
         }
     }
 
@@ -103,9 +105,9 @@ databaseChangeLog = {
             end;
             /
             """)
-    }
-
-        // Insert default categories
+    }		
+		
+       // Insert standardScorcard Questions for Postgres
     changeSet(author: 'marketplace', dbms: 'mssql, mysql, oracle, postgresql, hsqldb, h2', id: 'defaultData-5', context: 'defaultData') {
         def createdDate = new Date()
         def standardQuestions = [
@@ -115,7 +117,7 @@ databaseChangeLog = {
                 image: "/marketplace/themes/common/images/scorecard/ScorecardIcons_EMS_lrg.png",
                 createdDate: createdDate,
                 editedDate: createdDate,
-                showOnListing: true
+                showOnListing: 1
             ),
             new ScoreCardItem(
                 question: "Is the application hosted within the infrastructure of the cloud?",
@@ -123,7 +125,7 @@ databaseChangeLog = {
                 image: "/marketplace/themes/common/images/scorecard/ScorecardIcons_CloudHost_lrg.png",
                 createdDate: createdDate,
                 editedDate: createdDate,
-                showOnListing: true
+                showOnListing: 1
             ),
             new ScoreCardItem(
                 question: "Does the application elastically scale?",
@@ -131,7 +133,7 @@ databaseChangeLog = {
                 image: "/marketplace/themes/common/images/scorecard/ScorecardIcons_Scale_lrg.png",
                 createdDate: createdDate,
                 editedDate: createdDate,
-                showOnListing: true
+                showOnListing: 1
             ),
             new ScoreCardItem(
                 question: "Does this system operate without license constraints?",
@@ -139,7 +141,7 @@ databaseChangeLog = {
                 image: "/marketplace/themes/common/images/scorecard/ScorecardIcons_LicenseFree_lrg.png",
                 createdDate: createdDate,
                 editedDate: createdDate,
-                showOnListing: true
+                showOnListing: 1
             ),
             new ScoreCardItem(
                 question: "Is the application data utilizing cloud storage?",
@@ -147,7 +149,7 @@ databaseChangeLog = {
                 image: "/marketplace/themes/common/images/scorecard/ScorecardIcons_CloudStorage_lrg.png",
                 createdDate: createdDate,
                 editedDate: createdDate,
-                showOnListing: true
+                showOnListing: 1
             ),
             new ScoreCardItem(
                 question: "Is the application accessible through a web browser?",
@@ -155,20 +157,25 @@ databaseChangeLog = {
                 image: "/marketplace/themes/common/images/scorecard/ScorecardIcons_Browser_lrg.png",
                 createdDate: createdDate,
                 editedDate: createdDate,
-                showOnListing: true
+                showOnListing: 1
             )
         ]
-
-        standardQuestions.each { question ->
-            insert(tableName: 'score_card_item') {
-                column name: 'question', value: "${escapeSql(question.question)}"
-                column name: 'description', value: "${escapeSql(question.description)}"
-                column name: 'image', value: "${escapeSql(question.image)}"
-                column name: 'version', valueNumeric: 0
-                column name: 'created_date', value: "${escapeSql(question.createdDate.format('yyyy-MM-dd HH:mm:ss'))}"
-                column name: 'edited_date', value: "${escapeSql(question.editedDate.format('yyyy-MM-dd HH:mm:ss'))}"
-                column name: 'show_on_listing', valueBoolean: question.showOnListing
-            }
+			standardQuestions.each { question ->
+            //insert rows where the question does not already exist.
+            //
+            //NOTE: the FROM line doesn't actually do anything, it is
+            //just there to keep liquibase/oracle from complaining about a
+            //SELECT-WHERE without a FROM. application_configuration table is
+            //used simply because we can guarantee that it will have at least one row
+            sql("""
+                INSERT INTO score_card_item (question, description, image, version, created_date, edited_date, show_on_listing)
+                    SELECT DISTINCT '${escapeSql(question.question)}', '${escapeSql(question.description)}', '${escapeSql(question.image)}', 0,
+                        \${currentDateFunction}, \${currentDateFunction}, \${showOnListing}
+                    FROM application_configuration
+                    WHERE NOT EXISTS (SELECT id FROM score_card_item
+                        WHERE question = '${escapeSql(question.question)}'
+                    )
+            """)
         }
     }
 
@@ -177,5 +184,6 @@ databaseChangeLog = {
         sql(endDelimiter: "", splitStatements: false, sql: """
             drop trigger score_card_item_insert;
         """)
-    }
+		}
+	
 }

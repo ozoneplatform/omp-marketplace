@@ -1,5 +1,5 @@
 <%@ page import="marketplace.*" %>
-<%@ page import="static org.codehaus.groovy.grails.commons.ConfigurationHolder.config" %>
+<%@ page import="static grails.util.Holders.config" %>
 
 
  <script>

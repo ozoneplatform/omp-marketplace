@@ -27,7 +27,6 @@ class RejectionListingRestService extends ChildObjectRestService<ServiceItem, Re
 
     RejectionListingRestService() {}
 
-    @Override
     protected void postprocess(RejectionListing updated, RejectionListing old = null) {
         updated.author = profileRestService.currentUserProfile
         parentClassRestService.reject(updated.serviceItem, updated)

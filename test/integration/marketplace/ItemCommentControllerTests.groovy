@@ -171,6 +171,7 @@ class ItemCommentControllerTests extends MarketplaceIntegrationTestCase {
 	  controller.params.commentTextInput = "This is a comment"
 	  controller.session.username = "User1"
 	  switchUser('User1')
+    controller.request.method = 'POST'
 	  controller.saveItemComment()
 	  result = JSON.parse(controller.response.contentAsString)
 	  assert true ==  result.message.contains("User is not authorized to access")
@@ -196,6 +197,7 @@ class ItemCommentControllerTests extends MarketplaceIntegrationTestCase {
 	  controller.params.itemCommentId = comment.id
 	  controller.session.username = "User1"
 	  switchUser('User1')
+    controller.request.method = 'POST'
 	  controller.deleteItemComment()
 	  result = JSON.parse(controller.response.contentAsString)
 	  assert true ==  result.message.contains("User is not authorized to access")

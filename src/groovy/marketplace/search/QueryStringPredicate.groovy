@@ -31,6 +31,16 @@ class QueryStringPredicate extends SingleValuePredicate {
                 should {
                     query_string(default_field: this.indexFieldName, query: expandedQueryString ?: '*')
                 }
+            } else if (expandedQueryString?.contains('.')) {
+                String queryPath = expandedQueryString.substring(0, expandedQueryString.split(':')[0].lastIndexOf('.'))
+                must {
+                    nested {
+                        path = "$queryPath"
+                        query {
+                            query_string(query: expandedQueryString ?: '*')
+                        }
+                    }
+                }
             } else {
                 must {
                     query_string(default_field: this.indexFieldName, query: expandedQueryString ?: '*')
@@ -47,10 +57,9 @@ class QueryStringPredicate extends SingleValuePredicate {
      */
     String getExpandedQueryString(String originalString) {
         if (originalString?.contains(':')) {
-
-            return originalString.replaceAll(/[\w]+:[\w]+/,
+            return originalString.replaceAll(/[\w\.]+:[\w\.]+/,
                     {
-                        def matcher = it =~ /([\w]+):([\w]+)/
+                        def matcher = it =~ /([\w\.]+):([\w\.]+)/
                         if (matcher) {
                             String fieldName = matcher[0][1]
                             String fieldValue = matcher[0][2]

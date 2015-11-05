@@ -17,15 +17,12 @@ class TypesControllerTests extends MarketplaceAdminControllerTests {
     void setUp() {
         super.setUp()
         typesServiceMock = mockFor(TypesService)
-        controller.typesService = typesServiceMock.createMock()
-		controller.class.metaClass.list{
-			println "yo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-		}
+        controller.typesService =  typesServiceMock.createMock()
         typesServiceMock.demand.with {
-            getItemFromParams(0..1) { params, request -> [domain: Types.get(params.id), isNewVersion: false] }
-            buildItemFromParams(0..1) {params, request -> new Types(params) }
             list(0..1) { params -> Types.list() }
             countTypes(0..1) { -> Types.count() }
+            getItemFromParams(0..1) { params, request -> [domain: Types.get(params.id), isNewVersion: false] }
+            buildItemFromParams(0..1) {params, request -> new Types(params) }
         }
         controller.metaClass.postUpdateDomain = { -> }
     }

@@ -4,8 +4,9 @@ import org.apache.log4j.Logger
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.builder.SearchSourceBuilder
-import org.elasticsearch.search.facet.query.QueryFacetBuilder
-import org.elasticsearch.search.facet.terms.TermsFacetBuilder
+import org.elasticsearch.search.aggregations.AggregationBuilders
+import org.elasticsearch.search.aggregations.AbstractAggregationBuilder
+import org.elasticsearch.search.aggregations.AggregationBuilder
 import org.elasticsearch.search.sort.FieldSortBuilder
 import org.elasticsearch.search.sort.ScoreSortBuilder
 import org.elasticsearch.search.sort.SortOrder
@@ -19,15 +20,15 @@ class SearchCriteria implements Cloneable, Serializable {
     static final String TERTIARY_SORT = 'sortTitle'
     static final SortOrder TERTIARY_ORDER = SortOrder.ASC
 
-    static final Integer DEFAULT_FACET_SIZE = 100
+    static final Integer DEFAULT_AGGREGATION_SIZE = 100
 
     static final Collection<String> TYPES_TO_SEARCH = ['marketplace.ServiceItem', 'marketplace.ExtServiceItem']
 
-    static final String[] TERM_FACETS = ['types', 'categories', 'agency']
+    static final String[] TERM_AGGREGATIONS = ['types', 'categories', 'agencies']
 
     String sort
     String order = "asc"
-    boolean facets = false
+    boolean aggregations = false
     def max
     def offset
 
@@ -48,7 +49,7 @@ class SearchCriteria implements Cloneable, Serializable {
         order = params.order
         max = params.max
         offset = params.offset
-        facets = params.facets
+        aggregations = params.aggregations
     }
 
     public updateBean(params) {
@@ -64,8 +65,8 @@ class SearchCriteria implements Cloneable, Serializable {
         if (params.offset) {
             offset = params.offset
         }
-        if(params.facets) {
-            facets = params.facets
+        if(params.aggregations) {
+            aggregations = params.aggregations
         }
 
         // Add predicates from parameter map
@@ -85,8 +86,8 @@ class SearchCriteria implements Cloneable, Serializable {
         if (offset) {
             params.offset = offset
         }
-        if(facets) {
-            params.facets = facets
+        if(aggregations) {
+            params.aggregations = aggregations
         }
         params
     }
@@ -100,7 +101,6 @@ class SearchCriteria implements Cloneable, Serializable {
      */
     def addSearch(String field, String val) {
         log.info "OP-3759: addSearch $field, $val"
-
         if (this.predicateMap[(field)] && this.predicateMap[(field)] instanceof MultiValuePredicate) {
             MultiValuePredicate multiValueFilter = this.predicateMap[(field)]
             multiValueFilter.addValue(val)
@@ -144,33 +144,18 @@ class SearchCriteria implements Cloneable, Serializable {
      */
     def getSearchClause() {
         List<Predicate> allPredicates = predicateMap.values().toList()
-        List<Predicate> filters = allPredicates.findAll {it.isFilter()}
-        List<Predicate> queries = allPredicates - filters
-
-        def result
+        def result 
         if (allPredicates) {
             result = {
                 filtered {
-                    if (queries) {
+                    filter {
                         query {
                             bool {
-                                queries.each { Predicate query ->
+                                allPredicates.each { Predicate query ->
                                     Closure searchClause = (Closure) query.getSearchClause()
                                     searchClause.delegate = delegate.delegate
                                     searchClause()
-                                }
-                            }
-                        }
-                    }
-                    if (filters) {
-                        filter {
-                            query {
-                                bool {
-                                    filters.each { Predicate filter ->
-                                        Closure searchClause = (Closure) filter.getSearchClause()
-                                        searchClause.delegate = delegate.delegate
-                                        searchClause()
-                                    }
+
                                 }
                             }
                         }
@@ -186,6 +171,7 @@ class SearchCriteria implements Cloneable, Serializable {
                 }
             }
         }
+
         result
     }
 
@@ -215,7 +201,14 @@ class SearchCriteria implements Cloneable, Serializable {
         SearchSourceBuilder source = new SearchSourceBuilder()
 
         addSort(source)
-        addFacets(source)
+
+        if (aggregations) {
+            TERM_AGGREGATIONS.each { String term -> 
+                source.aggregation(AggregationBuilders.nested("${term}").path("${term}").subAggregation(
+                    AggregationBuilders.terms("id").field("${term}.id").size(DEFAULT_AGGREGATION_SIZE)
+                ))
+            }
+        }
 
         return source
     }
@@ -242,11 +235,4 @@ class SearchCriteria implements Cloneable, Serializable {
         }
     }
 
-    def addFacets(SearchSourceBuilder source) {
-        if(facets) {
-            TERM_FACETS.each { String term ->
-                source.facet(new TermsFacetBuilder(term).field("${term}.id").size(DEFAULT_FACET_SIZE))
-            }
-        }
-    }
 }

@@ -1,7 +1,7 @@
 package marketplace
 
 import org.codehaus.groovy.grails.web.json.JSONObject
-import org.codehaus.groovy.grails.commons.ApplicationHolder
+import grails.util.Holders
 import ozone.utils.Utils
 import marketplace.JSONUtil as JS
 import org.apache.commons.lang.builder.HashCodeBuilder
@@ -13,6 +13,7 @@ class Types implements Serializable {
         root false
         title index: 'analyzed', excludeFromAll: false
         ozoneAware index: 'not_analyzed', excludeFromAll: true
+        id index: 'analyzed', excludeFromAll: false
         only = ['id', 'title', 'ozoneAware']
     }
 

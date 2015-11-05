@@ -86,7 +86,7 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: 'marketplace', dbms: 'mssql, mysql, postgresql, hsqldb', id: '7.5.0-3',
+    changeSet(author: 'marketplace', dbms: 'mssql, mysql, oracle, postgresql, hsqldb', id: '7.5.0-3',
             context: 'create, 7.5.0') {
         dropColumn(tableName: 'service_item', columnName: 'agency')
         dropColumn(tableName: 'service_item', columnName: 'agency_icon')

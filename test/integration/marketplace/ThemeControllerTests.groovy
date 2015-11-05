@@ -4,7 +4,7 @@ import grails.test.mixin.TestMixin
 import grails.test.mixin.integration.IntegrationTestMixin
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 
 @TestMixin(IntegrationTestMixin)
 class ThemeControllerTests extends MarketplaceIntegrationTestCase {
@@ -13,7 +13,7 @@ class ThemeControllerTests extends MarketplaceIntegrationTestCase {
 	def DEFAULT_THEME_NAME = "marketplace"
 
 	def themeService
-	def config = ConfigurationHolder.config
+	def config = Holders.config
 
 	void setUp() {
 		super.setUp()

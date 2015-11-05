@@ -1,6 +1,6 @@
 package marketplace.rest
 
-import marketplace.FacetsService
+import marketplace.AggregationsService
 import marketplace.JSONUtil
 import marketplace.SearchableService
 import marketplace.search.SearchCriteria
@@ -17,7 +17,7 @@ class SearchResource extends JsonResource {
     @Context UriInfo uriInfo
     SearchableService searchableService
     SearchRestService searchRestService
-    FacetsService facetsService
+    AggregationsService aggregationsService
 
     @GET
     Map search() {
@@ -36,19 +36,19 @@ class SearchResource extends JsonResource {
 
     private Map doSearch(Map params) {
         SearchCriteria searchBean = new SearchCriteria(params)
-        searchBean.facets = true
+        searchBean.aggregations = true
 
         def result = searchableService.searchListings(searchBean)
         Collection resultsList = result?.searchResults
-        Map facets = facetsService.extractFacetInfo(result)
+        Map aggregations = aggregationsService.extractAggregationInfo(result)
 
         [
             total: result?.total ?: resultsList.size(),
             data: resultsList,
-            facets: [
-                type:    JSONUtil.getListFromDomainObject(facets.types),
-                category:  JSONUtil.getListFromDomainObject(facets.categories),
-                agency: JSONUtil.getListFromDomainObject(facets.agencies)
+            aggregations: [
+                type:    JSONUtil.getListFromDomainObject(aggregations.types),
+                category:  JSONUtil.getListFromDomainObject(aggregations.categories),
+                agency: JSONUtil.getListFromDomainObject(aggregations.agencies)
             ]
         ]
     }
