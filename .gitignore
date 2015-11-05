@@ -60,6 +60,7 @@ out/*
 plugins/*
 !plugins/audit-trail-*
 !plugins/ui-performance-*
+!plugins/ozone-auditing-*
 node_modules
 js-build
 .vagrant
