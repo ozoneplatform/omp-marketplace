@@ -15,6 +15,7 @@ import ozone.utils.Utils
 
 import marketplace.testutil.FakeAuditTrailHelper
 
+@TestFor(ListingController)
 @TestMixin([ControllerUnitTestMixin, DomainClassUnitTestMixin])
 class ListingControllerTests {
     Profile someUser

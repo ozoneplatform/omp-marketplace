@@ -2,6 +2,7 @@ package marketplace
 
 import grails.converters.JSON
 import grails.test.mixin.TestMixin
+import grails.test.mixin.TestFor
 import grails.test.mixin.domain.DomainClassUnitTestMixin
 import grails.test.mixin.web.ControllerUnitTestMixin
 
@@ -10,6 +11,7 @@ import org.hibernate.SessionFactory
 import org.hibernate.classic.Session
 import ozone.decorator.JSONDecoratorService
 
+@TestFor(OwfWidgetTypesController)
 @TestMixin([ControllerUnitTestMixin, DomainClassUnitTestMixin])
 class OwfWidgetTypesControllerTests {
     def domainInstance1, domainInstance2, domainInstance3

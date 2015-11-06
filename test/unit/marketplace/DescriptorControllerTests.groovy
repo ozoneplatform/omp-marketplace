@@ -9,6 +9,7 @@ import ozone.decorator.JSONDecoratorService
 
 import marketplace.testutil.FakeAuditTrailHelper
 
+@TestFor(DescriptorController)
 @TestMixin([ControllerUnitTestMixin, DomainClassUnitTestMixin])
 class DescriptorControllerTests {
 
