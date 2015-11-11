@@ -48,6 +48,7 @@ class OwfProperties implements Serializable {
         stackDescriptor index: 'analyzed', excludeFromAll: false
         width index: 'not_analyzed', excludeFromAll: true
         descriptorUrl index: 'not_analyzed', excludeFromAll: false
+        intents component: true
         except = ['createdBy', 'createdDate', 'editedBy', 'editedDate', 'size', 'version', 'serviceItem']
     }
 
