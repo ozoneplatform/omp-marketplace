@@ -18,7 +18,9 @@ class SearchableService {
         log.debug 'searchListings:'
 
 
-        def ops = [types: searchCriteria.TYPES_TO_SEARCH]
+        def ops = [size: searchCriteria.max,
+                   from: searchCriteria.offset,
+                   types: searchCriteria.TYPES_TO_SEARCH]
 
         def retry = true
 
