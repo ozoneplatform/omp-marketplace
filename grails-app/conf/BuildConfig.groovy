@@ -104,10 +104,9 @@ grails.project.dependency.resolution = {
         grailsPlugins()
         grailsHome()
         mavenLocal()
-        mavenRepo 'http://maven.restlet.org'
-        mavenRepo 'http://repository.opencastproject.org/nexus/content/repositories/public'
         grailsCentral()
         mavenCentral()
+		mavenRepo 'http://maven.restlet.org'
     }
 
     dependencies {
