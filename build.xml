@@ -179,7 +179,7 @@
           target: war
          ================================= -->
 
-    <target name="war" depends="-init,clean,test,compress_js" unless="skipWar" description="--> Creates a WAR of a Grails application">
+    <target name="war" depends="-init,clean,test,compress_js,compile-themes" unless="skipWar" description="--> Creates a WAR of a Grails application">
         <grails script="-Dbuild.number=${build.number} war" args="${offline.arg}" />
         <move file="${basedir}/target/${app.name}-${app.version}.war" tofile="${basedir}/target/marketplace.war" />
     </target>
