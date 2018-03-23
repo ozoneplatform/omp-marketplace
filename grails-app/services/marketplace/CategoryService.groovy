@@ -1,17 +1,18 @@
 package marketplace
 
+import org.hibernate.SessionFactory
+
 import ozone.marketplace.domain.ValidationException
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.hibernate.FlushMode
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 class CategoryService extends MarketplaceService {
 
-    def sessionFactory
+    SessionFactory sessionFactory
 
     @Transactional(readOnly = true)
     def search(params) {
-
         def c = Category.createCriteria()
         if (params.containsKey('query') && !params.query) params.remove('query')
         def results = c.list(params) {
@@ -27,7 +28,7 @@ class CategoryService extends MarketplaceService {
     }
 
     @Transactional(readOnly = true)
-    def list(def params) {
+    List<Category> list(def params) {
         def results
         def dateSearch = parseEditedSinceDate(params)
         if (dateSearch) {
@@ -40,12 +41,12 @@ class CategoryService extends MarketplaceService {
     }
 
     @Transactional(readOnly = true)
-    def get(def params) {
+    Category get(def params) {
         return Category.get(params.id)
     }
 
     @Transactional(readOnly = true)
-    def countTypes() {
+    Integer countTypes() {
         return Category.count()
     }
 

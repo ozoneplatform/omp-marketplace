@@ -1,26 +1,33 @@
 package marketplace.listing
 
+import marketplace.AccountService
 import marketplace.BaseMarketplaceRestController
 import grails.converters.JSON
+
+import marketplace.ImportStackService
 import marketplace.ServiceItem
+import marketplace.ServiceItemService
+
 
 class ListingController extends BaseMarketplaceRestController {
 
-    def serviceItemService
-    def importStackService
-    def accountService
-
     static allowedMethods = [
-        list: 'GET',
+            list: 'GET',
 //            show: 'GET',
 //            update: 'PUT',
-        save: 'POST',
+            save: 'POST',
 //            delete: 'DELETE'
     ]
 
+    ServiceItemService serviceItemService
+
+    ImportStackService importStackService
+
+    AccountService accountService
 
     def index() {
         redirect(action: "list", params: params)
+        return
     }
 
 

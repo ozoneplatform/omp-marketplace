@@ -1,28 +1,50 @@
 package marketplace
 
-import ozone.marketplace.domain.ValidationException
-import ozone.marketplace.enums.ImageType;
+import grails.core.GrailsApplication
+import grails.gorm.transactions.ReadOnly
+import grails.gorm.transactions.Transactional
+import grails.plugin.cache.Cacheable
 
-import org.apache.commons.lang.exception.ExceptionUtils
-import org.hibernate.FlushMode
 import org.springframework.validation.FieldError
-
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
+
+import org.hibernate.FlushMode
+import org.hibernate.SessionFactory
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+import marketplace.data.CustomFieldDefinitionDataService
+import marketplace.data.ServiceItemDataService
 import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang.exception.ExceptionUtils
+
+import ozone.marketplace.domain.ValidationException
+import ozone.marketplace.enums.ImageType
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 import ozone.utils.Utils
-import grails.plugin.cache.Cacheable
-import org.springframework.transaction.annotation.Transactional
+
 
 class TypesService extends MarketplaceService {
 
-    def sessionFactory
-    def imagesService
-    def marketplaceApplicationConfigurationService
-    def grailsApplication
+    public static final String ERROR_NOT_FOUND = "objectNotFound"
+    public static final String ERROR_IS_IMMUTABLE = "delete.failure.isImmutable"
+    public static final String ERROR_HAS_ASSOCIATED_SERVICE_ITEM = "delete.failure.serviceItem.exists"
+    public static final String ERROR_HAS_ASSOCIATED_FIELD = "delete.failure.customFieldDefinition.exists"
 
+    GrailsApplication grailsApplication
+
+    SessionFactory sessionFactory
+
+    ImagesService imagesService
+
+    ServiceItemDataService serviceItemDataService
+
+    CustomFieldDefinitionDataService customFieldDefinitionDataService
+
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
+    /** TODO: Only active usage of this is to get the URL? */
     @Cacheable("typeIconImageCache")
-    @Transactional(readOnly = true)
+    @ReadOnly
     def getTypeIconImage(def params, usePublic = false) {
 
         def contextPathForImages = "${params.contextPath}/images/get"
@@ -39,7 +61,7 @@ class TypesService extends MarketplaceService {
                 contentType = image.contentType
                 imageSize = image.imageSize
                 id = image.id
-            }
+        }
         } else if (types) {
             def defaults = Constants.DEFAULT_TYPE_IMAGE_FILES
             def filename = defaults."${types.title}" ?: defaults.default
@@ -50,16 +72,15 @@ class TypesService extends MarketplaceService {
         return imageMap
     }
 
-    @Transactional(readOnly = true)
-    Images getDefaultTypesImage(params) {
-        String typesTitle = params.title ?: "default"
-        String typesImageFilePath = Constants.DEFAULT_TYPE_IMAGE_FILES[typesTitle] ?: Constants.DEFAULT_TYPE_IMAGE_FILES["default"]
+    @ReadOnly
+    Images getDefaultTypesImage(String title = "default") {
+        String typesImageFilePath = Constants.DEFAULT_TYPE_IMAGE_FILES[title] ?: Constants.DEFAULT_TYPE_IMAGE_FILES["default"]
 
         imagesService.loadImageFromFile(ImageType.TYPES, typesImageFilePath, true)
     }
 
     @Transactional
-    def deleteTypeImage(def type) {
+    void deleteTypeImage(Types type) {
         def currDomainImage = type.image
         type.image = null
         type.save()
@@ -84,13 +105,13 @@ class TypesService extends MarketplaceService {
     }
 
     @Transactional
-    def buildItemFromParams(def params, request) {
+    Types buildItemFromParams(Map params, request) {
         def types = new Types(params)
         checkAndUpdateTypeImageUploadFromRequest(types, request)
         return types
     }
 
-    private void checkAndUpdateTypeImageUploadFromRequest(types, request) {
+    private void checkAndUpdateTypeImageUploadFromRequest(Types types, request) {
         if (request instanceof DefaultMultipartHttpServletRequest) {
             def typeMaxImageSize = marketplaceApplicationConfigurationService.valueOf(MarketplaceApplicationSetting.TYPE_IMAGE_MAX_SIZE)
             Long maxFileSize = Long.valueOf(typeMaxImageSize)
@@ -113,8 +134,8 @@ class TypesService extends MarketplaceService {
         }
     }
 
-    @Transactional(readOnly = true)
-    def list(def params) {
+    @ReadOnly
+    List<Types> list(Map params) {
         def results
         def dateSearch = parseEditedSinceDate(params)
         if (dateSearch) {
@@ -126,13 +147,13 @@ class TypesService extends MarketplaceService {
         return results
     }
 
-    @Transactional(readOnly = true)
-    def get(def params) {
-        return Types.get(params.id)
+    @ReadOnly
+    Types get(Map params) {
+        return Types.get(params.id as Long)
     }
 
-    @Transactional(readOnly = true)
-    def countTypes() {
+    @ReadOnly
+    int countTypes() {
         return Types.count()
     }
 
@@ -146,46 +167,36 @@ class TypesService extends MarketplaceService {
      * 5. Type that is immutable. Throw error, don't delete it
      */
     @Transactional
-    def delete(def id) {
+    void delete(long id) {
         Types type
         try {
             type = Types.get(id)
             if (!type) {
-                throw new ValidationException(message: "objectNotFound", args: [id])
+                throw new ValidationException(message: ERROR_NOT_FOUND, args: [id])
             }
+
+            // Is immutable?
             if (type.isPermanent) {
-                throw new ValidationException(message: "delete.failure.isImmutable", args: [type.title])
+                throw new ValidationException(message: ERROR_IS_IMMUTABLE, args: [type.title])
             }
-            def criteria = ServiceItem.createCriteria()
-            def cnt = criteria.get {
-                projections {
-                    count('id')
-                }
-                types {
-                    eq('id', new Long(id))
-                }
+
+            // Has associated listing?
+            if (serviceItemDataService.countHasTypeById(id) > 0) {
+                throw new ValidationException(message: ERROR_HAS_ASSOCIATED_SERVICE_ITEM, args: [type.title])
             }
-            if (cnt > 0) {
-                throw new ValidationException(message: "delete.failure.serviceItem.exists", args: [type.title])
+
+            // Has associated custom field?
+            if (customFieldDefinitionDataService.countHasTypeById(id) > 0) {
+                throw new ValidationException(message: ERROR_HAS_ASSOCIATED_FIELD, args: [type.toString()])
             }
-            def cfdCriteria = CustomFieldDefinition.createCriteria()
-            def cfdCnt = cfdCriteria.get {
-                projections {
-                    count('id')
-                }
-                types {
-                    eq('id', new Long(id))
-                }
-            }
-            if (cfdCnt > 0) {
-                throw new ValidationException(message: "delete.failure.customFieldDefinition.exists", args: [type.toString()])
-            }
-            type.delete(flush: true)
+
+            type.delete()
         }
         catch (ValidationException ve) {
             throw ve
         }
         catch (Exception e) {
+            // TODO: Is this still required?
             String message = ExceptionUtils.getRootCauseMessage(e)
             log.error "Error occurred trying to delete ${type}. ${message}"
             // Need this to prevent flush exception. See http://jira.codehaus.org/browse/GRAILS-5865
@@ -195,30 +206,31 @@ class TypesService extends MarketplaceService {
         }
     }
 
-    @Transactional(readOnly = true)
-    def getAllTypes() {
+    @ReadOnly
+    List<Types> getAllTypes() {
         Types.list(sort: 'title', order: 'asc')
     }
 
     @Transactional
-    def createRequired() {
-
+    void createRequired() {
         log.info "Loading types..."
 
         def typesInConfig = grailsApplication.config.marketplace.metadata.types
 
-        if (typesInConfig) {
-            typesInConfig.each { Map typeInfo ->
-                String title = typeInfo.title
-                if (!Types.findByTitle(title)) {
-                    new Types(title: title, description: typeInfo.description,
-                        ozoneAware: typeInfo.ozoneAware, hasLaunchUrl: typeInfo.hasLaunchUrl, hasIcons: typeInfo.hasIcons, isPermanent: typeInfo.isPermanent).save()
-                }
-            }
-
-            log.info "Types loaded."
-        } else {
+        if (!typesInConfig) {
             log.error "Types metadata info was not found in the loaded config files."
+            return
         }
+
+        typesInConfig.each { Map typeInfo ->
+            String title = typeInfo.title
+            if (!Types.findByTitle(title)) {
+                new Types(title: title, description: typeInfo.description,
+                    ozoneAware: typeInfo.ozoneAware, hasLaunchUrl: typeInfo.hasLaunchUrl, hasIcons: typeInfo.hasIcons, isPermanent: typeInfo.isPermanent).save()
+            }
+        }
+
+        log.info "Types loaded."
     }
+
 }

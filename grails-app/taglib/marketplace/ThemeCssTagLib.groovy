@@ -2,12 +2,16 @@ package marketplace
 
 import org.springframework.context.*
 
+import ozone.marketplace.domain.ThemeDefinition
+
+
 class ThemeCssTagLib implements ApplicationContextAware {
 
     static namespace = 'marketplaceTheme'
 
-    def themeService
-    def applicationContext
+    ThemeService themeService
+
+    ApplicationContext applicationContext
 
     def defaultCssPath = {
         out << "${request.contextPath}/" + getCurrentTheme().css.toString()
@@ -30,7 +34,94 @@ class ThemeCssTagLib implements ApplicationContextAware {
         this.applicationContext = applicationContext
     }
 
-    def getCurrentTheme() {
+    ApplicationContext getApplicationContext() {
+        return this.applicationContext;
+    }
+
+    ThemeDefinition getCurrentTheme() {
         themeService.getCurrentTheme()
     }
+
+
+    Closure configScript = { attrs ->
+        String context = attrs.context ?: request.contextPath ?: ""
+
+        out << script("${context}/static/config.js")
+    }
+
+    def themeStylesheet = { attrs ->
+        String themeName = attrs.theme
+
+        if (themeName) {
+            String encoded = themeName.encodeAsURL().encodeAsHTML()
+            out << linkStylesheet("${request.contextPath}" + "/static/themes/${encoded}.theme/css/${encoded}.css")
+            return
+        }
+
+        String currentTheme = themeService.getCurrentTheme().css.toString()
+
+        if (currentTheme == null || currentTheme.isEmpty()) {
+            out << linkStylesheet('about:blank')
+            return
+        }
+
+        out << linkStylesheet("${request.contextPath}" + "/static/" + currentTheme, 'theme')
+    }
+
+    def bootstrapStylesheet = { attrs ->
+        String currentTheme = themeService.getCurrentTheme().css.toString()
+
+        if (currentTheme == null || currentTheme.isEmpty()) {
+            out << linkStylesheet('about:blank')
+            return
+        }
+
+        def bootstrapTheme = (currentTheme =~ /[^\/]+$/).replaceFirst('bootstrap.css')
+
+        out << linkStylesheet("${request.contextPath}" + "/static/" + bootstrapTheme, 'bootstrap')
+    }
+
+    def dataTablesStylesheet = { attrs ->
+        String currentTheme = themeService.getCurrentTheme().css.toString()
+
+        if (currentTheme == null || currentTheme.isEmpty()) {
+            out << linkStylesheet('about:blank')
+            return
+        }
+
+        def bootstrapTheme = (currentTheme =~ /[^\/]+$/).replaceFirst('dataTables.css')
+
+        out << linkStylesheet("${request.contextPath}" + "/static/" + bootstrapTheme, 'bootstrap')
+    }
+
+    def imageLink = { attrs ->
+        String currentTheme = themeService.getCurrentTheme().css.toString()
+
+        if (currentTheme == null || currentTheme.isEmpty()) {
+            out << linkStylesheet('about:blank')
+            return
+        }
+        def imageLink = (currentTheme =~ /\/css.*/).replaceFirst('/images/' + attrs.src)
+        out << "${request.contextPath}" + "/static/" + imageLink
+
+    }
+
+    def vendor = { attrs ->
+        String src = attrs.src
+        String context = attrs.context ?: request.contextPath ?: ""
+
+        out << script("$context/static/vendor/$src")
+    }
+    def javascript = { attrs ->
+        String src = attrs.src
+        out << script("${request.contextPath}" + "/static/js/$src")
+    }
+    private static String linkStylesheet(String href, String id = null) {
+        return (id != null) ? """<link id="$id" rel="stylesheet" type="text/css" href="$href"  media="screen, projection"/>"""
+                : """<link rel="stylesheet" type="text/css" href="$href"  media="screen, projection"/>"""
+    }
+    private static String script(String src) {
+        """<script type="text/javascript" src="$src"></script>"""
+    }
+
 }

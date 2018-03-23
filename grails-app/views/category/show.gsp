@@ -52,7 +52,7 @@
 		                         <tr class="prop">
 		                            <td  class="nameAdmin"><g:message code="label.createdBy" encodeAs="HTML" /></td>
 		                            <td  class="admin_create_field admin_page_link">
-		                              <g:set var="creatorId" value="${category.createdBy?.id}" />
+		                              <g:set var="creatorId" value="${category.createdBy}" />
 		                              <g:set var="creatorDisplay" value="${AdminObjectFormatter.creatorNameDisplay(category)}" />
 		                              <g:if test="${creatorId}">
 		                                <g:link controller="profile" action="detail" id="${creatorId}">${creatorDisplay?.encodeAsHTML()}</g:link>
@@ -69,7 +69,7 @@
 		                         <tr class="prop">
 		                            <td  class="nameAdmin"><g:message code="label.lastEditedBy" encodeAs="HTML" /></td>
 		                            <td  class="admin_create_field admin_page_link">
-		                              <g:set var="editorId" value="${category.editedBy?.id}" />
+		                              <g:set var="editorId" value="${category.editedBy}" />
 		                              <g:set var="editorDisplay" value="${AdminObjectFormatter.editorNameDisplay(category)}" />
 		                              <g:if test="${editorId}">
 		                                <g:link controller="profile" action="detail" id="${editorId}">${editorDisplay?.encodeAsHTML()}</g:link>

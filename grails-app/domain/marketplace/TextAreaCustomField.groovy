@@ -1,8 +1,11 @@
 package marketplace
 
-class TextAreaCustomField extends CustomField {
+import org.grails.web.json.JSONObject
 
-    String value
+
+class TextAreaCustomField extends CustomField implements ToJSON {
+
+    def value
 
     static constraints = {
         value(maxSize: 4000, nullable: true)
@@ -33,12 +36,12 @@ class TextAreaCustomField extends CustomField {
 
     }
 
-    def asJSON() {
-        def jsonObject = super.asJSON()
-        jsonObject.putAll(
-            id: id,
-            value: value
-        )
-        return jsonObject
+    @Override
+    JSONObject asJSON() {
+        def json = super.asJSON()
+        json.putAll([id   : id,
+                     value: value])
+        json
     }
+
 }

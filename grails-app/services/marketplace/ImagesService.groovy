@@ -1,14 +1,20 @@
 package marketplace
 
+import grails.core.GrailsApplication
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
 import org.apache.commons.lang.exception.ExceptionUtils
-import org.apache.log4j.helpers.Loader
+import org.springframework.context.ApplicationContext
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.FieldError
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
+
+import org.apache.logging.log4j.core.util.Loader
+
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 import ozone.marketplace.enums.ImageType;
 import ozone.utils.Utils
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 
 public class ImagesService {
@@ -16,8 +22,9 @@ public class ImagesService {
     public static final Long ONE_MB_SIZE = 1024 * 1024
 
     def commonImagesLoc = '/themes/common/images'
-    def grailsApplication
-    def marketplaceApplicationConfigurationService
+
+    GrailsApplication grailsApplication
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
 
     @Transactional(readOnly = true)
     def get(def params) {
@@ -72,12 +79,12 @@ public class ImagesService {
     @Transactional(readOnly = true)
     def getImageByCriteria(imageType, isDefault) {
         def images = Images.withCriteria
-            {
-                and {
-                    eq('type', imageType)
-                    eq('isDefault', isDefault)
+                {
+                    and {
+                        eq('type', imageType)
+                        eq('isDefault', isDefault)
+                    }
                 }
-            }
         return images
     }
 
@@ -88,17 +95,18 @@ public class ImagesService {
     Images loadImageFromFile(ImageType imageType, String imageFilePath, boolean isDefault = false) {
         Images image = null
 
-        File imageFile = grailsApplication.mainContext.getResource(imageFilePath).file
+//        File imageFile = grailsApplication.mainContext.getResource(imageFilePath).file
+        File imageFile = grailsApplication.mainContext.getResource('classpath:' +imageFilePath).file
         if (imageFile && imageFile.exists()) {
             def validContentTypes = ['image/png', 'image/jpeg', 'image/gif']
             if (!validContentTypes.contains(Utils.getMimeType(imageFilePath))) {
                 log.info "Image file '${imageFilePath}' content type must be one of: ${validContentTypes}"
             } else {
                 image = new Images(bytes: imageFile.getBytes(),
-                    imageSize: imageFile.length(),
-                    contentType: Utils.getMimeType(imageFile.getName()),
-                    isDefault: isDefault,
-                    type: imageType)
+                        imageSize: imageFile.length(),
+                        contentType: Utils.getMimeType(imageFile.getName()),
+                        isDefault: isDefault,
+                        type: imageType)
             }
         } else {
             log.info "Unable to load image ${imageFilePath}"

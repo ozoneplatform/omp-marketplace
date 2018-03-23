@@ -2,7 +2,7 @@
 <%@ page import="marketplace.*" %>
 <html>
   <head>
-      <meta name="layout" content="marketplace" />
+      <meta name="layout" content="${session.marketplaceLayout}" />
 	  <title><g:message code="marketplace.title" encodeAs="HTML" /> Server Exception</title>
 	  <!-- ** CSS ** -->
 	  <!-- base library -->

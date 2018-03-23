@@ -3,7 +3,7 @@
 <%
     def flashClazz = "message errorText"
     if (flash?.success) { flashClazz = "message successText" }
-    def seeAllArrowLink = p.imageLink(src:"seeAllArrow.png").replaceAll("'", "")
+    def seeAllArrowLink = '/static/themes/common/images/seeAllArrow.png'
 %>
 
 
@@ -36,7 +36,7 @@
     <h1 class="newArrivals">New Arrivals</h1>
     <div class="franchise_discover_see_more_text">
         <g:link action="search" controller="serviceItem"
-                params="[sort:'approvedDate',order:'desc',offset:0,accessType:session.accessType,status_any_checkbox: 'on']">
+                params="[sort:'approvalDate',order:'desc',offset:0,accessType:session.accessType,status_any_checkbox: 'on']">
             <span class="see-all-text">see all</span>
         </g:link>
     </div>
@@ -45,7 +45,7 @@
     <g:render   template="/serviceItem/widget_shoppe_items" var="items" bean="${recentlyAdded}" model="[size:'3', name:'miniRecentlyAddedCarousel']" />
 </div>
 
-<p:javascript src='service-item-js-bundle' />
+<marketplaceTheme:javascript src='service-item-js-bundle.js' />
 <script type="text/javascript">
 
 

@@ -1,0 +1,11 @@
+version: '3.2'
+
+services:
+
+  postgres:
+    image: omp/postgres
+    build:
+      context: ./container
+    restart: always
+    ports:
+     - 5432:5432

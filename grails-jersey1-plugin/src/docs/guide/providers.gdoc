@@ -1,0 +1,5 @@
+Entity providers bind representation formats to Java classes. They are used to factor out marshalling and unmarshalling
+code from resource classes.
+
+The *jaxrs* plugin provides some default entity providers that are presented in the following subsections. The
+[custom providers|guide:customproviders] section explains how to implement custom entity providers.

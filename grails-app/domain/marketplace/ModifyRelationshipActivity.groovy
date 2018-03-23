@@ -1,9 +1,9 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 
-class ModifyRelationshipActivity extends ServiceItemActivity {
+class ModifyRelationshipActivity extends ServiceItemActivity implements ToJSON {
 
     List items = []
 
@@ -14,11 +14,14 @@ class ModifyRelationshipActivity extends ServiceItemActivity {
         items batchSize: 50
     }
 
+    @Override
     JSONObject asJSON() {
-        def retval = super.asJSON()
+        def json = super.asJSON()
 
-        retval.put('relatedItems', new JSONArray(items.collect { ServiceItemSnapshot snapshot ->
+        json.put('relatedItems', new JSONArray(items.collect { ServiceItemSnapshot snapshot ->
             snapshot.asJSON()
         }))
+
+        json
     }
 }

@@ -1,17 +1,13 @@
 package marketplace
 
 import ozone.marketplace.enums.MarketplaceApplicationSetting
-import org.codehaus.groovy.grails.web.json.JSONObject
-
-import grails.converters.JSON
+import org.grails.web.json.JSONObject
 
 import javax.servlet.http.HttpServletResponse
 
 class DescriptorController extends BaseMarketplaceRestController {
 
-    def relationshipService
-    def marketplaceApplicationConfigurationService
-
+    RelationshipService relationshipService
 
     private def serviceItemToDescriptor(ServiceItem serviceItem) {
         def descriptorMap = [:]
@@ -62,7 +58,7 @@ class DescriptorController extends BaseMarketplaceRestController {
             descriptorUrl = serviceItem.owfProperties.descriptorUrl
 
             defaultTags = serviceItem.categories.collect { it.title }
-            editedBy = serviceItem?.editedBy?.username
+            editedBy = serviceItem?.findEditedByProfile()?.username
             editedDte = serviceItem?.editedDate
             intents = [
                     send: sendIntents,
@@ -78,6 +74,8 @@ class DescriptorController extends BaseMarketplaceRestController {
         def url = request.getRequestURL().toString() - request.getServletPath()
         def logo = url + '/public/' + marketplaceApplicationConfigurationService.valueOf(MarketplaceApplicationSetting.OPEN_SEARCH_SITE_ICON)
         def name = marketplaceApplicationConfigurationService.valueOf(MarketplaceApplicationSetting.STORE_NAME)
+        if(name == null)
+            name = ""
         def widgetSize = 200;
 
         def storeData = [

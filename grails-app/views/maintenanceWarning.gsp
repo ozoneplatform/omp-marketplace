@@ -2,7 +2,7 @@
 <%@ page import="marketplace.*" %>
 <html>
 <head>
-    <meta name="layout" content="marketplace" />
+    <meta name="layout" content="${session.marketplaceLayout}" />
     <title>Maintenance Warning</title>
     <!-- ** CSS ** -->
     <!-- base library -->

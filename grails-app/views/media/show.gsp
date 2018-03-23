@@ -15,7 +15,7 @@
           		<div id= "videoContent" style="padding-top: 2%; height:340px;">
 
           			<span id="videoTag" style="padding-left: 3%;">
-                            <img src="${request.contextPath}/video/Introduction_to_OZONE/Introduction_to_OZONE_Tutorials.png" style="width:400px;height:225px;"/>
+                            <img src="${request.contextPath}/static/video/Introduction_to_OZONE/Introduction_to_OZONE_Tutorials.png" style="width:400px;height:225px;"/>
 					</span>
 
 					<span id= "contentInfo" style=" padding-left:2%; position:absolute;">
@@ -110,17 +110,17 @@
 
 				if(mediaType == 'slideshow') {
 					//launch pdf here
-					window.open('../media/'+mediaTitle + '/' + mediaTitle + '.ppt');
+					window.open('../static/media/'+mediaTitle + '/' + mediaTitle + '.ppt');
 				} else if(mediaType == 'guide') {
 					//launch pdf here
-					window.open('../media/'+mediaTitle + '/' + mediaTitle + '.pdf');
+					window.open('../static/media/'+mediaTitle + '/' + mediaTitle + '.pdf');
 				} else {
 				    $('#contentInfo').children('#video-title').text(mediaDisplayName);
 				    $('#contentInfo').children('#video-description').text(mediaDescription);
 				    $('.large_ribbon_time').text(mediaLength);
 				    $('.large_ribbon_title').text(mediaDisplayName);
 
-					$('#videoTag').html("<video id='vidPlayer'  poster=../media/" + mediaTitle + "/" + mediaTitle +"_Large.png width='400px' height='300px'>"+
+					$('#videoTag').html("<video id='vidPlayer'  poster=../static/media/" + mediaTitle + "/" + mediaTitle +"_Large.png width='400px' height='300px'>"+
 							 "<source src="+ mediaTitle +"/"+ mediaTitle +".mp4 type='video/mp4'>"+
 						  	 "<source src="+ mediaTitle +"/"+ mediaTitle +".webm type='video/webm'>"+
 							 "<source src="+ mediaTitle +"/"+ mediaTitle +".ogv type='video/ogv'>"+
@@ -131,7 +131,7 @@
 								   "<param name='allowscriptaccess' value='always'>"+
 								   "<param name='flashvars' value="+ mediaTitle +"/"+ mediaTitle +".mp4>"+
 						  	  	   "<param name='movie' value="+ mediaTitle +"/"+ mediaTitle +".swf>"+
-						  	  	   "<img src=../media/" + mediaTitle + "/" + mediaTitle +"_Large.png  width='400px' height='300px'/>"+
+						  	  	   "<img src=../static/media/" + mediaTitle + "/" + mediaTitle +"_Large.png  width='400px' height='300px'/>"+
 							  "</object>"+
 							  "<p style='position:absolute; top:300px; left:775px;'>Your browser does not support playing video<br/>" +
 								"<a href="+ mediaTitle +"/"+ mediaTitle +".mp4 style='left:75px;position:relative;'>Download video here.</a>"+

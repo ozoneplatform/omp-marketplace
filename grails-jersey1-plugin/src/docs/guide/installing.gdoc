@@ -1,0 +1,21 @@
+The plugin itself is split into several smaller plugins. The *jaxrs-core* plugin contains the bulk
+of the classes necessary for the plugin to work, but there are many different implementations of
+JSR-311 that exist. The plugin was broken up to better manage the library dependencies that come
+with adding many different implementations.
+
+When adding the *jaxrs* plugin to an application, one of the implementation-specific plugins should
+be used.
+
+{warning}
+The *jaxrs-core* plugin should not be included as a dependency of an application directly. It will
+automatically be included as part of the dependencies of the implementation that is chosen.
+{warning}
+
+The table below details the various plugins that are available and what they do.
+{table}
+Name | Description
+jaxrs-core | Contains the core classes necessary to run the *jaxrs* plugin. This plugin should *not* be included directly in applications.
+jaxrs-jersey1 | Implements the *jersey server 1.x* JAX-RS library.
+jaxrs-restlet | Implements the *restlet* JAX-RS library.
+jaxrs-integration-test | Provides a mocked environment superclass useful for integration tests that target resources.
+{table}

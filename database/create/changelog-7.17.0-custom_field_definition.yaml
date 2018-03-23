@@ -1,0 +1,358 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition
+      author: omp
+      comment: create 'custom_field_definition' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: custom_field_definition
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: tooltip
+                  type: varchar(50)
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: label
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250)
+              - column:
+                  name: is_required
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: style_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255)
+              - column:
+                  name: section
+                  type: varchar(255)
+              - column:
+                  name: all_types
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_permanent
+                  type: boolean
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition
+      author: omp
+      comment: create 'custom_field_definition' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: custom_field_definition
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: tooltip
+                  type: varchar(50)
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: label
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250)
+              - column:
+                  name: is_required
+                  type: bit(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: style_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255)
+              - column:
+                  name: section
+                  type: varchar(255)
+              - column:
+                  name: all_types
+                  type: tinyint(1)
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_permanent
+                  type: bit(1)
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition
+      author: omp
+      comment: create 'custom_field_definition' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: custom_field_definition
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: tooltip
+                  type: varchar(50 CHAR)
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: label
+                  type: varchar(50 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250 CHAR)
+              - column:
+                  name: is_required
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(50 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: style_type
+                  type: varchar(255 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255 CHAR)
+              - column:
+                  name: section
+                  type: varchar(255 BYTE)
+              - column:
+                  name: all_types
+                  type: number(1,0)
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_permanent
+                  type: number(1,0)
+
+        - addPrimaryKey:
+            tableName: custom_field_definition
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition
+      author: omp
+      comment: create 'custom_field_definition' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: custom_field_definition
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: tooltip
+                  type: nvarchar(50)
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: label
+                  type: nvarchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: nvarchar(250)
+              - column:
+                  name: is_required
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: nvarchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: style_type
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: nvarchar(255)
+              - column:
+                  name: section
+                  type: varchar(255)
+              - column:
+                  name: all_types
+                  type: bit
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_permanent
+                  type: bit
+
+        - addPrimaryKey:
+            tableName: custom_field_definition
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition-constraints
+      author: omp
+      comment: create 'custom_field_definition' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: custom_field_definition
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK150F70C6E31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: custom_field_definition
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK150F70C67666C6D2
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition-indices
+      author: omp
+      comment: create 'custom_field_definition' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: custom_field_definition
+            indexName: cfd_uuid_idx
+            unique: true
+            columns:
+              - column:
+                  name: uuid

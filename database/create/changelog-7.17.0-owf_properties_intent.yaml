@@ -1,0 +1,104 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-owf_properties_intent
+      author: omp
+      comment: create 'owf_properties_intent 'table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: owf_properties_intent
+
+            columns:
+              - column:
+                  name: owf_properties_intents_id
+                  type: bigint
+              - column:
+                  name: intent_id
+                  type: bigint
+
+
+  - changeSet:
+      id: 7.17.0-owf_properties_intent
+      author: omp
+      comment: create 'owf_properties_intent 'table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: owf_properties_intent
+
+            columns:
+              - column:
+                  name: owf_properties_intents_id
+                  type: number(38,0)
+              - column:
+                  name: intent_id
+                  type: number(38,0)
+
+
+  - changeSet:
+      id: 7.17.0-owf_properties_intent
+      author: omp
+      comment: create 'owf_properties_intent 'table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: owf_properties_intent
+
+            columns:
+              - column:
+                  name: owf_properties_intents_id
+                  type: number(19,0)
+              - column:
+                  name: intent_id
+                  type: bigint
+
+
+  - changeSet:
+      id: 7.17.0-owf_properties_intent-constraints
+      author: omp
+      comment: create 'owf_properties_intent' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: intent_id
+            baseTableName: owf_properties_intent
+            referencedColumnNames: id
+            referencedTableName: intent
+            constraintName: FK3F99ECA7A651895D
+
+        - addForeignKeyConstraint:
+            baseColumnNames: owf_properties_intents_id
+            baseTableName: owf_properties_intent
+            referencedColumnNames: id
+            referencedTableName: owf_properties
+            constraintName: FK3F99ECA74704E25C
+
+
+  - changeSet:
+      id: 7.17.0-owf_properties_intent-indices
+      author: omp
+      comment: create 'owf_properties_intent' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: owf_properties_intent
+            indexName: FK3F99ECA7A651895D
+            columns:
+              - column:
+                  name: intent_id
+
+        - createIndex:
+            tableName: owf_properties_intent
+            indexName: owfProps_intent_id_idx
+            columns:
+              - column:
+                  name: owf_properties_intents_id

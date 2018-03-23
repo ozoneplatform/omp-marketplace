@@ -1,7 +1,7 @@
 package marketplace
 
-@gorm.AuditStamp
-class Avatar implements Serializable {
+
+class Avatar extends AuditStamped implements Serializable {
 
     byte[] pic
     String contentType
@@ -10,7 +10,6 @@ class Avatar implements Serializable {
     static constraints = {
         pic(nullable: true, maxSize: 10 * 1024 * 1024)
         contentType(nullable: true)
-
     }
 
     static mapping = {

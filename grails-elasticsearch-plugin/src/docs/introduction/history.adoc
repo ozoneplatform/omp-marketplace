@@ -1,0 +1,151 @@
+=== History
+
+==== Grails 3.x version
+
+* August 17, 2017
+** 1.4.1
+*** Upgraded to Elasticsearch 5.4.1
+**** Changed data types 'string' to 'text' and 'keyword' with sensible defaults
+**** BREAKING CHANGE: if you want to sort or aggregate by text properties your need to add fielddata: true since it is disabled by default in ES 5.x
+**** BREAKING CHANGE: default search type changed to QUERY_THEN_FETCH. See the tip at the end of https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html[here]
+**** Added initial support for https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html[fields]
+**** Ignore _all configuration for component objects
+
+* June 3, 2016
+** 1.2.0
+*** Upgraded to Elasticsearch 2.3.3
+**** Support for `elasticsearch-groovy` client removed (no available compatible version, pending on https://github.com/elastic/elasticsearch-groovy/issues/35[Issue 35])
+**** `delete` migration strategy has been replaced by `deleteIndex`, due to new Elasticsearch 2.x API's
+*** Removed test classes from plugin distribution
+
+* April 18, 2016
+** 1.0.0.1
+*** Add ability to change search method name in domain class via config
+*** Updated documentation to asciidoc
+
+* February 29, 2016
+** 1.0.0
+*** Support for Grails 3.1.1
+
+==== Grails 2.x version
+
+* April 3, 2016
+** 0.1.0 
+*** New Elasticsearch 2.1.2 release
+*** Immutable Settings Removed  - Use `Settings.builder()` instead of `ImmutableSettings.builder()`
+*** `BroadcastOperationResponse` got renamed to `BroadcastResponse`
+*** Removed `deleteMapping`
+*** `memory` type is now deprecated
+*** Query/filter refactoring - `org.elasticsearch.index.queries.FilterBuilders` has been removed as part of the merge of queries and filters. These filters are now available in `QueryBuilders` with the same name. All methods that used to accept a `FilterBuilder` now accept a `QueryBuilder` instead.
+*** For more information related to changes in underline Java API https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking_20_java_api_changes.html#_query_filter_refactoring[click here]
+ 
+* June 30, 2015
+** 0.0.4.5
+*** Upgrade to ElasticSearch 1.6.0
+*** Support the return of aggregation results
+
+* June 15, 2015
+** 0.0.4.5
+*** Add the ability to define property names that are excluded by default
+*** Fix NPE
+*** Add the attachment type
+
+* March 5, 2015
+** 0.0.4.4
+*** Upgrade to Elasticsearch-Groovy 1.4.4
+
+* February 22, 2015
+** 0.0.4.3
+*** Add mapping configuration support for '_all'
+*** Fix issue with indexing nested GeoPoint
+*** Add support for transient properties
+
+* February 10, 2015
+** 0.0.4.2
+*** Reduce severity of non-searchable property in index document when unmarshalling domain
+
+* February 03, 2015
+** 0.0.4.1
+*** Upgrade to Elasticsearch 1.4.2
+*** Enable configuration of the number of replicas created per shard
+
+* January 28, 2015
+** 0.0.4.0
+*** Included Mapping migrations
+*** Included read and write aliases to indices to deal with migrations on multinode deployments
+
+* December 14, 2014
+** 0.0.3.8
+*** Upgrade to ElasticSearch 1.4.1
+*** Support the min_score query parameter.
+*** Try to detect the MongoDB without using the plugin manager.
+
+* December 01, 2014
+** 0.0.3.7
+*** Create separate SimpleTypeConverter per-thread
+* November 06, 2014
+** 0.0.3.6
+*** Upgrade to ElasticSearch 1.4.0
+
+* October 28, 2014
+** 0.0.3.5
+*** Fix the bulk index query iteration.
+
+* October 14, 2014
+** 0.0.3.4
+*** Upgrade to latest version of ElasticSearch and remove the Groovy client dependency.
+
+* August 28, 2014
+** 0.0.3.3
+*** Configure a component field to act as an inner object instead of a nested object.
+
+* August 3, 2014
+** 0.0.3.2
+*** Add the ability to mark fields with aliases
+*** Support ES client HTTP configuration parameters
+*** Improve Hibernate 4 support
+
+* June 9, 2014
+** 0.0.3.1
+*** Upgrade to ElasticSearch 1.2.x
+*** Add special treatment for MongoDB ObjectId data types
+*** Return raw result objects when now class mapping is found
+*** Fix integration-test NPE
+
+* May 25, 2014
+** 0.0.3.0
+*** Upgrade to Grails dependency 2.2.x
+*** Upgrade to Grails runtime 2.3.x
+*** Upgrade to ElasticSearch 1.x
+*** Apply ElasticSearch 1.x compatibility fixes
+*** Enable customization of index name types when mapping classes
+
+* May 15, 2014
+** 0.0.2.6
+*** Use 'grails.util.Holders' instead of ApplicationHolder
+
+* April 2, 2014
+** 0.0.2.5
+*** Start releasing the plugin as 'elasticsearch' instead of 'elasticsearch-gorm'
+*** Fix NPE when marshalling JSONObject fields
+
+* March 24, 2014
+** 0.0.2.4
+*** GeoPoint mapping
+*** Injected service now supports filters (e.g. geo_reference) and sort builders (e.g. for geo_distance sorting)
+*** Marshalled date values are now with correct time zone
+*** Removed dependency on Java 7
+*** Fix support of BigDecimal
+*** Searchable mapping property name and Elasticsearch plugin path are now configurable.
+
+* February 4, 2014
+** 0.0.2.3 Bugfix release
+* January 19, 2014
+** 0.0.2.2 Bugfix release
+
+* November 24, 2013
+** 0.0.2.1 Bugfix release
+* November 12, 2013
+** 0.0.2 release
+* November 2, 2013
+** initial 0.0.1 release

@@ -2,11 +2,10 @@
 <%@ page import="marketplace.*"%>
 
 <%
-
-  def imgSearchDflt = p.imageLink(src:"icons/search_button_up.png")
-  def imgSearchDown = p.imageLink(src:"icons/search_button_down.png")
-  def imgSearchOver = p.imageLink(src:"icons/search_button_over.png")
-  def imgSearchLeft = p.imageLink(src:"icons/search_box_left.png")
+//  def imgSearchDflt = p.imageLink(src:"icons/search_button_up.png")
+//  def imgSearchDown = p.imageLink(src:"icons/search_button_down.png")
+//  def imgSearchOver = p.imageLink(src:"icons/search_button_over.png")
+//  def imgSearchLeft = p.imageLink(src:"icons/search_box_left.png")
 
 %>
 <script type="text/javascript">
@@ -30,7 +29,7 @@
 </script>
 <!-- Search -->
 
-<div class="search-bar-left"><img src=${imgSearchLeft}></div>
+<div class="search-bar-left"><img src=<marketplaceTheme:imageLink src="icons/search_box_left.png"/>></div>
 <div class="search-bar-middle">
 
 <g:form id="simple_search" class="simple_search_form" name="search" method="get"
@@ -45,11 +44,11 @@
     <div id="icon_search_id" class="icon_search">
         <a href="#" onclick="getElementById('simple_search').submit();">
             <img alt="Search Icon" ignore_fix_flag="true" id="icon_search"
-                src=${imgSearchDflt} title="Search" alt="Search"
-                onmouseover="Marketplace.imageRoll('icon_search', ${imgSearchOver})"
-                onmouseout="Marketplace.imageRoll('icon_search', ${imgSearchDflt})"
-                onmousedown="Marketplace.imageRoll('icon_search', ${imgSearchDown})"
-                onmouseup="Marketplace.imageRoll('icon_search', ${imgSearchDflt})"
+                src=<marketplaceTheme:imageLink src="icons/search_button_up.png"/> title="Search" alt="Search"
+                onmouseover="Marketplace.imageRoll('icon_search', <marketplaceTheme:imageLink src="icons/search_button_over.png"/>)"
+                onmouseout="Marketplace.imageRoll('icon_search', <marketplaceTheme:imageLink src="icons/search_button_up.png"/>)"
+                onmousedown="Marketplace.imageRoll('icon_search', <marketplaceTheme:imageLink src="icons/search_button_down.png"/>)"
+                onmouseup="Marketplace.imageRoll('icon_search', <marketplaceTheme:imageLink src="icons/search_button_up.png"/>)"
             />
         </a>
     </div>

@@ -1,8 +1,8 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
-class CheckBoxCustomFieldDefinition extends CustomFieldDefinition {
+class CheckBoxCustomFieldDefinition extends CustomFieldDefinition implements ToJSON {
 
     static bindableProperties = CustomFieldDefinition.bindableProperties + ['selectedByDefault']
     static modifiableReferenceProperties = []
@@ -28,12 +28,11 @@ class CheckBoxCustomFieldDefinition extends CustomFieldDefinition {
         this.styleType = Constants.CustomFieldDefinitionStyleType.CHECK_BOX
     }
 
-    def asJSON() {
-        def jsonObject = super.asJSON()
-        jsonObject.putAll(
-            selectedByDefault: selectedByDefault
-        )
-        return jsonObject
+    @Override
+    JSONObject asJSON() {
+        def json = super.asJSON()
+        json.putAll([selectedByDefault: selectedByDefault])
+        json
     }
 
     def bindFromJSON(JSONObject json) {

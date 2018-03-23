@@ -1,0 +1,281 @@
+databaseChangeLog:
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-sequences.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-agency.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-avatar.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-check_box_cf.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-check_box_cfd.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-drop_down_cfd.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-ext_profile.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-ext_service_item.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-image_url_cf.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-image_url_cfd.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-interface_configuration.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-modify_relationship_activity.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-service_item_profile.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-tag.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-text_area_cf.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-text_area_cfd.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-text_cf.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-text_cfd.yaml
+
+  - include:
+      # requires: n/a
+      file: create/changelog-7.17.0-u_domain_preferences.yaml
+
+  - include:
+      # requires: avatar
+      file: create/changelog-7.17.0-profile.yaml
+
+  - include:
+      # requires: avatar, profile
+      file: create/changelog-7.17.0-avatar-fk.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-application_configuration.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-category.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-contact_type.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-custom_field_definition.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-images.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-intent_action.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-intent_data_type.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-intent_direction.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-owf_properties.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-owf_widget_types.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-rejection_justification.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-score_card_item.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-state.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-text.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-user_account.yaml
+
+  - include:
+      # requires: profile
+      file: create/changelog-7.17.0-u_domain.yaml
+
+  - include:
+      # requires: custom_field_definition, profile
+      file: create/changelog-7.17.0-custom_field.yaml
+
+  - include:
+      # requires: custom_field
+      file: create/changelog-7.17.0-service_item_custom_field.yaml
+
+  - include:
+      # requires: drop_down_cfd, profile
+      file: create/changelog-7.17.0-field_value.yaml
+
+  - include:
+      # requires: field_value
+      file: create/changelog-7.17.0-drop_down_cf.yaml
+
+  - include:
+      # requires: field_value
+      file: create/changelog-7.17.0-drop_down_cf_field_value.yaml
+
+  - include:
+      # requires: category
+      file: create/changelog-7.17.0-service_item_category.yaml
+
+  - include:
+      # requires: interface_configuration, profile
+      file: create/changelog-7.17.0-import_task.yaml
+
+  - include:
+      # requires: import_task
+      file: create/changelog-7.17.0-import_task_result.yaml
+
+  - include:
+      # requires: import_task, import_task_result
+      file: create/changelog-7.17.0-import_task-fk.yaml
+
+  - include:
+      # requires: intent_action, intent_data_type, profile
+      file: create/changelog-7.17.0-intent.yaml
+
+  - include:
+      # requires: intent, owf_properties
+      file: create/changelog-7.17.0-owf_properties_intent.yaml
+
+  - include:
+      # requires: images, profile
+      file: create/changelog-7.17.0-default_images.yaml
+
+  - include:
+      # requires: images, profile
+      file: create/changelog-7.17.0-types.yaml
+
+  - include:
+      # requires: agency, owf_properties, profile, state, types
+      file: create/changelog-7.17.0-service_item.yaml
+
+  - include:
+      # requires: profile, service_item, tag
+      file: create/changelog-7.17.0-service_item_tag.yaml
+
+  - include:
+      # requires: score_card_item, service_item
+      file: create/changelog-7.17.0-service_item_score_card_item.yaml
+
+  - include:
+      # requires: profile, service_item
+      file: create/changelog-7.17.0-service_item_activity.yaml
+
+  - include:
+      # requires: service_item, service_item_activity
+      file: create/changelog-7.17.0-service_item-fk.yaml
+
+  - include:
+      # requires: profile, rejection_justification, service_item
+      file: create/changelog-7.17.0-rejection_listing.yaml
+
+  - include:
+      # requires: rejection_listing
+      file: create/changelog-7.17.0-rejection_activity.yaml
+
+  - include:
+      # requires: service_item
+      file: create/changelog-7.17.0-service_item_snapshot.yaml
+
+  - include:
+      # requires: service_item_snapshot
+      file: create/changelog-7.17.0-relationship_activity_log.yaml
+
+  - include:
+      # requires: service_item
+      file: create/changelog-7.17.0-service_item_documentation_url.yaml
+
+  - include:
+      # requires: service_item
+      file: create/changelog-7.17.0-service_item_tech_pocs.yaml
+
+  - include:
+      # requires: service_item
+      file: create/changelog-7.17.0-si_recommended_layouts.yaml
+
+  - include:
+      # requires: service_item
+      file: create/changelog-7.17.0-screenshot.yaml
+
+  - include:
+      # requires: service_item
+      file: create/changelog-7.17.0-relationship.yaml
+
+  - include:
+      # requires: service_item
+      file: create/changelog-7.17.0-relationship_service_item.yaml
+
+  - include:
+      # requires: profile, service_item
+      file: create/changelog-7.17.0-item_comment.yaml
+
+  - include:
+      # requires: service_item_activity
+      file: create/changelog-7.17.0-change_detail.yaml
+
+  - include:
+      # requires: contact_type, profile, service_item
+      file: create/changelog-7.17.0-contact.yaml
+
+  - include:
+      # requires: types
+      file: create/changelog-7.17.0-custom_field_definition_types.yaml
+
+  - include:
+      # requires: images, profile
+      file: create/changelog-7.17.0-affiliated_marketplace.yaml

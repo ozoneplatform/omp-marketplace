@@ -1,0 +1,363 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-owf_properties
+      author: omp
+      comment: create 'owf_properties' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: owf_properties
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: visible_in_launch
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: singleton
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: background
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+              - column:
+                  name: height
+                  type: bigint
+              - column:
+                  name: width
+                  type: bigint
+              - column:
+                  name: owf_widget_type
+                  type: varchar(255)
+                  defaultValue: standard
+                  constraints:
+                      nullable: false
+              - column:
+                  name: universal_name
+                  type: varchar(255)
+              - column:
+                  name: stack_context
+                  type: varchar(200)
+              - column:
+                  name: stack_descriptor
+                  type: text
+              - column:
+                  name: descriptor_url
+                  type: varchar(2083)
+              - column:
+                  name: mobile_ready
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-owf_properties
+      author: omp
+      comment: create 'owf_properties' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: owf_properties
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: visible_in_launch
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: singleton
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: background
+                  type: tinyint(1)
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+              - column:
+                  name: height
+                  type: bigint
+              - column:
+                  name: width
+                  type: bigint
+              - column:
+                  name: owf_widget_type
+                  type: varchar(255)
+                  defaultValue: standard
+                  constraints:
+                      nullable: false
+              - column:
+                  name: universal_name
+                  type: varchar(255)
+              - column:
+                  name: stack_context
+                  type: varchar(200)
+              - column:
+                  name: stack_descriptor
+                  type: longtext
+              - column:
+                  name: descriptor_url
+                  type: varchar(2083)
+              - column:
+                  name: mobile_ready
+                  type: tinyint(1)
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-owf_properties
+      author: omp
+      comment: create 'owf_properties' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: owf_properties
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: visible_in_launch
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: singleton
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: background
+                  type: number(1,0)
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+              - column:
+                  name: height
+                  type: number(38,0)
+              - column:
+                  name: width
+                  type: number(38,0)
+              - column:
+                  name: owf_widget_type
+                  type: varchar(255 BYTE)
+                  defaultValue: standard
+                  constraints:
+                      nullable: false
+              - column:
+                  name: universal_name
+                  type: varchar(255 BYTE)
+              - column:
+                  name: stack_context
+                  type: varchar(200 BYTE)
+              - column:
+                  name: stack_descriptor
+                  type: clob
+              - column:
+                  name: descriptor_url
+                  type: varchar(2083 BYTE)
+              - column:
+                  name: mobile_ready
+                  type: number(1,0)
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+
+        - addPrimaryKey:
+            tableName: owf_properties
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-owf_properties
+      author: omp
+      comment: create 'owf_properties' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: owf_properties
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: visible_in_launch
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: singleton
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: background
+                  type: bit
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+              - column:
+                  name: height
+                  type: bigint
+              - column:
+                  name: width
+                  type: bigint
+              - column:
+                  name: owf_widget_type
+                  type: varchar(255)
+                  defaultValue: standard
+                  constraints:
+                      nullable: false
+              - column:
+                  name: universal_name
+                  type: varchar(255)
+              - column:
+                  name: stack_context
+                  type: varchar(200)
+              - column:
+                  name: stack_descriptor
+                  type: nvarchar(max)
+              - column:
+                  name: descriptor_url
+                  type: varchar(2083)
+              - column:
+                  name: mobile_ready
+                  type: bit
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+
+        - addPrimaryKey:
+            tableName: owf_properties
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-owf_properties-constraints
+      author: omp
+      comment: create 'owf_properties' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: owf_properties
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKE88638947666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: owf_properties
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKE8863894E31CB353
+

@@ -1,0 +1,200 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-import_task_result
+      author: omp
+      comment: create 'import_task_result' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: import_task_result
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: import_task_rPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: message
+                  type: varchar(4000)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: result
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: run_date
+                  type: timestamp with time zone
+                  constraints:
+                      nullable: false
+              - column:
+                  name: task_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-import_task_result
+      author: omp
+      comment: create 'import_task_result' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: import_task_result
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: message
+                  type: varchar(4000)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: result
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: run_date
+                  type: datetime
+                  constraints:
+                      nullable: false
+              - column:
+                  name: task_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-import_task_result
+      author: omp
+      comment: create 'import_task_result' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: import_task_result
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: import_task_rPK
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: message
+                  type: varchar(4000 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: result
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: run_date
+                  type: timestamp
+                  constraints:
+                      nullable: false
+              - column:
+                  name: task_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-import_task_result
+      author: omp
+      comment: create 'import_task_result' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: import_task_result
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: import_task_rPK
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: message
+                  type: nvarchar(4000)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: result
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: run_date
+                  type: datetime
+                  constraints:
+                      nullable: false
+              - column:
+                  name: task_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-import_task_result-constraints
+      author: omp
+      comment: create 'import_task_result' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: task_id
+            baseTableName: import_task_result
+            referencedColumnNames: id
+            referencedTableName: import_task
+            constraintName: FK983AC27D11D7F882

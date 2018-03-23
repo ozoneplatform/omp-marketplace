@@ -1,0 +1,130 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-service_item_category
+      author: omp
+      comment: create 'service_item_category' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: service_item_category
+
+            columns:
+              - column:
+                  name: service_item_categories_id
+                  type: bigint
+              - column:
+                  name: category_id
+                  type: bigint
+              - column:
+                  name: categories_idx
+                  type: integer
+
+
+  - changeSet:
+      id: 7.17.0-service_item_category
+      author: omp
+      comment: create 'service_item_category' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: service_item_category
+
+            columns:
+              - column:
+                  name: service_item_categories_id
+                  type: number(19,0)
+              - column:
+                  name: category_id
+                  type: number(19,0)
+              - column:
+                  name: categories_idx
+                  type: number(10,0)
+
+
+  - changeSet:
+      id: 7.17.0-service_item_category
+      author: omp
+      comment: create 'service_item_category' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: service_item_category
+
+            columns:
+              - column:
+                  name: service_item_categories_id
+                  type: bigint
+              - column:
+                  name: category_id
+                  type: number(19,0)
+              - column:
+                  name: categories_idx
+                  type: int
+
+
+  - changeSet:
+      id: 7.17.0-service_item_category-constraints
+      author: omp
+      comment: create 'service_item_category' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: service_item_category
+            referencedColumnNames: id
+            referencedTableName: category
+            constraintName: FKECC570A0DA41995D
+
+
+  - changeSet:
+      id: 7.17.0-service_item_category-indices_1
+      author: omp
+      comment: create 'service_item_category' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: service_item_category
+            indexName: svc_item_cat_id_idx
+            columns:
+              - column:
+                  name: service_item_categories_id
+
+
+  - changeSet:
+      id: 7.17.0-service_item_category-indices_mysql
+      author: omp
+      comment: create 'service_item_category' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: service_item_category
+            indexName: FKECC570A0DA41995D
+            columns:
+              - column:
+                  name: category_id
+
+
+  - changeSet:
+      id: 7.17.0-service_item_category-indices_2
+      author: omp
+      comment: create 'service_item_category' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: service_item_category
+            indexName: si_cat_cat_id_idx
+            columns:
+              - column:
+                  name: category_id

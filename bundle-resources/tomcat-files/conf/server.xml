@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<Server port="8005"
+        shutdown="SHUTDOWN">
+
+    <Listener className="org.apache.catalina.startup.VersionLoggerListener"/>
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener"/>
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"/>
+    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener"/>
+
+    <Service name="Catalina">
+
+        <Connector port="8080"
+                   protocol="HTTP/1.1"
+                   connectionTimeout="20000"
+                   redirectPort="8443"/>
+
+        <Connector port="8443"
+                   protocol="org.apache.coyote.http11.Http11Protocol"
+                   maxThreads="150"
+                   SSLEnabled="true"
+                   scheme="https"
+                   secure="true"
+                   keystoreFile="certs/keystore.jks"
+                   keystorePass="changeit"
+                   truststoreFile="certs/keystore.jks"
+                   truststorePass="changeit"
+                   clientAuth="want"
+                   sslProtocol="TLS"/>
+
+        <Engine name="Catalina"
+                defaultHost="localhost">
+
+            <Host name="localhost"
+                  appBase="webapps"
+                  unpackWARs="true"
+                  autoDeploy="true"/>
+
+        </Engine>
+
+    </Service>
+
+</Server>

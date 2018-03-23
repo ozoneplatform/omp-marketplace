@@ -1,0 +1,11 @@
+The *jaxrs* plugin has a long history and has had many contributions. This section will serve to acknowledge those
+contributions and give proper credit and thanks for everyone's work.
+
+The biggest thanks go to [Martin Krasser|https://github.com/krasserm],
+[Davide Cavestro|https://github.com/davidecavestro], and [Noam Y. Tenne|https://github.com/noamt] for their work on the
+development and maintenance of the plugin. The plugin may have gone through some structural changes, but the code and
+logic is either mostly intact or derived from their work. Additionally, the documentation includes significant sections
+of the original plugin documentation from the [GitHub wiki|https://github.com/krasserm/grails-jaxrs/wiki].
+
+Thank you also to [Donald Jackson|https://github.com/donald-jackson] for his work on starting the adaption of the plugin
+for Grails 3.

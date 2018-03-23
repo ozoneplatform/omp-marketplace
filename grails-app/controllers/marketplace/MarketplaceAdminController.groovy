@@ -1,13 +1,15 @@
 package marketplace
 
+import org.hibernate.SessionFactory
+
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.hibernate.FlushMode
 
 abstract class MarketplaceAdminController extends BaseMarketplaceRestController {
 
-    def sessionFactory
-    def messageSource
+    SessionFactory sessionFactory
 
+    def messageSource
 
     abstract protected String getDomainName()
 
@@ -31,6 +33,7 @@ abstract class MarketplaceAdminController extends BaseMarketplaceRestController 
 
     def index = {
         redirect(action: 'list', params: params)
+        return
     }
 
     // the delete, save and update actions only accept POST requests
@@ -56,6 +59,7 @@ abstract class MarketplaceAdminController extends BaseMarketplaceRestController 
             flash.message = "specificObjectNotFound"
             flash.args = [getObjectName(), params.id]
             redirect(action: 'list')
+            return
         } else {
             return getDomainMap(domain)
         }
@@ -67,6 +71,7 @@ abstract class MarketplaceAdminController extends BaseMarketplaceRestController 
             flash.message = "objectNotFound"
             flash.args = [params.id]
             redirect(action: 'list')
+            return
         } else {
             return getDomainMap(domain)
         }
@@ -93,6 +98,7 @@ abstract class MarketplaceAdminController extends BaseMarketplaceRestController 
         def session = sessionFactory.currentSession
         session.setFlushMode(FlushMode.MANUAL)
         redirect(action: 'edit', id: params.id)
+        return
     }
 
     def update = {
@@ -109,10 +115,12 @@ abstract class MarketplaceAdminController extends BaseMarketplaceRestController 
                 if (!flash.message) flash.message = "update.success"
                 flash.args = [domain.prettyPrint()]
                 redirect(action: 'show', id: domain.id)
+                return
             } else {
                 flash.message = "objectNotFound"
                 flash.args = [params.id]
                 redirect(action: 'edit', id: params.id)
+                return
             }
         }
         catch (grails.validation.ValidationException ve) {
@@ -145,6 +153,7 @@ e.printStackTrace()
             flash.message = "create.success"
             flash.args = [domain.prettyPrint()]
             redirect(action: 'show', id: domain.id)
+            return
         }
         catch (grails.validation.ValidationException ve) {
             def ref = Helper.generateLogReference()

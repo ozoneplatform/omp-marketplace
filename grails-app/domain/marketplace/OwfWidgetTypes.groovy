@@ -1,17 +1,16 @@
 package marketplace
 
-import java.io.Serializable;
+import org.grails.web.json.JSONObject
 
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
+
 import ozone.utils.Utils
 
 /**
  * The type of widget of a ServiceItem representing an OWF widget.
  */
-@gorm.AuditStamp
-class OwfWidgetTypes implements Serializable {
+class OwfWidgetTypes extends AuditStamped implements Serializable, ToJSON {
 
     //TODO: This class and its associated controller/service appear to be unused
 
@@ -61,13 +60,12 @@ class OwfWidgetTypes implements Serializable {
         id
     }
 
-    def asJSON() {
-        return new JSONObject(
-            id: id,
-            uuid: uuid,
-            title: title,
-            description: description
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id         : id,
+                  uuid       : uuid,
+                  title      : title,
+                  description: description])
     }
 
     @Override

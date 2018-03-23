@@ -1,10 +1,10 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
 //TODO Is ther a reason to have this class? title is generally just the title of the serviceItem,
 //it seems redundant
-class ServiceItemSnapshot implements Serializable {
+class ServiceItemSnapshot implements Serializable, ToJSON {
 
     ServiceItem serviceItem
     String title
@@ -15,11 +15,10 @@ class ServiceItemSnapshot implements Serializable {
         serviceItem(nullable: true)
     }
 
+    @Override
     JSONObject asJSON() {
-        return new JSONObject(
-            title: title,
-            id: serviceItem?.id
-        )
+        new JSONObject([title: title,
+                        id   : serviceItem?.id])
     }
 
     boolean equals(other) {

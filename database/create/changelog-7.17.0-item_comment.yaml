@@ -1,0 +1,313 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-item_comment
+      author: omp
+      comment: create 'item_comment' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: item_comment
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: service_item_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: text
+                  type: varchar(4000)
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: rate
+                  type: real
+
+
+  - changeSet:
+      id: 7.17.0-item_comment
+      author: omp
+      comment: create 'item_comment' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: item_comment
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: service_item_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: text
+                  type: varchar(4000)
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: rate
+                  type: float
+
+
+  - changeSet:
+      id: 7.17.0-item_comment
+      author: omp
+      comment: create 'item_comment' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: item_comment
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: service_item_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: text
+                  type: varchar(4000 CHAR)
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: author_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: rate
+                  type: float(126)
+
+        - addPrimaryKey:
+            tableName: item_comment
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-item_comment
+      author: omp
+      comment: create 'item_comment' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: item_comment
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: service_item_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: text
+                  type: nvarchar(4000)
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: author_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: rate
+                  type: float
+
+        - addPrimaryKey:
+            tableName: item_comment
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-item_comment-constraints
+      author: omp
+      comment: create 'item_comment' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: item_comment
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKE6D04D337666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: item_comment
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKE6D04D33E31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: service_item_id
+            baseTableName: item_comment
+            referencedColumnNames: id
+            referencedTableName: service_item
+            constraintName: FKE6D04D33C7E5C662
+
+        - addForeignKeyConstraint:
+            baseColumnNames: author_id
+            baseTableName: item_comment
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKE6D04D335A032135
+
+  - changeSet:
+      id: 7.17.0-item_comment-indices
+      author: omp
+      comment: create 'item_comment' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: item_comment
+            indexName: itm_cmnt_svc_item_id_idx
+            columns:
+              - column:
+                  name: service_item_id
+
+        - createIndex:
+            tableName: item_comment
+            indexName: itm_cmnt_author_id_idx
+            columns:
+              - column:
+                  name: author_id
+
+  - changeSet:
+      id: 7.17.0-item_comment-indices_mysql
+      author: omp
+      comment: create 'item_comment' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: item_comment
+            indexName: FKE6D04D337666C6D2
+            columns:
+              - column:
+                  name: created_by_id
+
+        - createIndex:
+            tableName: item_comment
+            indexName: FKE6D04D33E31CB353
+            columns:
+              - column:
+                  name: edited_by_id
+
+        - createIndex:
+            tableName: item_comment
+            indexName: FKE6D04D33C7E5C662
+            columns:
+              - column:
+                  name: service_item_id
+
+        - createIndex:
+            tableName: item_comment
+            indexName: FKE6D04D335A032135
+            columns:
+              - column:
+                  name: author_id

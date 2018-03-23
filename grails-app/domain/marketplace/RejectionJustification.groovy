@@ -1,9 +1,9 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class RejectionJustification implements Serializable {
+
+class RejectionJustification extends AuditStamped implements Serializable, ToJSON {
 
     String title
     String description
@@ -29,11 +29,11 @@ class RejectionJustification implements Serializable {
         }
     }
 
-    def asJSON() {
-        return new JSONObject(
-            id: id,
-            title: title,
-            description: description
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id         : id,
+                  title      : title,
+                  description: description])
     }
+
 }

@@ -12,7 +12,7 @@ import marketplace.Relationship
  * A NON-PERSISTENT domain class representing the format
  * of scheduled import data
  */
-class ScheduledImportData {
+class ScheduledImportData implements Serializable{
     //Tells gorm not to persist this class
     static mapWith = "none"
 

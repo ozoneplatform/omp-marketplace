@@ -1,0 +1,80 @@
+[[searching]]
+== Searching
+
+The plugin provides 2 ways to send search requests.
+
+* You can use the `elasticSearchService` and its public `search` method for cross-domain searching, meaning that ElasticSearch may analyze multiple indices and return hits of different types (=different domains).
+
+[source, groovy]
+----
+def res = elasticSearchService.search("${params.query}")
+// 'res' search results may contains multiple types of results
+
+----
+
+* You can use the injected dynamic method in the domain for domain-specific searching.
+
+[source, groovy]
+----
+def res = Tweet.search("${params.query}")
+// 'res' search results contains only Tweet instances
+
+----
+
+These search methods return a `Map` containing 3 entries:
+
+* a `total` entry, representing the total number of hits found
+* a `searchResults` entry, containing the hits
+* a `scores` entry, containing the hits scores
+
+*Example*
+
+[source, groovy]
+----
+def res = Tweet.search("${params.query}")
+println "Found ${res.total} result(s)"
+res.searchResults.each {
+    println it.message
+}
+
+def res = elasticSearchService.search("${params.query}")
+println "Found ${res.total} result(s)"
+res.searchResults.each {
+    if(it instanceof Tweet) {
+        println it.message
+    } else {
+        println it.toString()
+    }
+}
+
+----
+
+If you're willing to retrieve only the number of hits for a peculiar query, you can use the `countHits()` method. It will only return an `Integer` representing the total hits matching your query.
+
+*Example*
+
+[source, groovy]
+----
+def res = Tweet.countHits("${params.query}")
+println "Found ${res} result(s)"
+
+def res = elasticSearchService.countHits("${params.query}", [indices:'test'])
+println "Found ${res} result(s)"
+
+----
+
+include::searching/queryStrings.adoc[]
+
+include::searching/queryClosure.adoc[]
+
+include::searching/queryBuilder.adoc[]
+
+include::searching/filterClosure.adoc[]
+
+include::searching/filterBuilder.adoc[]
+
+include::searching/highlighting.adoc[]
+
+include::searching/sorting.adoc[]
+
+include::searching/pagination.adoc[]

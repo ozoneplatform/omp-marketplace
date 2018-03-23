@@ -1,15 +1,20 @@
 package marketplace
 
+import org.hibernate.SessionFactory
+
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.hibernate.FlushMode
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 class ServiceItemActivityService extends OzoneService {
 
-    def sessionFactory
-    def changeLogService
-    def profileService
-    def accountService
+    SessionFactory sessionFactory
+
+    ChangeLogService changeLogService
+
+    ProfileService profileService
+
+    AccountService accountService
 
     //TODO: this is used by the my listings page (via the ServiceItem/myListingView controller/action) to populate the recent activities. It can be removed when that feature is migrated to the REST API
     @Transactional(readOnly = true)

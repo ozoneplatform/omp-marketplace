@@ -1,0 +1,194 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-relationship
+      author: omp
+      comment: create 'relationship' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: relationship
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: relationship_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: owning_entity_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-relationship
+      author: omp
+      comment: create 'relationship' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: relationship
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: relationship_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: owning_entity_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-relationship
+      author: omp
+      comment: create 'relationship' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: relationship
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: relationship_type
+                  type: varchar(255 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: owning_entity_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+
+        - addPrimaryKey:
+            tableName: relationship
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-relationship
+      author: omp
+      comment: create 'relationship' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: relationship
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: relationship_type
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: owning_entity_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+
+        - addPrimaryKey:
+            tableName: relationship
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-relationship-constraints
+      author: omp
+      comment: create 'relationship' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: owning_entity_id
+            baseTableName: relationship
+            referencedColumnNames: id
+            referencedTableName: service_item
+            constraintName: FKF06476389D70DD39
+
+
+  - changeSet:
+      id: 7.17.0-relationship-indices_mysql
+      author: omp
+      comment: create 'relationship' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: relationship
+            indexName: FKF06476389D70DD39
+            columns:
+              - column:
+                  name: owning_entity_id
+
+
+  - changeSet:
+      id: 7.17.0-relationship-indices
+      author: omp
+      comment: create 'relationship' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: relationship
+            indexName: relationship_owing_id_idx
+            columns:
+              - column:
+                  name: owning_entity_id

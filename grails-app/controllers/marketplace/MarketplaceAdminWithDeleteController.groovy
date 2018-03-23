@@ -13,11 +13,13 @@ abstract class MarketplaceAdminWithDeleteController extends MarketplaceAdminCont
             flash.message = 'delete.success'
             flash.args = [title]
             redirect(action: 'list')
+            return
         }
         catch (ValidationException ve) {
             flash.message = ve.message
             flash.args = ve.args
             redirect(action: 'show', id: params.id)
+            return
         }
     }
 }

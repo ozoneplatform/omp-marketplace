@@ -1,13 +1,15 @@
 package marketplace
 
+import org.hibernate.SessionFactory
+
 import ozone.marketplace.domain.ValidationException
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.hibernate.FlushMode
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 class RejectionJustificationService extends MarketplaceService {
 
-    def sessionFactory
+    SessionFactory sessionFactory
 
     @Transactional(readOnly = true)
     def list(def params) {

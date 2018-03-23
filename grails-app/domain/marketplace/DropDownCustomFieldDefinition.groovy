@@ -1,9 +1,9 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 
-class DropDownCustomFieldDefinition extends CustomFieldDefinition {
+class DropDownCustomFieldDefinition extends CustomFieldDefinition implements ToJSON {
 
     static bindableProperties = CustomFieldDefinition.bindableProperties + [
         'isMultiSelect', 'fieldValues'
@@ -13,9 +13,10 @@ class DropDownCustomFieldDefinition extends CustomFieldDefinition {
     def beforeValidate() {
         //beforeValidate isn't automatically called on child
         //objects
-        fieldValues*.beforeValidate()
+       //TODO BVEST Why do these calls fail?
+        // fieldValues*.beforeValidate()
 
-        super.beforeValidate()
+        //super.beforeValidate()
     }
 
     List<FieldValue> fieldValues
@@ -77,11 +78,12 @@ class DropDownCustomFieldDefinition extends CustomFieldDefinition {
         }
     }
 
-    def asJSON() {
-        def currJSON = super.asJSON()
-        currJSON.put('fieldValues', new JSONArray(fieldValues?.collect { it.asJSONRef() }))
-        currJSON.put('isMultiSelect', isMultiSelect)
-        return currJSON
+    @Override
+    JSONObject asJSON() {
+        def json = super.asJSON()
+        json.putAll([fieldValues  : new JSONArray(fieldValues?.collect { it.asJSONRef() }),
+                     isMultiSelect: isMultiSelect])
+        json
     }
 
 //    This is partially handled in the ImportExportService because of complications having to do with

@@ -1,0 +1,303 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-profile
+      author: omp
+      comment: create 'profile' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: profile
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: bio
+                  type: varchar(1000)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: username
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: email
+                  type: varchar(256)
+              - column:
+                  name: avatar_id
+                  type: bigint
+              - column:
+                  name: display_name
+                  type: varchar(256)
+              - column:
+                  name: uuid
+                  type: varchar(255)
+              - column:
+                  name: user_roles
+                  type: varchar(255)
+
+
+  - changeSet:
+      id: 7.17.0-profile
+      author: omp
+      comment: create 'profile' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: profile
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: bio
+                  type: varchar(1000)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: username
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: email
+                  type: varchar(256)
+              - column:
+                  name: avatar_id
+                  type: bigint
+              - column:
+                  name: display_name
+                  type: varchar(256)
+              - column:
+                  name: uuid
+                  type: varchar(255)
+              - column:
+                  name: user_roles
+                  type: varchar(255)
+
+
+  - changeSet:
+      id: 7.17.0-profile
+      author: omp
+      comment: create 'profile' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: profile
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: bio
+                  type: varchar(1000 CHAR)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: username
+                  type: varchar(256 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: email
+                  type: varchar(256 CHAR)
+              - column:
+                  name: avatar_id
+                  type: number(19,0)
+              - column:
+                  name: display_name
+                  type: varchar(256 CHAR)
+              - column:
+                  name: uuid
+                  type: varchar(255 CHAR)
+              - column:
+                  name: user_roles
+                  type: varchar(255 BYTE)
+
+        - addPrimaryKey:
+            tableName: profile
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-profile
+      author: omp
+      comment: create 'profile' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: profile
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: bio
+                  type: nvarchar(1000)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: username
+                  type: nvarchar(256)
+              - column:
+                  name: email
+                  type: nvarchar(256)
+              - column:
+                  name: avatar_id
+                  type: number(19,0)
+              - column:
+                  name: display_name
+                  type: nvarchar(256)
+              - column:
+                  name: uuid
+                  type: nvarchar(255)
+              - column:
+                  name: user_roles
+                  type: varchar(255)
+
+        - addPrimaryKey:
+            tableName: profile
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-profile-constraints
+      author: omp
+      comment: create 'profile' constraints
+      context: create
+
+      changes:
+        - addUniqueConstraint:
+            tableName: profile
+            columnNames: username
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: profile
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKED8E89A9E31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: profile
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKED8E89A97666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: avatar_id
+            baseTableName: profile
+            referencedColumnNames: id
+            referencedTableName: avatar
+            constraintName: FKED8E89A961C3343D
+
+
+  - changeSet:
+      id: 7.17.0-profile-indices
+      author: omp
+      comment: create 'profile' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: profile
+            indexName: profile_uuid_idx
+            unique: true
+            columns:
+              - column:
+                  name: uuid

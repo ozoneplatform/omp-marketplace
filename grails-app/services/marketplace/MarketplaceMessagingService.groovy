@@ -1,42 +1,50 @@
 package marketplace
 
+import grails.core.GrailsApplication
+import grails.gorm.services.Service
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 import org.ozoneplatform.messaging.payload.OzoneMessage
+import org.ozoneplatform.messaging.service.api.MessageService
+
 import static ozone.marketplace.enums.MarketplaceApplicationSetting.*
 
-
+@Service
 class MarketplaceMessagingService {
 
     static transactional = false
 
-    def messageService
+    MessageService messageService
 
-    def marketplaceApplicationConfigurationService
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
 
-    def profileService
+    ProfileService profileService
 
-    def grailsApplication
+    GrailsApplication grailsApplication
 
-    public void sendNotificationOfChange(ServiceItem serviceItem, ServiceItemActivity activity){
-        if(grailsApplication.config.notifications.enabled == true){
-            OzoneMessage message = createMessage(serviceItem)
-            
-            if(activity.action == Constants.Action.INSIDE || activity.action == Constants.Action.OUTSIDE){
-                message.body = "${serviceItem.title} set to ${activity.action.description} by ${serviceItem.editedBy}"
-            } else{
-                message.body = "${serviceItem.title} ${activity.action.description} by ${serviceItem.editedBy}"
+    void sendNotificationOfChange(ServiceItem serviceItem, ServiceItemActivity activity){
+        if (!(grailsApplication.config.notifications.enabled == true)) return
+
+        OzoneMessage message = createMessage(serviceItem)
+
+        Profile editedBy = serviceItem.findEditedByProfile()
+        if(activity.action == Constants.Action.INSIDE || activity.action == Constants.Action.OUTSIDE){
+            message.body = "${serviceItem.title} set to ${activity.action.description} by ${editedBy}"
+        } else{
+            message.body = "${serviceItem.title} ${activity.action.description} by ${editedBy}"
+        }
+
+        try{
+            runAsync{
+                messageService.sendGroupMessage(message)
             }
-
-            try{
-                runAsync{
-                    messageService.sendGroupMessage(message)
-                }
-            } catch (Exception e){
-                log.error "Unable to send message: ${e.message}"
-            }
+        } catch (Exception e){
+            log.error "Unable to send message: ${e.message}"
         }
     }
 
-    public OzoneMessage createMessage(ServiceItem serviceItem) {
+    OzoneMessage createMessage(ServiceItem serviceItem) {
         OzoneMessage message = new OzoneMessage()
         message.subject = "Recent activity for ${serviceItem.title}"
         message.classification = this.marketplaceApplicationConfigurationService.valueOf(SECURITY_LEVEL)

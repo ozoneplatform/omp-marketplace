@@ -1,0 +1,204 @@
+The *jaxrs* plugin also supports scaffolding. It allows you to generate a RESTful service interface for one or more
+domain classes based on JAX-RS resource classes. Supported representation formats are XML and JSON. The following
+sections walk through a simple example.
+
+h3. Create a domain class
+
+To create a @Person@ domain class go to the project's root directory and enter:
+
+{code}grails create-domain-class person{code}
+
+Open the generated @Person.groovy@ file (under @grails-app/domain@) and add two properties, @firstName@ and @lastName@.
+
+{code}
+package hello
+
+class Person {
+
+    static constraints = {
+    }
+
+    String firstName
+
+    String lastName
+
+}
+{code}
+
+h3. Generate the REST API
+
+To generate JAX-RS resources that implement the RESTful service interface for that domain class enter:
+
+{code}grails generate-resources hello.Person{code}
+
+This will generate two resource classes, @PersonCollectionResource.groovy@ and @PersonResource.groovy@
+(in the @hello@ package) that support HTTP POST, GET, PUT and DELETE operations for creating, reading, updating and
+deleting @Person@ objects, respectively. @PersonCollectionResource.groovy@ is related to @Person@ lists,
+@PersonResource.groovy@ is related to individual @Person@ instances. Let's take a look at how to use the generated
+RESTful service interface.
+
+h3. Use the REST API
+
+Start the hello application with:
+
+{code}grails run-app{code}
+
+New person objects can be created by POSTing to @http://localhost:8080/api/person@. The following request POSTs an XML
+representation of a person object.
+
+{code}
+POST /api/person HTTP/1.1
+Content-Type: application/xml
+Accept: application/xml
+Host: localhost:8080
+Content-Length: 82
+
+<person>
+    <firstName>Sam</firstName>
+    <lastName>Hill</lastName>
+</person>
+{code}
+
+The Content-Type header must be set either to @application/xml@. After sending the request, the server creates a new
+person object in the database and returns an XML representation of it.
+
+{code}
+HTTP/1.1 201 Created
+Content-Type: application/xml
+Location: http://localhost:8080/api/person/1
+Transfer-Encoding: chunked
+Server: Jetty(6.1.14)
+
+<?xml version="1.0" encoding="UTF-8"?>
+<person id="1">
+    <firstName>Sam</firstName>
+    <lastName>Hill</lastName>
+</person>
+{code}
+
+The client explicitly requested an XML representation via the @Accept@ request header. Note that the returned
+representation differs from the submitted representation by an @id@ attribute in the @<person>@ element. This @id@ is
+also contained in the @Location@ response header, the URL of the created resource. The response code is @201 (CREATED)@.
+Let's create another person object using a JSON representation. Here's the request:
+
+{code}
+POST /api/person HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080
+Content-Length: 58
+
+{"class":"Person","firstName":"Fabien","lastName":"Barel"}
+{code}
+
+The response also contains a JSON representation of the created person (see @Accept@ request header). The @id@ of the
+created person object is @2@.
+
+{code}
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: http://localhost:8080/api/person/2
+Transfer-Encoding: chunked
+Server: Jetty(6.1.14)
+
+{"class":"Person","id":"2","firstName":"Fabien","lastName":"Barel"}
+{code}
+
+Content negotiation via @Content-Type@ and @Accept@ headers works for other HTTP methods as well. To GET a list of
+created persons, open a browser (Firefox in our example) and enter the URL @http://localhost:8080/api/person@.
+This returns an XML representation of the list of persons stored in the database.
+
+{code}
+<list>
+    <person id="1">
+        <firstName>Sam</firstName>
+        <lastName>Hill</lastName>
+    </person>
+    <person id="2">
+        <firstName>Fabien></firstName>
+        <lastName>Barel</lastName>
+    </person>
+</list>
+{code}
+
+An XML representation is returned because Firefox sets an @Accept=text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8@
+request header. To get the representation of a single person, specify the @id@ in the URL. For example, to get the
+person with @id@ @1@ use @http://localhost:8080/api/person/1@
+
+{code}
+<person id="1">
+    <firstName>Sam</firstName>
+    <lastName>Hill</lastName>
+</person>
+{code}
+
+If you try to get a person that doesn't exist, an error message (with a status code @404@) is returned.
+
+{code}
+<error>Person with id 3 not found</error>
+{code}
+
+In the next step we update the first name of person @1@ by PUTting a new representation to
+@http://localhost:8080/api/person/1@.
+
+{code}
+PUT /api/person/1 HTTP/1.1
+Content-Type: application/xml
+Accept: application/xml
+Host: localhost:8080
+Content-Length: 85
+
+<person>
+    <firstName>Samuel</firstName>
+    <lastName>Hill</lastName>
+</person>
+{code}
+
+The response is a new representation of the updated person.
+
+{code}
+HTTP/1.1 200 OK
+Content-Type: application/xml
+Transfer-Encoding: chunked
+Server: Jetty(6.1.14)
+
+<?xml version="1.0" encoding="UTF-8"?>
+<person id="1">
+    <firstName>Samuel</firstName>
+    <lastName>Hill</lastName>
+</person>
+{code}
+
+GETting the person list again shows the update of person @1@.
+
+{code}
+<list>
+    <person id="1">
+        <firstName>Samuel</firstName>
+        <lastName>Hill</lastName>
+    </person>
+    <person id="2">
+        <firstName>Fabien></firstName>
+        <lastName>Barel</lastName>
+    </person>
+</list>
+{code}
+
+Finally, we delete person @1@ by sending a DELETE request to @http://localhost:8080/api/person/1@.
+
+{code}
+DELETE /api/person/1 HTTP/1.1
+Accept: application/xml
+Host: localhost:8080
+{code}
+
+GETting the person lists again shows that person 1 has actually been deleted.
+
+{code}
+<list>
+    <person id="2">
+        <firstName>Fabien></firstName>
+        <lastName>Barel</lastName>
+    </person>
+</list>
+{code}

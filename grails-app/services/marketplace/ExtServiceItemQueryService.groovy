@@ -3,7 +3,8 @@ package marketplace
 import org.hibernate.criterion.*
 
 class ExtServiceItemQueryService extends OzoneService {
-    def accountService
+
+    AccountService accountService
 
     static final stringCondition = { field, value, criteria ->
         def m = value =~ /\*(.+)\*/
@@ -104,7 +105,7 @@ class ExtServiceItemQueryService extends OzoneService {
     void addAccessConstraints(def c, def params) {
         def session = getSession()
 
-        if (accountService.isExternAdmin()) {
+        if (accountService.isExtAdmin()) {
             log.debug "addAccessConstraints: for external admin ${session.username}"
             // TODO: add in check for enabled
             //                         eq('isHidden',0)

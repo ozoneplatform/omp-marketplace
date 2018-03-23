@@ -1,0 +1,33 @@
+[[deleteIndex]]
+=== deleteIndex
+
+#### Purpose
+
+Delete one or more existing indices, whether they correspond to a searchable class or not.
+
+#### Examples
+
+[source, groovy]
+----
+elasticSearchAdminService.deleteIndex()
+
+----
+
+##### Description
+
+`deleteIndex` signatures:
+
+[source, groovy]
+----
+void deleteIndex()   // Delete all indices
+void deleteIndex(String... indices)
+void deleteIndex(Class... searchableClasses)
+
+----
+
+
+##### Parameters
+Without parameters, *deletes all indices*.
+
+* `indices` - A `Collection` of indices to delete.
+* `searchableClasses` - A `Collection` of searchable classes which indices are to be deleted.

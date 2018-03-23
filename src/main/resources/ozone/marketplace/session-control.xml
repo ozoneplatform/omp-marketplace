@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <bean id="ozoneCacheManager"
+          class="ozone.marketplace.security.OzoneMarketplaceCacheManager">
+        <property name="grailsCacheManager" ref="grailsCacheManager"/>
+    </bean>
+
+    <bean id="sessionRegistry"
+          class="ozone.security.session.ClusteredSessionRegistryImpl">
+        <constructor-arg name="ozoneCacheManager" ref="ozoneCacheManager"/>
+    </bean>
+
+    <bean id="concurrentSessionControlAuthenticationStrategy"
+          class="ozone.security.session.OzoneConcurrentSessionControlStrategy">
+        <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+        <constructor-arg name="ozoneCacheManager" ref="ozoneCacheManager"/>
+        <property name="maximumSessions" value="1"/>
+    </bean>
+
+</beans>

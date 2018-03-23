@@ -16,10 +16,10 @@
 %>
 
 
-<owf:styles>
-</owf:styles>
-<owf:scripts>
-</owf:scripts>
+%{--<owf:styles>--}%
+%{--</owf:styles>--}%
+%{--<owf:scripts>--}%
+%{--</owf:scripts>--}%
 
 <g:if test="${flash.message}">
   <!-- Message -->
@@ -80,7 +80,8 @@
 </g:else>
 
 <script type='text/javascript'>
-    var affiliatedMarketplaceSearchParams = ${params as JSON ?:  'null'};
+    var affiliatedMarketplaceSearchParams = ${raw((params as JSON).toString()) ?:  'null'};
+
     var affiliatedMarketplaceSearchSize = Marketplace.affiliatedSearchSize;
     var sortBy          = affiliatedMarketplaceSearchParams.sort;
     var sortOrder       = affiliatedMarketplaceSearchParams.order;
@@ -90,4 +91,4 @@
 </script>
 
 
-<script src="${request.contextPath}/js/affiliatedSearch/affiliatedSearch-main.js"></script>
+<script src="${request.contextPath}/static/js/affiliatedSearch/affiliatedSearch-main.js"></script>

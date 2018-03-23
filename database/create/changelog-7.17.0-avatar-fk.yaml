@@ -1,0 +1,22 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-avatar-constraints
+      author: omp
+      comment: create 'avatar' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: avatar
+            referencedTableName: profile
+            referencedColumnNames: id
+            constraintName: FKAC32C1597666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: avatar
+            referencedTableName: profile
+            referencedColumnNames: id
+            constraintName: FKAC32C159E31CB353

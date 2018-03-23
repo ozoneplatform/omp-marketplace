@@ -1112,7 +1112,7 @@ databaseChangeLog = {
 				constraints(nullable: "false")
 			}
 
-			column(name: "APPROVED_DATE", type: "DATETIME")
+			column(name: "APPROVAL_DATE", type: "DATETIME")
 
 			column(name: "AUTHOR_ID", type: "BIGINT") {
 				constraints(nullable: "false")
@@ -1218,7 +1218,7 @@ databaseChangeLog = {
 				constraints(nullable: "false")
 			}
 
-			column(name: "ACTIVITY_DATE", type: "DATETIME") {
+			column(name: "ACTIVITY_TIMESTAMP", type: "DATETIME") {
 				constraints(nullable: "false")
 			}
 

@@ -1,14 +1,16 @@
 package marketplace
 
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 
 class FranchiseTagLib {
 
-    def accountService
-
-    def marketplaceApplicationConfigurationService
-
     static namespace = "franchise"
+
+    AccountService accountService
+
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
 
     def renderIfScoreCardEnabled = { attrs, body ->
         if (isScoreCardFunctionalityEnabled()) {

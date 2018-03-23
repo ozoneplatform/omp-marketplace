@@ -1,8 +1,12 @@
 package marketplace
 
+import grails.util.Environment
 import grails.util.GrailsUtil
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
-import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
+import grails.web.context.ServletContextHolder
+import org.grails.web.util.GrailsApplicationAttributes
+
+import org.hibernate.SessionFactory
+
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.quartz.Job
 import org.quartz.JobKey
@@ -14,14 +18,18 @@ import java.text.SimpleDateFormat
 import java.text.ParseException
 
 class DisableInactiveAccountsJob implements Job {
-	def name = "deleteInactiveAccounts"
+
+    AccountService accountService
+
+    PurgeUserService purgeUserService
+
+    SessionFactory sessionFactory
+
+    def name = "deleteInactiveAccounts"
 	def group = "ompDeleteInactiveAccounts"
     JobKey jobKey = new JobKey(name, group)
     def execInterval
     def startTime
-    def accountService
-    def purgeUserService
-    def sessionFactory
 
     public DisableInactiveAccountsJob() {
 
@@ -111,7 +119,7 @@ class DisableInactiveAccountsJob implements Job {
      * @return
      */
     public void execute(JobExecutionContext context) {
-        if (GrailsUtil.environment == 'test') {
+        if (Environment.current == Environment.TEST) {
             // Don't purge users in the unit/integration tests
             return
         }

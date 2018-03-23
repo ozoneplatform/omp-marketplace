@@ -1,0 +1,225 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-default_images
+      author: omp
+      comment: create 'default_images' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: default_images
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: image_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: defined_default_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: timestamp
+
+
+  - changeSet:
+      id: 7.17.0-default_images
+      author: omp
+      comment: create 'default_images' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: default_images
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: image_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: defined_default_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: datetime
+
+
+  - changeSet:
+      id: 7.17.0-default_images
+      author: omp
+      comment: create 'default_images' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: default_images
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: image_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: defined_default_type
+                  type: varchar(255 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: timestamp
+
+        - addPrimaryKey:
+            tableName: default_images
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-default_images
+      author: omp
+      comment: create 'default_images' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: default_images
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: image_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: defined_default_type
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: datetime
+
+        - addPrimaryKey:
+            tableName: default_images
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-default_images-constraints
+      author: omp
+      comment: create 'default_images' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: default_images
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK6F064E367666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: default_images
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK6F064E36E31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: image_id
+            baseTableName: default_images
+            referencedColumnNames: id
+            referencedTableName: images
+            constraintName: FK6F064E36553AF61A

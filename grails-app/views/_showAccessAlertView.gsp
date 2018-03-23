@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
         <meta http-equiv="PRAGMA" content="NO-CACHE" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        %{--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--}%
 
         <meta name="pageId" content="${controllerName}.${actionName}" />
 
@@ -14,18 +14,22 @@
 
         <!-- ** CSS ** -->
         <!-- base library -->
-        <p:css id='theme' name='${marketplaceTheme.defaultCssPath()}' absolute='true'/>
-        <p:css id='theme-bootstrap' name='${marketplaceTheme.defaultThemeBasePath()}css/bootstrap.css' absolute='true'/>
-
-        <myui:bannerBeanCSS/>
+        <marketplaceTheme:themeStylesheet/>
+        <marketplaceTheme:bootstrapStylesheet/>
+        %{--<p:css id='theme' name='${marketplaceTheme.defaultCssPath()}' absolute='false'/>--}%
+        %{--<p:css id='theme-bootstrap' name='${marketplaceTheme.defaultThemeBasePath()}css/bootstrap.css' absolute='false'/>--}%
 
         <!-- ** JavaScript ** -->
-        <g:javascript src="../config.js" />
-        <p:javascript src="marketplace-js-bundle"/>
-        <g:javascript src="../vendor/owf-widget-min.js" />
+        <g:javascript src="../config.js"/>
+
+        <g:javascript src="../static/js/marketplace-js-bundle.js"/>
+        <g:javascript src="../static/vendor/owf-widget-min.js" />
+
+        <myui:bannerBeanCSS/>
         <myui:bannerBeanJS/>
 
         <script type="text/javascript">
+            console.log('initializing viewport')
             Marketplace.viewPortInit(); //Comes from "config" library
         </script>
     </head>

@@ -1,6 +1,0 @@
-<decorators>
-    <excludes>
-        <pattern>/vendor/dojo-1.2.3-windowname-only/dojo/resources/blank.html</pattern>
-        <pattern>/vendor/dojo-1.2.3-windowname-only/dojox/io/init_src.html</pattern>
-    </excludes>
-</decorators>

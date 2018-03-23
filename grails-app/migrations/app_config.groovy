@@ -1,3 +1,5 @@
+println("appconfig loading")
+
 databaseChangeLog = {
 
     def detailValues = ["types", "categories", "state", "releaseDate",
@@ -38,14 +40,14 @@ databaseChangeLog = {
           //Initial "Branding"
         [
             [items: [[code: "store.name", type: "String", mutable: true, value: ""],
-                     [code: "store.logo", type: "Image", mutable: true, value: "/marketplace/themes/gold.theme/images/Mp_logo.png"],
-                     [code: "store.icon", type: "Image", mutable: true, value: "/marketplace/themes/common/images/agency/agencyDefault.png"],
+                     [code: "store.logo", type: "Image", mutable: true, value: "/static/themes/gold.theme/images/Mp_logo.png"],
+                     [code: "store.icon", type: "Image", mutable: true, value: "/static/themes/common/images/agency/agencyDefault.png"],
                      [code: "free.warning.content", type: "String", mutable: true, value: ""],
                      [code: 'url.public', type: 'string', mutable: true, value: '']]
             ],
 
             [items: [[code: "about.box.content", type: "String", mutable: true, value: "The Store allows visitors to discover and explore business and convenience applications and enables user-configurable visualizations of available content."],
-                     [code: "about.box.image", type: "Image", mutable: true, value: "/marketplace/themes/gold.theme/images/Mp_logo_128x128.png"]],
+                     [code: "about.box.image", type: "Image", mutable: true, value: "/static/themes/gold.theme/images/Mp_logo_128x128.png"]],
              subGroupName: "About Information"
             ],
 
@@ -61,8 +63,8 @@ databaseChangeLog = {
 
             [items: [[code: "store.open.search.title.message", type: "String", mutable: true, value: "Marketplace Search"],
                      [code: "store.open.search.description.message", type: "String", mutable: true, value: "Marketplace Search Description"],
-                     [code: "store.open.search.fav.icon", type: "Image", mutable: true, value: "/marketplace/themes/gold.theme/images/favicon.ico"],
-                     [code: "store.open.search.site.icon", type: "Image", mutable: true, value: "../images/themes/default/market_64x64.png"]],
+                     [code: "store.open.search.fav.icon", type: "Image", mutable: true, value: "/static/themes/gold.theme/images/favicon.ico"],
+                     [code: "store.open.search.site.icon", type: "Image", mutable: true, value: "/static/themes/common/images/themes/default/market_64x64.png"]],
              subGroupName: "Open Search"
             ],
 

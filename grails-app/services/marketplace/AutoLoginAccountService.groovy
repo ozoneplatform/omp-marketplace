@@ -1,15 +1,14 @@
 package marketplace
 
+import grails.util.Environment
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
-import grails.util.GrailsUtil
 import ozone.security.authentication.OWFUserDetailsImpl
 import ozone.utils.User
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import ozone.security.authorization.model.GrantedAuthorityImpl
 
-public class AutoLoginAccountService extends AccountService {
+class AutoLoginAccountService extends AccountService {
 
     boolean transactional = false
 
@@ -19,13 +18,13 @@ public class AutoLoginAccountService extends AccountService {
     def autoRoles
     def autoOrganization
 
-    public Authentication getAuthentication() {
+    Authentication getAuthentication() {
         if (!SCH.context.authentication)
             createSecurityContext()
         return SCH.context.authentication
     }
 
-    def getLoggedInUsername() {
+    String getLoggedInUsername() {
         // App components may set SCH explicitly; do not ignore
         if (getAuthentication()) {
             autoAccountUsername = getAuthentication().principal.username
@@ -53,7 +52,7 @@ public class AutoLoginAccountService extends AccountService {
         return getLoggedInUserRoles().contains(roleVal)
     }
 
-    def getLoggedInUser() {
+    User getLoggedInUser() {
         User usr = new User()
         usr.username = getLoggedInUsername()
         usr.name = autoAccountName
@@ -66,7 +65,7 @@ public class AutoLoginAccountService extends AccountService {
     //per environment.
     def createSecurityContext() {
 
-        if (!GrailsUtil.environment == 'development')
+        if (Environment.current != Environment.DEVELOPMENT)
             return
 
         def auths = []

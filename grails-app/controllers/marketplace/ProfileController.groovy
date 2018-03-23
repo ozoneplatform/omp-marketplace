@@ -1,27 +1,37 @@
 package marketplace
 
-import org.apache.commons.lang.exception.ExceptionUtils
-import grails.util.Holders
-import org.hibernate.FlushMode
-import ozone.marketplace.domain.ValidationException
-
-import grails.converters.JSON
+import marketplace.data.ServiceItemDataService
 
 import javax.servlet.http.Cookie
 
-class ProfileController extends BaseMarketplaceRestController {
+import grails.converters.JSON
 
-    def accountService
-    def profileService
-    def sessionFactory
-    def messageSource
-    def auditLogListener
-    def config = Holders.config
-    def themeService
+import org.hibernate.FlushMode
+import org.hibernate.SessionFactory
+
+import org.apache.commons.lang.exception.ExceptionUtils
+
+
+class ProfileController extends BaseMarketplaceRestController {
 
     static allowedMethods = [edit: 'POST', editBio: 'POST', update: 'POST', updateSessionAccessAlertShown: 'POST', onBeforeLogout: 'POST']
 
-    def index = { redirect(action: list, params: params) }
+    ServiceItemDataService serviceItemDataService
+
+    AccountService accountService
+
+    ProfileService profileService
+
+    ThemeService themeService
+
+    SessionFactory sessionFactory
+
+    def messageSource
+
+    def index = {
+        redirect(action: 'list', params: params)
+        return
+    }
 
     def list = {
         if (!params.max) params.max = 10
@@ -40,6 +50,7 @@ class ProfileController extends BaseMarketplaceRestController {
                 accessAlertMsg: "${session.accessAlertMsg}", initialUrl: "${session.initalRequestURL}"])
         } else {
             redirect(controller: "serviceItem", action: "index")
+            return
         }
     }
 
@@ -70,7 +81,8 @@ class ProfileController extends BaseMarketplaceRestController {
         if (!profile) {
             flash.message = "specificObjectNotFound"
             flash.args = ['profile', params.id]
-            redirect(action: list)
+            redirect(action: 'list')
+            return
         } else {
             [profile: profile]
         }
@@ -81,7 +93,8 @@ class ProfileController extends BaseMarketplaceRestController {
         if (!profile) {
             flash.message = "specificObjectNotFound"
             flash.args = ['profile', params.id]
-            redirect(action: list)
+            redirect(action: 'list')
+            return
         } else {
             [profile: profile]
         }
@@ -91,7 +104,7 @@ class ProfileController extends BaseMarketplaceRestController {
         log.info "update for ${params}"
         try {
             def sessionParams = ['isAdmin': session.isAdmin, 'username': session.username]
-            def profile = profileService.getAllowableUser(params.id, sessionParams)
+            def profile = profileService.getAllowableUser(params.id.toLong(), sessionParams)
 
             if (profile) {
                 if (params.version) {
@@ -117,11 +130,12 @@ class ProfileController extends BaseMarketplaceRestController {
                             session.fullname = newFullname
                         }
                     }
-                    profileService.reindexServiceItemsByUser(profile.id)
+                    serviceItemDataService.reindexAllByOwnerId(profile.id)
 
                     flash.message = "update.success"
                     flash.args = [profile.prettyPrint()]
-                    redirect(action: detail, id: profile.id)
+                    redirect(action: 'detail', id: profile.id)
+                    return
                 } else {
                     render(view: 'edit', model: [profile: profile])
                 }
@@ -130,7 +144,8 @@ class ProfileController extends BaseMarketplaceRestController {
             } else {
                 flash.message = "specificObjectNotFound"
                 flash.args = ['profile', params.id]
-                redirect(action: edit, id: params.id)
+                redirect(action: 'edit', id: params.id)
+                return
             }
 
         } catch (AccessControlException e) {
@@ -140,7 +155,7 @@ class ProfileController extends BaseMarketplaceRestController {
         } catch (Exception e) {
             String message = ExceptionUtils.getRootCauseMessage(e)
             def sessionParams = ['isAdmin': session.isAdmin, 'username': session.username]
-            def profile = profileService.getAllowableUser(params.id, sessionParams)
+            def profile = profileService.getAllowableUser(params.id.toLong(), sessionParams)
             log.error("Error occurred trying to update ${profile}. ${message}", e)
             flash.message = "update.failure"
             flash.args = [profile.prettyPrint(), message]

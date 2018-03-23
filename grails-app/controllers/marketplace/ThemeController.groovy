@@ -4,13 +4,14 @@ import grails.converters.JSON
 
 class ThemeController extends BaseMarketplaceRestController {
 
-    def themeService
+    ThemeService themeService
 
     def getImageURL = {
         log.debug "getImageURL: params = ${params}"
         params.img_name
         def imageURL = themeService.getImageURL(params)
         redirect(uri: imageURL ?: '/theme')
+        return
     }
 
     def getAvailableThemes = {

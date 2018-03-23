@@ -1,15 +1,22 @@
 package marketplace
 
-import org.springframework.transaction.annotation.Transactional
+import grails.config.Config
+
+import grails.gorm.transactions.Transactional
 import grails.util.Holders
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 
 class ScoreCardService {
 
-    def marketplaceApplicationConfigurationService
-    def accountService
-    def profileService
-    def serviceItemActivityInternalService
-    def config = Holders.config
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
+    AccountService accountService
+
+    ProfileService profileService
+
+    Config config = Holders.config
     
     // Score Card Question Section
     

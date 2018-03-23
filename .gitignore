@@ -1,3 +1,15 @@
+!.gitkeep
+
+/.gradle/
+/build/
+/bin/
+
+/src/main/resources/public/js/*
+/src/main/resources/public/vendor/*
+
+# Elasticsearch generated directories
+/libs/
+/data/
 
 ###################
 *.com
@@ -29,28 +41,34 @@ mktplDevDB.properties
 mktplDevDB.script
 mktplTestDB.properties
 mktplTestDB.script
-mktplDevDb.h2.db
-mktplDevDb.trace.db
-mktplDevDb.lock.db
-mktplTestDb.h2.db
-mktplTestDb.trace.db
-mktplTestDb.lock.db
-mktplProdDb.trace.db
+/*.db
 
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-#Icon?
-ehthumbs.db
+
+### JetBrains (IntelliJ)
+.idea/
+*.iml
+
+### Windows
 Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+Desktop.ini
 
-# Directories
-######################
-.idea/*
+### Mac OS
+# General
+*.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+### Eclipse files
+.classpath
+.project
+.settings/
+
+
+### Directories
 build-base*/*
 target/*
 target-eclipse/*
@@ -63,28 +81,16 @@ plugins/*
 node_modules
 js-build
 .vagrant
-data/
+/bin
 
-# Project files
-######################
-*.iml
-*.ipr
-*.ids
-*.iws
-*.tmproj
-.classpath
-.project
-
-# local backup files
+### local backup files
 *.bak
 .*.swp
 
-# Compass generated files
-#########################
+### Compass generated files
 *.sass-cache
 
-#Build generated files and directories
-######################################
+### Build generated files and directories
 build.number
 jsdoc/
 src/assemble/docs/jsdoc/

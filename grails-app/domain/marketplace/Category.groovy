@@ -1,13 +1,15 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import ozone.utils.Utils
-import marketplace.JSONUtil as JS
-import org.apache.commons.lang.builder.HashCodeBuilder
-import org.apache.commons.lang.builder.EqualsBuilder
+import org.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class Category implements Serializable {
+import marketplace.JSONUtil as JS
+import org.apache.commons.lang.builder.EqualsBuilder
+import org.apache.commons.lang.builder.HashCodeBuilder
+
+import ozone.utils.Utils
+
+
+class Category extends AuditStamped implements Serializable, ToJSON {
     static searchable = {
         root false
         title index: 'analyzed'
@@ -60,13 +62,12 @@ class Category implements Serializable {
         }
     }
 
-    def asJSON() {
-        return new JSONObject(
-            id: id,
-            uuid: uuid,
-            title: title,
-            description: description
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id         : id,
+                  uuid       : uuid,
+                  title      : title,
+                  description: description])
     }
 
     def asJSONRef() {

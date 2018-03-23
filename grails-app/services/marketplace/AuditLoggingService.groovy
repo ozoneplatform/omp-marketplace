@@ -1,7 +1,7 @@
 package marketplace
 
-import org.codehaus.groovy.grails.commons.GrailsApplication
-
+import grails.core.GrailsApplication
+import marketplace.configuration.MarketplaceApplicationConfigurationService
 import org.springframework.beans.BeansException
 
 import org.apache.log4j.Logger
@@ -15,8 +15,6 @@ import org.ozoneplatform.auditing.enums.PayloadType
 
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import static ozone.marketplace.enums.MarketplaceApplicationSetting.*
-
-import marketplace.configuration.MarketplaceApplicationConfigurationService
 
 import ozone.utils.User
 

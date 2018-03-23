@@ -1,32 +1,35 @@
 package marketplace
 
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
+import grails.converters.JSON
+import grails.plugins.feeds.FeedBuilder
+
+import com.sun.syndication.feed.module.opensearch.OpenSearchModule
+import com.sun.syndication.feed.module.opensearch.entity.OSQuery
+import com.sun.syndication.feed.module.opensearch.impl.OpenSearchModuleImpl
+import com.sun.syndication.feed.synd.SyndContent
+import com.sun.syndication.feed.synd.SyndContentImpl
+import com.sun.syndication.feed.synd.SyndFeed
 import com.sun.syndication.feed.synd.SyndImageImpl
 import com.sun.syndication.io.SyndFeedOutput
-import com.sun.syndication.feed.module.opensearch.OpenSearchModule
-import com.sun.syndication.feed.module.opensearch.entity.OSQuery;
-import com.sun.syndication.feed.module.opensearch.impl.OpenSearchModuleImpl
-
-import feedsplugin.FeedBuilder
 import marketplace.search.SearchCriteria
+
 import ozone.marketplace.controller.MarketplaceException
 import ozone.marketplace.enums.MarketplaceApplicationSetting
-import grails.util.Holders
 
-import grails.converters.JSON
 
 class SearchController extends BaseMarketplaceRestController {
-    def config = Holders.config
-    def searchableService
-    def searchNuggetService
-    def serviceItemService
-    def aggregationsService
 
     final static String DEFAULT_FEED_TYPE = 'atom'
     final static List VALID_FEED_TYPES = ['atom', 'rss']
     final static String DEFAULT_FEED_PAGE_SIZE = '10'
+
+    SearchableService searchableService
+
+    SearchNuggetService searchNuggetService
+
+    ServiceItemService serviceItemService
+
+    AggregationsService aggregationsService
 
     // TODO: Remove this once I get logging from the integration test working.
     def logIt(def strIn) {
@@ -156,9 +159,9 @@ class SearchController extends BaseMarketplaceRestController {
 
 
         if (params.viewGridOrList == 'list') {
-            render(template: "../serviceItem/searchResults/widget_list_view", model: modelData)
+            render(template: "/serviceItem/searchResults/widget_list_view", model: modelData)
         } else {
-            render(template: "../serviceItem/searchResults/widget_grid_view", model: modelData)
+            render(template: "/serviceItem/searchResults/widget_grid_view", model: modelData)
         }
 
     }

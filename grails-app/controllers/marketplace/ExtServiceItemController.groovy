@@ -1,8 +1,10 @@
 package marketplace
 
+import org.hibernate.SessionFactory
 
 import ozone.marketplace.domain.ValidationException
-import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
+import org.grails.web.converters.exceptions.ConverterException
+
 import ozone.decorator.JSONDecoratorException
 import ozone.marketplace.domain.ValidationException
 import ozone.marketplace.enums.MarketplaceApplicationSetting
@@ -11,17 +13,15 @@ import grails.converters.JSON
 
 class ExtServiceItemController extends BaseMarketplaceRestController {
 
-    def extServiceItemService
+    ExtServiceItemService extServiceItemService
 
-    def extServiceItemQueryService
+    ExtServiceItemQueryService extServiceItemQueryService
 
-    def accountService
+    AccountService accountService
 
     def springcacheService
 
-    def sessionFactory
-
-    def marketplaceApplicationConfigurationService
+    SessionFactory sessionFactory
 
     // TODO: Remove this once I get logging from the integration test working.
     def logIt(def strIn) {

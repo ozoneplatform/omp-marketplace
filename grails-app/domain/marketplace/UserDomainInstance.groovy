@@ -2,10 +2,8 @@ package marketplace
 
 /**
  * Domain class to save information related to user preferences within marketplace
- *
  */
-@gorm.AuditStamp
-class UserDomainInstance implements Serializable {
+class UserDomainInstance extends AuditStamped implements Serializable {
 
 	String username
 	Map preferences = [:]
@@ -43,15 +41,11 @@ class UserDomainInstance implements Serializable {
         }
     }
 
-    // want this to always return true or false, never null
-    def getAnimationsEnabled() {
-        if (preferences[ENABLE_ANIMATIONS] == 'true')
-            return true
-        else
-            return false;
+    boolean getAnimationsEnabled() {
+        preferences[ENABLE_ANIMATIONS] == 'true'
     }
 
-    def setAnimationsEnabled(def enabled) {
+    void setAnimationsEnabled(String enabled) {
         preferences[ENABLE_ANIMATIONS] = enabled
     }
 

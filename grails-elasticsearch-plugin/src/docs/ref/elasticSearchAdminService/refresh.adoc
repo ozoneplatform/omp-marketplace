@@ -1,0 +1,44 @@
+[[refresh]]
+=== refresh
+
+#### Purpose
+
+Explicitly refresh one or more index, making all operations performed since the last refresh available for search.
+
+#### Examples
+
+[source, groovy]
+----
+elasticSearchService.index(domain)
+// Some code...
+// ...
+elasticSearchService.index(domain2)
+// Some code...
+// ...
+elasticSearchService.index(domain3)
+
+// Some code...
+// ...
+elasticSearchAdminService.refresh() // Ensure that the 3 previous index requests 
+									// have been made searchable by ES
+
+----
+
+##### Description
+
+`refresh` signatures:
+
+[source, groovy]
+----
+public void refresh()   // Refresh all indices
+public void refresh(String... indices)
+public void refresh(Class... searchableClasses)
+
+----
+
+##### Parameters
+
+Without parameters, refreshes all indices.
+
+* `indices` - A `Collection` of indices to refresh.
+* `searchableClasses` - A `Collection` of searchable classes which indices are to be refreshed.

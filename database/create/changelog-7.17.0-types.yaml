@@ -1,0 +1,329 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-types
+      author: omp
+      comment: create 'types' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: types
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: has_launch_url
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250)
+              - column:
+                  name: image_id
+                  type: bigint
+              - column:
+                  name: ozone_aware
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: has_icons
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255)
+              - column:
+                  name: is_permanent
+                  type: boolean
+
+
+  - changeSet:
+      id: 7.17.0-types
+      author: omp
+      comment: create 'types' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: types
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: has_launch_url
+                  type: bit(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250)
+              - column:
+                  name: image_id
+                  type: bigint
+              - column:
+                  name: ozone_aware
+                  type: bit(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: has_icons
+                  type: bit(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255)
+              - column:
+                  name: is_permanent
+                  type: tinyint(1)
+
+
+  - changeSet:
+      id: 7.17.0-types
+      author: omp
+      comment: create 'types' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: types
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: title
+                  type: varchar(50 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: has_launch_url
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250 CHAR)
+              - column:
+                  name: image_id
+                  type: number(19,0)
+              - column:
+                  name: ozone_aware
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: has_icons
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255 CHAR)
+              - column:
+                  name: is_permanent
+                  type: number(1,0)
+
+        - addPrimaryKey:
+            tableName: types
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-types
+      author: omp
+      comment: create 'types' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: types
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: title
+                  type: nvarchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: has_launch_url
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: nvarchar(250)
+              - column:
+                  name: image_id
+                  type: number(19,0)
+              - column:
+                  name: ozone_aware
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: has_icons
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: nvarchar(255)
+              - column:
+                  name: is_permanent
+                  type: bit
+
+        - addPrimaryKey:
+            tableName: types
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-types-constraints
+      author: omp
+      comment: create 'types' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: types
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK69B5879E31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: types
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK69B58797666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: image_id
+            baseTableName: types
+            referencedColumnNames: id
+            referencedTableName: images
+            constraintName: FK69B5879553AF61A
+
+
+  - changeSet:
+      id: 7.17.0-types-indices
+      author: omp
+      comment: create 'types' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: types
+            indexName: types_uuid_idx
+            unique: true
+            columns:
+              - column:
+                  name: uuid

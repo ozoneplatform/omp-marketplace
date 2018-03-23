@@ -1,0 +1,686 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-service_item
+      author: omp
+      comment: create 'service_item' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: service_item
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: owf_properties_id
+                  type: bigint
+              - column:
+                  name: avg_rate
+                  type: real
+                  constraints:
+                      nullable: false
+              - column:
+                  name: approval_status
+                  type: varchar(11)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_small_url
+                  type: varchar(2083)
+              - column:
+                  name: image_large_url
+                  type: varchar(2083)
+              - column:
+                  name: total_votes
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: launch_url
+                  type: varchar(2083)
+              - column:
+                  name: uuid
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version_name
+                  type: varchar(256)
+              - column:
+                  name: release_date
+                  type: timestamp
+              - column:
+                  name: organization
+                  type: varchar(256)
+              - column:
+                  name: dependencies
+                  type: varchar(1000)
+              - column:
+                  name: types_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: requirements
+                  type: varchar(1000)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: total_comments
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_hidden
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(4000)
+              - column:
+                  name: state_id
+                  type: bigint
+              - column:
+                  name: install_url
+                  type: varchar(2083)
+              - column:
+                  name: last_activity_id
+                  type: bigint
+              - column:
+                  name: total_rate1
+                  type: integer
+              - column:
+                  name: total_rate2
+                  type: integer
+              - column:
+                  name: total_rate3
+                  type: integer
+              - column:
+                  name: total_rate4
+                  type: integer
+              - column:
+                  name: total_rate5
+                  type: integer
+              - column:
+                  name: approval_date
+                  type: timestamp with time zone
+              - column:
+                  name: is_outside
+                  type: boolean
+              - column:
+                  name: agency_id
+                  type: bigint
+              - column:
+                  name: opens_in_new_browser_tab
+                  type: boolean
+              - column:
+                  name: image_medium_url
+                  type: varchar(2083)
+
+
+  - changeSet:
+      id: 7.17.0-service_item
+      author: omp
+      comment: create 'service_item' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: service_item
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: owf_properties_id
+                  type: bigint
+              - column:
+                  name: avg_rate
+                  type: float
+                  constraints:
+                      nullable: false
+              - column:
+                  name: approval_status
+                  type: varchar(11)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_small_url
+                  type: varchar(2083)
+              - column:
+                  name: image_large_url
+                  type: varchar(2083)
+              - column:
+                  name: total_votes
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: launch_url
+                  type: varchar(2083)
+              - column:
+                  name: uuid
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version_name
+                  type: varchar(256)
+              - column:
+                  name: release_date
+                  type: datetime
+              - column:
+                  name: organization
+                  type: varchar(256)
+              - column:
+                  name: dependencies
+                  type: varchar(1000)
+              - column:
+                  name: types_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: requirements
+                  type: varchar(1000)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: total_comments
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_hidden
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(4000)
+              - column:
+                  name: state_id
+                  type: bigint
+              - column:
+                  name: install_url
+                  type: varchar(2083)
+              - column:
+                  name: last_activity_id
+                  type: bigint
+              - column:
+                  name: total_rate1
+                  type: integer
+              - column:
+                  name: total_rate2
+                  type: integer
+              - column:
+                  name: total_rate3
+                  type: integer
+              - column:
+                  name: total_rate4
+                  type: integer
+              - column:
+                  name: total_rate5
+                  type: integer
+              - column:
+                  name: approval_date
+                  type: datetime
+              - column:
+                  name: is_outside
+                  type: boolean
+              - column:
+                  name: agency_id
+                  type: bigint
+              - column:
+                  name: opens_in_new_browser_tab
+                  type: tinyint(1)
+              - column:
+                  name: image_medium_url
+                  type: varchar(2083)
+
+
+  - changeSet:
+      id: 7.17.0-service_item
+      author: omp
+      comment: create 'service_item' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: service_item
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: owf_properties_id
+                  type: number(19,0)
+              - column:
+                  name: avg_rate
+                  type: float(126)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: approval_status
+                  type: varchar(11 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(256 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_small_url
+                  type: varchar(2083 CHAR)
+              - column:
+                  name: image_large_url
+                  type: varchar(2083 CHAR)
+              - column:
+                  name: total_votes
+                  type: number(10,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: launch_url
+                  type: varchar(2083 CHAR)
+              - column:
+                  name: uuid
+                  type: varchar(255 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version_name
+                  type: varchar(256 CHAR)
+              - column:
+                  name: release_date
+                  type: timestamp
+              - column:
+                  name: organization
+                  type: varchar(256 CHAR)
+              - column:
+                  name: dependencies
+                  type: varchar(1000 CHAR)
+              - column:
+                  name: types_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: requirements
+                  type: varchar(1000 CHAR)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: total_comments
+                  type: number(10,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_hidden
+                  type: number(10,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(4000 CHAR)
+              - column:
+                  name: state_id
+                  type: number(19,0)
+              - column:
+                  name: install_url
+                  type: varchar(2083 CHAR)
+              - column:
+                  name: last_activity_id
+                  type: number(19,0)
+              - column:
+                  name: total_rate1
+                  type: number(10,0)
+              - column:
+                  name: total_rate2
+                  type: number(10,0)
+              - column:
+                  name: total_rate3
+                  type: number(10,0)
+              - column:
+                  name: total_rate4
+                  type: number(10,0)
+              - column:
+                  name: total_rate5
+                  type: number(10,0)
+              - column:
+                  name: approval_date
+                  type: timestamp
+              - column:
+                  name: is_outside
+                  type: number(1,0)
+              - column:
+                  name: agency_id
+                  type: number(38,0)
+              - column:
+                  name: opens_in_new_browser_tab
+                  type: number(1,0)
+              - column:
+                  name: image_medium_url
+                  type: varchar(2083 BYTE)
+
+        - addPrimaryKey:
+            tableName: service_item
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-service_item
+      author: omp
+      comment: create 'service_item' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: service_item
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: owf_properties_id
+                  type: number(19,0)
+              - column:
+                  name: avg_rate
+                  type: float
+                  constraints:
+                      nullable: false
+              - column:
+                  name: approval_status
+                  type: nvarchar(11)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: nvarchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_small_url
+                  type: nvarchar(2083)
+              - column:
+                  name: image_large_url
+                  type: nvarchar(2083)
+              - column:
+                  name: total_votes
+                  type: int
+                  constraints:
+                      nullable: false
+              - column:
+                  name: launch_url
+                  type: nvarchar(2083)
+              - column:
+                  name: uuid
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version_name
+                  type: varchar(256)
+              - column:
+                  name: release_date
+                  type: datetime
+              - column:
+                  name: organization
+                  type: nvarchar(256)
+              - column:
+                  name: dependencies
+                  type: nvarchar(1000)
+              - column:
+                  name: types_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: requirements
+                  type: nvarchar(1000)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: total_comments
+                  type: int
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_hidden
+                  type: int
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(4000)
+              - column:
+                  name: state_id
+                  type: number(19,0)
+              - column:
+                  name: install_url
+                  type: nvarchar(2083)
+              - column:
+                  name: last_activity_id
+                  type: number(19,0)
+              - column:
+                  name: total_rate1
+                  type: int
+              - column:
+                  name: total_rate2
+                  type: int
+              - column:
+                  name: total_rate3
+                  type: int
+              - column:
+                  name: total_rate4
+                  type: int
+              - column:
+                  name: total_rate5
+                  type: int
+              - column:
+                  name: approval_date
+                  type: datetime
+              - column:
+                  name: is_outside
+                  type: tinyint
+              - column:
+                  name: agency_id
+                  type: bigint
+              - column:
+                  name: opens_in_new_browser_tab
+                  type: bit
+              - column:
+                  name: image_medium_url
+                  type: varchar(2083)
+
+        - addPrimaryKey:
+            tableName: service_item
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-service_item-indices_mysql
+      author: omp
+      comment: create 'service_item' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: service_item
+            indexName: FK1571565D2746B676
+            columns:
+              - column:
+                  name: last_activity_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: FK1571565D904D6974
+            columns:
+              - column:
+                  name: owf_properties_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: FK1571565DE31CB353
+            columns:
+              - column:
+                  name: edited_by_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: FK1571565D7666C6D2
+            columns:
+              - column:
+                  name: created_by_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: FK1571565D6928D597
+            columns:
+              - column:
+                  name: types_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: FK1571565DDFEC3E97
+            columns:
+              - column:
+                  name: state_id
+
+
+  - changeSet:
+      id: 7.17.0-service_item-indices
+      author: omp
+      comment: create 'service_item' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: service_item
+            indexName: si_owf_props_id_idx
+            columns:
+              - column:
+                  name: owf_properties_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: si_types_id_idx
+            columns:
+              - column:
+                  name: types_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: si_state_id_idx
+            columns:
+              - column:
+                  name: state_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: si_last_activity_idx
+            columns:
+              - column:
+                  name: last_activity_id
+
+        - createIndex:
+            tableName: service_item
+            indexName: si_created_by_id_idx
+            columns:
+              - column:
+                  name: created_by_id

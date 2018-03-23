@@ -1,16 +1,20 @@
 package marketplace
 
+import grails.config.Config
+
 // import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import grails.util.Holders
-import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import ozone.security.authorization.model.GrantedAuthorityImpl
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.transaction.annotation.Transactional
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
-import grails.converters.JSON
+import grails.gorm.transactions.Transactional
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
+
 import ozone.security.authentication.OWFUserDetailsImpl
 import ozone.security.authorization.target.OwfGroup
 
@@ -21,12 +25,15 @@ import ozone.marketplace.domain.ValidationException
 
 class ImportService {
 
-	def marketplaceApplicationConfigurationService
-    def accountService
-
     boolean transactional = false
-    def config = Holders.config
-    def importExecutorService
+
+	MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
+    AccountService accountService
+
+    Config config = Holders.config
+
+    ImportExecutorService importExecutorService
 
     /**
      * Execute the given ImportTask immediately

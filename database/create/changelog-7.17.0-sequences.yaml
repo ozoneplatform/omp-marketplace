@@ -1,0 +1,28 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-sequences
+      author: omp
+      comment: create hibernate sequence
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createSequence:
+            sequenceName: hibernate_sequence
+            startValue: 1
+            incrementBy: 1
+
+
+  - changeSet:
+      id: 7.17.0-sequences
+      author: omp
+      comment: create hibernate sequence
+      context: create
+      dbms: oracle
+
+      changes:
+        - createSequence:
+            sequenceName: hibernate_sequence
+            startValue: 61
+            incrementBy: 1

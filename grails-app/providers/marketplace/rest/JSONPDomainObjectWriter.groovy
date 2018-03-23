@@ -12,8 +12,8 @@ import javax.ws.rs.ext.Provider
 import java.lang.annotation.Annotation
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import org.grails.jaxrs.support.DomainObjectWriterSupport
-import static org.grails.jaxrs.support.ConverterUtils.getDefaultEncoding
+import org.grails.plugins.jaxrs.provider.DomainObjectWriterSupport
+import static org.grails.plugins.jaxrs.provider.ConverterUtils.getDefaultEncoding
 
 @Provider
 @Produces(['text/javascript', 'application/javascript'])

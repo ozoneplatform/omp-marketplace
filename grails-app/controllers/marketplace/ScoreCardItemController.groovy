@@ -1,16 +1,15 @@
 package marketplace
 
 import grails.converters.JSON
-import ozone.marketplace.enums.MarketplaceApplicationSetting
-import org.codehaus.groovy.grails.web.json.JSONArray
 
+import ozone.marketplace.enums.MarketplaceApplicationSetting
 
 
 class ScoreCardItemController extends BaseMarketplaceRestController {
 
-    def scoreCardService
-
     static defaultAction = "show"
+
+    ScoreCardService scoreCardService
 
     // Displays the gsp page with score card adminstrator functions
     def show = {

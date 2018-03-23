@@ -1,0 +1,64 @@
+=== Class Mapping
+
+==== root
+Determine if the domain class will have its own index or not. Take a boolean as parameter, and is set to `true` by default.
+[source, groovy]
+----
+class Preference {
+    static searchable = {
+        root false
+    }
+    // ...
+}
+
+class Tag {
+    static searchable = true
+    // ...
+}
+
+class Tweet {
+    static searchable = {
+        message boost:2.0
+    }
+    // ...
+}
+----
+
+In this code, the classes `Tweet` and `Tag` are going to have their own index. The class `Preference` will not.
+It also mean that any search request will never return a Preference-type hit. The dynamic method `search` will not be
+injected in the `Preference` domain class.
+
+The domains not root-mapped can still be considered searchable, as they can be components of another domain which is root-mapped.
+For example, considered the following domain:
+
+[source, groovy]
+----
+class User {
+    static searchable = {
+        userPreferences component:true
+    }
+
+    Preference userPreferences
+}
+----
+
+When searching, any matches in the `userPreferences` property will be considered as a `User` match.
+
+==== all
+Set default analyzer for all domain class fields.
+
+[source, groovy]
+----
+static searchable = {
+  all = [analyzer: 'russian_morphology']
+}
+----
+
+[source, groovy]
+----
+static searchable = {
+  all = false
+}
+----
+
+When disabling the all field, it is a good practice to set index.query.default_field to a different value (for example, if you have a main 'message' field in your data, set it to message).

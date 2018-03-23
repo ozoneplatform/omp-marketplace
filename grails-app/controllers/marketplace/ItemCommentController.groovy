@@ -1,287 +1,200 @@
 package marketplace
 
-import grails.util.Holders
-import org.hibernate.FlushMode
-import org.hibernate.StaleObjectStateException
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException
-import ozone.marketplace.domain.ValidationException
-import org.codehaus.groovy.grails.web.json.JSONObject
 import javax.servlet.http.HttpServletResponse
+
+import org.hibernate.FlushMode
+import org.hibernate.SessionFactory
+
+import ozone.marketplace.domain.ValidationException
+
 
 class ItemCommentController extends BaseMarketplaceRestController {
 
-    def config = Holders.config
-    def serviceItemService
-    def itemCommentService
-    def searchableService
-    def profileService
-    def sessionFactory
+    static allowedMethods = [edit             : ['POST', 'PUT'],
+                             saveItemComment  : 'POST',
+                             deleteItemComment: ['POST', 'DELETE']]
 
-    static allowedMethods = [
-        edit: ['POST', 'PUT'],
-        saveItemComment: 'POST',
-        deleteItemComment: ['POST', 'DELETE']
-    ]
+    ServiceItemService serviceItemService
 
-    /**
-     * Returns a JSON structure containing the user's comments for all ServiceItems.
-     * If an exception occurs returns JSON with status success false
-     */
-    def getUserComments = {
-        def result
-        def json
+    ItemCommentService itemCommentService
+
+    SearchableService searchableService
+
+    ProfileService profileService
+
+    SessionFactory sessionFactory
+
+    def getUserComments() {
+        String username = session.username
+        boolean isAdmin = session.isAdmin ?: false
+        String accessType = session.accessType
+
         params.author = params.id //Due to screwed up URL mapping
-        try {
-            result = itemCommentService.getUserComments(params, session.username, session.isAdmin, session.accessType)
 
-            def rows = []
-            result.each { ic ->
-                rows << [
-                    id: ic.id,
-                    itemId: ic.serviceItem.id,
-                    date: ic.createdDate,
-                    userRate: ic.rate,
-                    name: ic.serviceItem.title,
-                    comment: ic.text
-                ]
-            }
+        def result = itemCommentService.getUserComments(params, username, isAdmin, accessType)
 
-            json = [
-                success: true,
-                totalCount: result.totalCount,
-                rows: rows
-            ]
-        }
-        catch (ValidationException ve) {
-            log.warn('getUserComments', ve)
-            json = [
-                success: false,
-                totalCount: 0,
-                msg: ve.getMessage()
-            ]
-        }
+        def rows = result.collect { ItemComment comment -> toJsonBrief(it) }
 
-        renderResult(json, -1, HttpServletResponse.SC_OK)
+        def response = [success   : true,
+                        totalCount: getTotalCount(result),
+                        rows      : rows]
+
+        renderResult(response, -1, HttpServletResponse.SC_OK)
     }
 
-    /**
-     * saveComment
-     */
-    def saveItemComment = {
-        log.debug "Saving itemComment using params: ${params}"
+    def commentsByServiceItem() {
+        def result = itemCommentService.getServiceItemComments(params)
 
-        def ic, json, responseCode = HttpServletResponse.SC_OK
+        def rows = result.collect { ItemComment comment -> toJson(comment) }
 
-        try {
-            if (!isFeedbackValid(params)) {
-                def errorMsg = message(code: "sic.validationException.saveItemComment.renderText")
-                log.error(errorMsg)
-                throw new ValidationException(message: errorMsg)
-            }
+        def response = [success   : true,
+                        totalCount: getTotalCount(result),
+                        rows      : rows]
 
-            try {
-                ic = itemCommentService.saveItemComment(params)
-            } catch (e) {
-                if ([StaleObjectStateException, HibernateOptimisticLockingFailureException].any { e in it }) {
-                    // Retry the operation
-                    log.error("Exception thrown: ${e.class.name}, retrying save itemComment for serviceItem")
-                    itemCommentService.saveItemComment(params)
-                    log.error("Successfully saved itemComment for serviceItem")
-                } else {
-                    log.error("Exception thrown: ${e.class.name}, not retrying save")
-                    throw e
-                }
-            }
-
-            json = [
-                success: true,
-                data: [
-                    id: ic.id,
-                    userId: ic.author.id,
-                    username: ic.author.username,
-                    displayName: ic.author.display(),
-                    text: ic.text,
-                    date: ic.editedDate,
-                    userRate: ic.rate,
-                    serviceItemRateStats: [
-                        avgRate: ic.serviceItem.avgRate,
-                        totalRate5: ic.serviceItem.totalRate5,
-                        totalRate4: ic.serviceItem.totalRate4,
-                        totalRate3: ic.serviceItem.totalRate3,
-                        totalRate2: ic.serviceItem.totalRate2,
-						totalRate1: ic.serviceItem.totalRate1,
-						totalVotes: ic.serviceItem.totalVotes
-                    ]
-                ]
-            ]
-        }
-        catch (AccessControlException e) {
-            log.info e?.message
-            json = [
-                success: false,
-                message: e?.message
-            ]
-            responseCode = HttpServletResponse.SC_UNAUTHORIZED
-        }
-        catch (ObjectNotFoundException noe) {
-            def result = "${noe.message}"
-            log.warn result
-
-            json = [
-                success: false,
-                message: result
-            ]
-            responseCode = HttpServletResponse.SC_NOT_FOUND
-        }
-        catch (ValidationException e) {
-            json = [
-                success: false,
-                message: e.message ?: message(code: "sic.validationException.saveItemComment.renderText", args: [])
-            ]
-            responseCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-        }
-        catch (Exception e) {
-            // Need this to prevent flush exception. See http://jira.codehaus.org/browse/GRAILS-5865
-            def session = sessionFactory.currentSession
-            session.setFlushMode(FlushMode.MANUAL)
-            def result = message(code: "sic.exception.saveItemComment.renderText", args: ["${e.message}"])
-            log.error result
-
-            json = [
-                success: false,
-                message: result
-            ]
-            responseCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-        }
-        renderResult(json, -1, responseCode)
+        renderResult(response, -1, HttpServletResponse.SC_OK)
     }
 
-    private boolean isFeedbackValid(params) {
-        return params.commentTextInput?.trim() as boolean ||
-            (params.newUserRating && (params.newUserRating as int) > 0) ||
-            (params.currUserRating && (params.currUserRating as int) > 0)
+    def saveItemComment() {
+        String username = params.useSystemUser ? 'System' : session.username
+        boolean isAdmin = (params.useSystemUser ? true : session.isAdmin) ?: false
+
+        if (!isFeedbackValid(params.commentTextInput as String,
+                             params.int('newUserRating'),
+                             params.int('currUserRating'))) {
+            throw new ValidationException(message(code: "sic.validationException.saveItemComment.renderText") as String)
+        }
+
+        ItemComment comment = retryOnLockingFailure {
+            itemCommentService.saveItemComment(params, username, isAdmin)
+        }
+
+        def response = [success: true,
+                        data   : toJson(comment)]
+
+        renderResult(response, -1, HttpServletResponse.SC_OK)
     }
 
-    /**
-     * edit - EDIT/UPDATE ITEM COMMENT
-     */
-    def edit = {
-        forward(controller: "itemComment", action: "saveItemComment", params: params)
+    def edit() {
+        forward(controller: "itemComment", action: "saveItemComment")
     }
 
-    /**
-     * deleteComment -
-     */
-    def deleteItemComment = {
-        def json, responseCode = HttpServletResponse.SC_OK
+    def deleteItemComment() {
+        String username = session.username
+        boolean isAdmin = session.isAdmin ?: false
 
-        ServiceItem serviceItem
-
-        log.debug "In deleteItemComment : CommentId: ${params.itemCommentId}"
-        try {
-            try {
-                serviceItem = itemCommentService.findAndDeleteItemComment(params)
-            } catch (e) {
-                if ([StaleObjectStateException, HibernateOptimisticLockingFailureException].any { e in it }) {
-                    // Retry the operation
-                    log.error("Exception thrown: ${e.class.name}, retrying delete itemComment ${params.itemCommentId} for serviceItem")
-                    itemCommentService.findAndDeleteItemComment(params)
-                    log.error("Successfully deleted itemComment ${params.itemCommentId} for serviceItem")
-                } else {
-                    log.error("Exception thrown: ${e.class.name}, not retrying delete itemComment ${params.itemCommentId} for serviceItem")
-                    throw e
-                }
-            }
-
-            json = [
-                success: true,
-                data: [
-                    serviceItemRateStats: new JSONObject(
-                        avgRate: serviceItem.avgRate,
-                        totalRate5: serviceItem.totalRate5,
-                        totalRate4: serviceItem.totalRate4,
-                        totalRate3: serviceItem.totalRate3,
-                        totalRate2: serviceItem.totalRate2,
-                        totalRate1: serviceItem.totalRate1,
-                        totalVotes: serviceItem.totalVotes
-                    )
-                ]
-            ]
-        }
-        catch (AccessControlException e) {
-            log.info e?.message
-            json = [
-                success: false,
-                message: e?.message
-            ]
-            responseCode = HttpServletResponse.SC_UNAUTHORIZED
-        }
-        catch (ObjectNotFoundException noe) {
-            def result = "${noe.message}"
-            log.warn result
-
-            json = [
-                success: false,
-                message: result
-            ]
-            responseCode = HttpServletResponse.SC_NOT_FOUND
-        }
-        catch (Exception e) {
-            // Need this to prevent flush exception. See http://jira.codehaus.org/browse/GRAILS-5865
-            def session = sessionFactory.currentSession
-            session.setFlushMode(FlushMode.MANUAL)
-            def result = message(code: "sic.exception.deleteItemComment.renderText", args: ["${e.message}"])
-            log.error result
-
-            json = [
-                success: false,
-                message: result
-            ]
-            responseCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+        ServiceItem serviceItem = retryOnLockingFailure {
+            itemCommentService.findAndDeleteItemComment(params, username, isAdmin)
         }
 
-        renderResult(json, -1, responseCode)
+        def response = [success: true,
+                        data   : [serviceItemRateStats: toJson(serviceItem)]]
+
+        renderResult(response, -1, HttpServletResponse.SC_OK)
     }
 
-    def commentsByServiceItem = {
-        def result, json, responseCode
-        try {
-            result = itemCommentService.getServiceItemComments(params)
-            responseCode = HttpServletResponse.SC_OK
-            json = [
-                success: true,
-                totalCount: result.totalCount,
-                rows: result.collect { ic ->
-                    [
-                        id: ic.id,
-                        userId: ic.author.id,
-                        username: ic.author.username,
-                        displayName: ic.author.display(),
-                        text: ic.text,
-                    date: ic.editedDate,
-                        userRate: ic.rate,
-                        serviceItemRateStats: [
-                            avgRate: ic.serviceItem.avgRate,
-                            totalRate5: ic.serviceItem.totalRate5,
-                            totalRate4: ic.serviceItem.totalRate4,
-                            totalRate3: ic.serviceItem.totalRate3,
-                            totalRate2: ic.serviceItem.totalRate2,
-	                        totalRate1: ic.serviceItem.totalRate1,
-	                        totalVotes: ic.serviceItem.totalVotes
-                        ]
-                    ]
-                }
-            ]
-        }
-        catch (ValidationException ve) {
-            responseCode = HttpServletResponse.SC_BAD_REQUEST
-            json = [
-                success: false,
-                totalCount: 0,
-                msg: ve.getMessage()
-            ]
-        }
-        renderResult(json, -1, responseCode)
+    private static boolean isFeedbackValid(String commentTextInput, Integer newRating, Integer currRating) {
+        return (commentTextInput != null && !commentTextInput.trim().isEmpty()) ||
+                (newRating != null && isValidRating(newRating)) ||
+                (currRating != null && isValidRating(currRating))
     }
+
+    private static boolean isValidRating(int rating) {
+        rating > 0 && rating <= 5
+    }
+
+    private static final Map<String, String> VALIDATION_MESSAGE_CODES =
+            ["saveItemComment": "sic.validationException.saveItemComment.renderText"]
+
+    private static final Map<String, String> EXCEPTION_MESSAGE_CODES =
+            ["saveItemComment"  : "sic.exception.saveItemComment.renderText",
+             "deleteItemComment": "sic.exception.deleteItemComment.renderText"]
+
+    def handleException(Exception ex) {
+        // Need this to prevent flush exception. See http://jira.codehaus.org/browse/GRAILS-5865
+        def session = sessionFactory.currentSession
+        session.setFlushMode(FlushMode.MANUAL)
+
+        String messageText = getExceptionMessage(ex)
+
+        log.error(messageText, ex)
+
+        def response = [success: false,
+                        message: messageText]
+
+        renderResult(response, -1, HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
+    }
+
+    def handleAccessControlException(AccessControlException ex) {
+        def response = [success: false,
+                        message: ex.message]
+
+        renderResult(response, -1, HttpServletResponse.SC_UNAUTHORIZED)
+    }
+
+    def handleObjectNotFoundException(ObjectNotFoundException ex) {
+        def result = "${ex.message}"
+
+        def response = [success: false,
+                        message: result]
+
+        renderResult(response, -1, HttpServletResponse.SC_NOT_FOUND)
+    }
+
+    def handleValidationException(ValidationException ex) {
+        def response = [success   : false,
+                        totalCount: 0,
+                        msg       : getValidationErrorMessage(ex)]
+
+        renderResult(response, -1, HttpServletResponse.SC_BAD_REQUEST)
+    }
+
+    private String getExceptionMessage(Exception ex) {
+        String messageCode = EXCEPTION_MESSAGE_CODES.get(actionName)
+
+        if (messageCode != null) {
+            return message(code: messageCode, args: ["${ex.message}"])
+        }
+
+        ex.getMessage() ?: ex.class.name
+    }
+
+    private String getValidationErrorMessage(ValidationException ex) {
+        if (ex.message) return ex.message
+
+        def messageCode = VALIDATION_MESSAGE_CODES.get(actionName)
+
+        messageCode != null ? message(code: messageCode, args: []) : "Validation exception"
+    }
+
+    private static Map toJson(ItemComment comment) {
+        [id                  : comment.id,
+         userId              : comment.author.id,
+         username            : comment.author.username,
+         displayName         : comment.author.display(),
+         text                : comment.text,
+         date                : comment.editedDate,
+         userRate            : comment.rate,
+         serviceItemRateStats: toJson(comment.serviceItem)]
+    }
+
+    private static Map toJsonBrief(ItemComment comment) {
+        [id      : comment.id,
+         itemId  : comment.serviceItem.id,
+         date    : comment.createdDate,
+         userRate: comment.rate,
+         name    : comment.serviceItem.title,
+         comment : comment.text]
+    }
+
+    private static Map toJson(ServiceItem serviceItem) {
+        [avgRate   : serviceItem.avgRate,
+         totalRate5: serviceItem.totalRate5,
+         totalRate4: serviceItem.totalRate4,
+         totalRate3: serviceItem.totalRate3,
+         totalRate2: serviceItem.totalRate2,
+         totalRate1: serviceItem.totalRate1,
+         totalVotes: serviceItem.totalVotes]
+    }
+
 
 }

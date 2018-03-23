@@ -1,13 +1,15 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
+import marketplace.JSONUtil as JS
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject;
-import ozone.utils.Utils
-import marketplace.JSONUtil as JS
 
-@gorm.AuditStamp
-class Profile implements Serializable {
+import ozone.utils.Utils
+
+
+class Profile extends AuditStamped implements Serializable, ToJSON {
 
     static bindableProperties = ['bio', 'username', 'displayName', 'email', 'uuid']
     static modifiableReferenceProperties = []
@@ -30,7 +32,6 @@ class Profile implements Serializable {
     String email = ''
     String bio = ''
     // not sure why createdDate is listed here since it will get added by the AuditStamp
-    Date createdDate
     Avatar avatar
     String uuid
 
@@ -51,7 +52,6 @@ class Profile implements Serializable {
         email(nullable: true, maxSize: 256)
         bio(nullable: true, maxSize: 1000)
         avatar(nullable: true)
-        createdDate(nullable:false)
         uuid(nullable:true, unique: true)
         userRoles(nullable: true)
     }
@@ -88,21 +88,19 @@ class Profile implements Serializable {
         }
     }
 
-    def asJSON()
-    {
+    @Override
+    JSONObject asJSON() {
         UserDomainInstance userDomainInstance = this.userDomainInstance
 
-        new JSONObject(
-            id: id,
-            uuid: uuid,
-            username: username,
-            displayName: displayName,
-            email: email,
-            bio: bio,
-            class: getClass(),
-            theme: userDomainInstance?.theme,
-            animationsEnabled: userDomainInstance?.animationsEnabled
-        )
+        marshall([id               : id,
+                  uuid             : uuid,
+                  username         : username,
+                  displayName      : displayName,
+                  email            : email,
+                  bio              : bio,
+                  class            : getClass().toString(),
+                  theme            : userDomainInstance?.theme,
+                  animationsEnabled: userDomainInstance?.animationsEnabled])
     }
 
     def asJSONRef() {

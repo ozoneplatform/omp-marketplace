@@ -1,0 +1,99 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-drop_down_cf_field_value
+      author: omp
+      comment: create 'drop_down_cf_field_value' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: drop_down_cf_field_value
+
+            columns:
+              - column:
+                  name: drop_down_cf_field_value_id
+                  type: bigint
+              - column:
+                  name: field_value_id
+                  type: bigint
+              - column:
+                  name: field_value_list_idx
+                  type: integer
+
+
+  - changeSet:
+      id: 7.17.0-drop_down_cf_field_value
+      author: omp
+      comment: create 'drop_down_cf_field_value' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: drop_down_cf_field_value
+
+            columns:
+              - column:
+                  name: drop_down_cf_field_value_id
+                  type: number(19,0)
+              - column:
+                  name: field_value_id
+                  type: number(19,0)
+              - column:
+                  name: field_value_list_idx
+                  type: number(10,0)
+
+
+  - changeSet:
+      id: 7.17.0-drop_down_cf_field_value
+      author: omp
+      comment: create 'drop_down_cf_field_value' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: drop_down_cf_field_value
+
+            columns:
+              - column:
+                  name: drop_down_cf_field_value_id
+                  type: number(19,0)
+              - column:
+                  name: field_value_id
+                  type: number(19,0)
+              - column:
+                  name: field_value_list_idx
+                  type: int
+
+
+  - changeSet:
+      id: 7.17.0-drop_down_cf_field_value-constraints
+      author: omp
+      comment: create 'drop_down_cf_field_value' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: field_value_id
+            baseTableName: drop_down_cf_field_value
+            referencedColumnNames: id
+            referencedTableName: field_value
+            constraintName: FK2627FFDDA5BD888
+
+
+  - changeSet:
+      id: 7.17.0-drop_down_cf_field_value-indices
+      author: omp
+      comment: create 'drop_down_cf_field_value' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: drop_down_cf_field_value
+            indexName: FK2627FFDDA5BD888
+            columns:
+              - column:
+                  name: field_value_id

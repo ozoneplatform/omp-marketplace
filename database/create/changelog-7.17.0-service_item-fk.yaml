@@ -1,0 +1,58 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-service_item-fk
+      author: omp
+      comment: create 'service_item' foreign keys
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: last_activity_id
+            baseTableName: service_item
+            referencedColumnNames: id
+            referencedTableName: service_item_activity
+            constraintName: FK1571565D2746B676
+
+        - addForeignKeyConstraint:
+            baseColumnNames: owf_properties_id
+            baseTableName: service_item
+            referencedColumnNames: id
+            referencedTableName: owf_properties
+            constraintName: FK1571565D904D6974
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: service_item
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK1571565DE31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: service_item
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK1571565D7666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: types_id
+            baseTableName: service_item
+            referencedColumnNames: id
+            referencedTableName: types
+            constraintName: FK1571565D6928D597
+
+        - addForeignKeyConstraint:
+            baseColumnNames: state_id
+            baseTableName: service_item
+            referencedColumnNames: id
+            referencedTableName: state
+            constraintName: FK1571565DDFEC3E97
+
+        - addForeignKeyConstraint:
+            baseColumnNames: agency_id
+            baseTableName: service_item
+            constraintName: SERVICE_ITEM_AGENCY_FK
+            onDelete: SET NULL
+            referencedTableName: agency
+            referencedColumnNames: id

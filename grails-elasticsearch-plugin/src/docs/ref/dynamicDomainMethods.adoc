@@ -1,0 +1,10 @@
+[[dynamicDomainMethods]]
+== Dynamic Domain Methods
+
+include::dynamicDomainMethods/countHits.adoc[]
+
+include::dynamicDomainMethods/index.adoc[]
+
+include::dynamicDomainMethods/search.adoc[]
+
+include::dynamicDomainMethods/unindex.adoc[]

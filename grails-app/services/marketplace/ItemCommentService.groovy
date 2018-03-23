@@ -1,36 +1,48 @@
 package marketplace
 
-import marketplace.rest.ServiceItemActivityInternalService
-import org.springframework.beans.factory.annotation.Autowired
-import ozone.marketplace.domain.ValidationException
-import org.apache.commons.lang.exception.ExceptionUtils
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
+
+import grails.gorm.transactions.ReadOnly
+import grails.gorm.transactions.Transactional
+
 import org.hibernate.FlushMode
-import org.springframework.transaction.annotation.Transactional
-import ozone.utils.Utils
-import javax.servlet.http.HttpSession
-import org.springframework.web.context.request.RequestContextHolder as RCH
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import org.hibernate.Session
+import org.hibernate.SessionFactory
+
 import marketplace.Constants.Action
+import marketplace.rest.ServiceItemActivityInternalService
+import org.apache.commons.lang.exception.ExceptionUtils
 
-public class ItemCommentService {
+import ozone.marketplace.domain.ValidationException
+import ozone.utils.Utils
 
-    def sessionFactory
-    def profileService
-    def serviceItemService
+import static ozone.utils.PagingOptions.pagingOptions
+import static ozone.utils.SortOptions.sortOptions
+import static ozone.utils.Utils.isValidRatingRange
 
-    @Autowired
+
+class ItemCommentService {
+
+    SessionFactory sessionFactory
+
+    ProfileService profileService
+
+    ServiceItemService serviceItemService
+
     ServiceItemActivityInternalService serviceItemActivityInternalService
 
-    def static final serviceItemRules = ['allNoRestrictions':false,
-        'allIfApproved':true,
-        'userNoRestrictions':true,
-        'userIfApproved':true]
+    static final Map<String, Boolean> SERVICE_ITEM_RULES =
+            [allNoRestrictions : false,
+             allIfApproved     : true,
+             userNoRestrictions: true,
+             userIfApproved    : true]
 
-    def static final itemCommentRules = ['allNoRestrictions':false,
-         'allIfApproved':false,
-        'userNoRestrictions':true,
-        'userIfApproved':true]
+    static final Map<String, Boolean> ITEM_COMMENT_RULES =
+            [allNoRestrictions : false,
+             allIfApproved     : false,
+             userNoRestrictions: true,
+             userIfApproved    : true]
 
     /**
      * Retrieves all of the comments for a user for all service items.
@@ -41,29 +53,21 @@ public class ItemCommentService {
      *
      *    limit - max number of records to return (for paging)
      *    start - 0 based offset into full result set (for paging)
-     *    username - Profile.username field used to retreive user comments
-     */
-    @Transactional(readOnly = true)
-    def getUserComments(def params, def username, def isAdmin, def accessType) {
-        try {
-            def sortField
-            switch (params.sort) {
-                case 'name':
-                    sortField = 'serviceItem'
-                    break
-                case 'date':
-                    sortField = 'editedDate'
-                    break
-                default:
-                    sortField = "editedDate"
-            }
+     *    username - Profile.username field used to retreive user comments*/
+    @ReadOnly
+    List<ItemComment> getUserComments(Map params, String username, boolean isAdmin, String accessType) {
+        def paging = pagingOptions(params)
+        def sort = sortOptions(params, 'editedDate', [name: 'serviceItem'])
 
-            def items = ItemComment.createCriteria().list(max: params.limit, offset: params.start) {
+        String author = params.asString('author')
+
+        try {
+            return ItemComment.createCriteria().list(paging) {
                 author {
-                    eq('username', params.author)
+                    eq('username', author)
                 }
                 serviceItem {
-                    if ((!accessType.equals(Constants.VIEW_ADMIN)) || !isAdmin) {
+                    if (accessType != Constants.VIEW_ADMIN || !isAdmin) {
                         or {
                             ilike('approvalStatus', Constants.APPROVAL_STATUSES["APPROVED"])
                             owners {
@@ -73,363 +77,329 @@ public class ItemCommentService {
                         eq('isHidden', 0)
                     }
                 }
-                order(sortField, params?.dir?.toLowerCase())
-            }
-            return items
-        }
-        catch (Exception e) {
+                order(sort.field, sort.order)
+            } as List
+        } catch (Exception e) {
             String message = ExceptionUtils.getRootCauseMessage(e)
-            log.error "Error occurred retreiving comments for user ${params.author}. ${message}"
+            log.error "Error occurred retreiving comments for user ${author}. ${message}"
             // Need this to prevent flush exception. See http://jira.codehaus.org/browse/GRAILS-5865
-            def session = sessionFactory.currentSession
+            Session session = sessionFactory.currentSession
             session.setFlushMode(FlushMode.MANUAL)
-            throw new ValidationException(message: "comment.failure", args: [params.author?.toString(), message])
+            throw new ValidationException(message: "comment.failure", args: [author, message])
         }
     }
 
-    @Transactional(readOnly = true)
-    def getServiceItemComments(def params) {
+
+    @ReadOnly
+    List<ItemComment> getServiceItemComments(Map params) {
+        def paging = pagingOptions(params)
+        def sort = sortOptions(params, 'editedDate', [displayName: 'a.displayName'])
+
+        String author = params.asString('author')
+        Long serviceItemId = params.asLong('id')
+
         try {
-            log.debug "getServiceItemComments: parms = ${params}"
-            def sortField
-            switch (params.sort) {
-                case 'displayName':
-                    sortField = 'a.displayName'
-                    break
-                case 'date':
-                    sortField = 'editedDate'
-                    break
-                default:
-                    sortField = "editedDate"
-            }
-            def sortDir = params.dir ? params.dir.toLowerCase() : "desc"
-            def items = ItemComment.createCriteria().list(max: params.limit, offset: params.start) {
+            return ItemComment.createCriteria().list(paging) {
                 createAlias("author", "a")
-                if (params.author) {
-                    eq('a.username', params.author)
+                if (author) {
+                    eq('a.username', author)
                 }
-                eq('serviceItem.id', Long.parseLong(params.id))
-                order(sortField, sortDir)
-            }
-            return items
-        }
-        catch (Exception e) {
+                eq('serviceItem.id', serviceItemId)
+                order(sort.field, sort.order)
+            } as List
+        } catch (Exception e) {
             String message = ExceptionUtils.getRootCauseMessage(e)
-            log.error "Error occurred retreiving comments for service item ${params.id}. ${message}"
+            log.error "Error occurred retreiving comments for service item ${serviceItemId}. ${message}"
             // Need this to prevent flush exception. See http://jira.codehaus.org/browse/GRAILS-5865
-            def session = sessionFactory.currentSession
+            Session session = sessionFactory.currentSession
             session.setFlushMode(FlushMode.MANUAL)
-            throw new ValidationException(message: "comment.failure", args: [params.author?.toString(), message])
+            throw new ValidationException(message: "comment.failure", args: [author, message])
         }
     }
 
-    @Transactional(readOnly = true)
-    def getAllowableComment(def id, def sessionParams, def rules) throws AccessControlException {
-        def comment = ItemComment.get(id)
-        def isUser = false
-        def isAvailable = false
-        def isApproved = false
-        def matchesRule = false
+    @ReadOnly
+    ItemComment getAllowableComment(Long itemCommentId,
+                                    String username,
+                                    boolean isAdmin,
+                                    Map<String, Boolean> rules) throws AccessControlException
+    {
+        ItemComment comment = ItemComment.get(itemCommentId)
 
-        if (comment) {
-            isUser = (sessionParams?.username == comment?.author?.username)
-            isAvailable = !comment?.serviceItem?.isHidden
-            isApproved = comment?.serviceItem.statApproved()
+        if (!comment) return null
 
-            if (rules?.allNoRestrictions && isAvailable) {
-                matchesRule = true
-            }
-            if (sessionParams?.isAdmin) {
-                matchesRule = true
-            }
-            if (rules?.allIfApproved && isAvailable && isApproved) {
-                matchesRule = true
-            }
-            if (rules?.userNoRestrictions && isUser && isAvailable) {
-                matchesRule = true
-            }
-            if (rules?.userIfApproved && isUser && isAvailable && isApproved) {
-                matchesRule = true
-            }
+        boolean isUser = username && username == comment?.author?.username
+        boolean isAvailable = !comment.serviceItem?.isHidden ?: false
+        boolean isApproved = comment.serviceItem?.statApproved() ?: false
 
-            if (matchesRule) {
-                return comment
-            } else {
-                throw new AccessControlException('User is not authorized to access this comment');
-            }
+        boolean matchesAnyRule = false
+        if (rules?.allNoRestrictions && isAvailable) {
+            matchesAnyRule = true
         }
-        return null;
-    }
+        if (isAdmin) {
+            matchesAnyRule = true
+        }
+        if (rules?.allIfApproved && isAvailable && isApproved) {
+            matchesAnyRule = true
+        }
+        if (rules?.userNoRestrictions && isUser && isAvailable) {
+            matchesAnyRule = true
+        }
+        if (rules?.userIfApproved && isUser && isAvailable && isApproved) {
+            matchesAnyRule = true
+        }
 
-    public HttpSession retrieveHttpSession() {
-        return RCH.currentRequestAttributes().getSession()
+        if (!matchesAnyRule) {
+            throw new AccessControlException('User is not authorized to access this comment')
+        }
+
+        return comment
     }
 
     @Transactional
-    def saveItemComment(def params) {
+    ItemComment saveItemComment(Map params, String username, boolean isAdmin) {
+        Long itemCommentId = params.asLong('id')
+        Long serviceItemId = params.asLong('serviceItemId')
+        Integer rateVal = params.asInteger('newUserRating')
 
-        def session = params.useSystemUser ? null : retrieveHttpSession()
+        String commentUsername = params.asString('username', username)
+        String commentText = params.asString('text')
+        String commentTextInput = params.asString('commentTextInput')
 
-        def sessionParams = ['isAdmin': params.useSystemUser ? true : session.isAdmin,
-            'username': params.useSystemUser ? "System" : session.username]
-
-        def itemCommentToSave
-        def si_id = params.serviceItemId?.toLong()
-        def rateVal = params.newUserRating
-
+        ItemComment itemCommentToSave
         ChangeDetail changeDetail = null
 
-        if(!params.id){
+        if (!itemCommentId) {
             itemCommentToSave = new ItemComment()
-            def profile = profileService.findByUsername(params.username ? params.username : session.username)
+            Profile profile = profileService.findByUsername(commentUsername)
             if (profile) itemCommentToSave.author = profile
             itemCommentToSave.createdDate = new Date()
-        } else {
-            itemCommentToSave = getAllowableComment(params.id,
-                                                    sessionParams,
-                                                    itemCommentRules)
-            if(!itemCommentToSave){
-                throw new ObjectNotFoundException("Cannot locate Allowable itemComment with id: ${params.id}")
+        }
+        else {
+            itemCommentToSave = getAllowableComment(itemCommentId, username, isAdmin, ITEM_COMMENT_RULES)
+            if (!itemCommentToSave) {
+                throw new ObjectNotFoundException("Cannot locate Allowable itemComment with id: ${itemCommentId}")
             }
 
             //Is this review being modified by someone who is not the reviewer?
-            if(itemCommentToSave.author.username != sessionParams.username && itemCommentToSave.text != params.text) {
+            if (itemCommentToSave.author.username != username && itemCommentToSave.text != commentText) {
                 String reviewOwner = itemCommentToSave.author.displayName
                 changeDetail = new ChangeDetail(fieldName: "$reviewOwner's Review", oldValue: itemCommentToSave.text, newValue: params.text)
             }
 
-            si_id = itemCommentToSave.serviceItem.id
+            serviceItemId = itemCommentToSave.serviceItem.id
         }
 
-        def si = serviceItemService.getAllowableItem(si_id,
-                                                sessionParams,
-                                                serviceItemRules)
-
-        if(!si){
-            throw new ObjectNotFoundException("Cannot locate Allowable serviceItem with id: ${si_id}")
+        ServiceItem serviceItem = serviceItemService.getAllowableItem(serviceItemId, username, isAdmin, SERVICE_ITEM_RULES)
+        if (!serviceItem) {
+            throw new ObjectNotFoundException("Cannot locate Allowable serviceItem with id: ${serviceItemId}")
         }
 
-        Lock lock = new ReentrantLock();
-        lock.lock();
+        Lock lock = new ReentrantLock()
+        lock.lock()
         try {
-            itemCommentToSave.text = params.commentTextInput
+            itemCommentToSave.text = commentTextInput
 
             if (!itemCommentToSave.id) {
-                itemCommentToSave.serviceItem = si
+                itemCommentToSave.serviceItem = serviceItem
             }
-
             if (rateVal) {
-                performRate(si, itemCommentToSave, rateVal)
+                performRate(serviceItem, itemCommentToSave, rateVal)
             }
-
             itemCommentToSave.scrubCR()
 
-            if (itemCommentToSave.save()) {
-                log.debug "Saving itemComment: ServiceID: ${si.id} / CommentId: ${itemCommentToSave.id}"
-                if (!params.id) {//Meaning new itemComment
-                    if (!si.totalComments) {
-                        si.totalComments = 0
-                    }
-                    si.totalComments += 1
+            if (rateVal) {
+                performRate(serviceItem, itemCommentToSave, rateVal)
+            }
 
-                    if (!si.itemComments) {
-                        si.itemComments = new LinkedHashSet<ItemComment>()
+            if (itemCommentToSave.save()) {
+                log.debug "Saving itemComment: ServiceID: ${serviceItem.id} / CommentId: ${itemCommentToSave.id}"
+                if (!itemCommentId) {//Meaning new itemComment
+                    if (!serviceItem.totalComments) {
+                        serviceItem.totalComments = 0
                     }
-                    si.itemComments.add(itemCommentToSave)
+                    serviceItem.totalComments += 1
+
+                    serviceItem.itemComments.add(itemCommentToSave)
                 }
-            } else {
-                log.error("Failure Saving itemComment: ServiceID: ${si.id} / CommentId: ${itemCommentToSave.id}")
+            }
+            else {
+                log.error("Failure Saving itemComment: ServiceID: ${serviceItem.id} / CommentId: ${itemCommentToSave.id}")
                 itemCommentToSave.errors.each { log.error it }
                 throw new ValidationException(fieldErrors: itemCommentToSave.errors)
             }
 
-            if(changeDetail) {
-                Profile activityAuthor = profileService.findByUsername(sessionParams.username)
+            if (changeDetail) {
+                Profile activityAuthor = profileService.findByUsername(username)
                 ServiceItemActivity activity = new ServiceItemActivity(action: Action.REVIEW_EDITED, author: activityAuthor)
                 activity.addToChangeDetails(changeDetail)
-                serviceItemActivityInternalService.addServiceItemActivity(si, activity)
+                serviceItemActivityInternalService.addServiceItemActivity(serviceItem, activity)
             }
 
+
             return itemCommentToSave
-        }finally {
-          lock.unlock();
+        } finally {
+            lock.unlock()
         }
     }
 
     @Transactional
-    ServiceItem findAndDeleteItemComment(def params) {
+    ServiceItem findAndDeleteItemComment(Map params, String username, boolean isAdmin) {
+        Long itemCommentId = params.asLong('itemCommentId')
 
-        def session = retrieveHttpSession()
-
-        def sessionParams = ['isAdmin':session.isAdmin,
-                             'username':session.username]
-
-        def itemCommentToDelete = getAllowableComment(params.itemCommentId,
-                                                    sessionParams,
-                                                    itemCommentRules)
-        if(!itemCommentToDelete){
-            throw new ObjectNotFoundException("Cannot locate Allowable itemComment with id: ${params.itemCommentId}")
+        ItemComment itemCommentToDelete = getAllowableComment(itemCommentId, username, isAdmin, ITEM_COMMENT_RULES)
+        if (!itemCommentToDelete) {
+            throw new ObjectNotFoundException("Cannot locate Allowable itemComment with id: ${itemCommentId}")
         }
 
-        def si_id = itemCommentToDelete.serviceItem.id
-        def si = serviceItemService.getAllowableItem(si_id,
-                                                sessionParams,
-                                                serviceItemRules)
-
-        if(!si){
-            throw new ObjectNotFoundException("Cannot locate Allowable serviceItem with id: ${si_id}")
+        Long serviceItemId = itemCommentToDelete.serviceItem.id
+        ServiceItem serviceItem = serviceItemService.getAllowableItem(serviceItemId, username, isAdmin, SERVICE_ITEM_RULES)
+        if (!serviceItem) {
+            throw new ObjectNotFoundException("Cannot locate Allowable serviceItem with id: ${serviceItemId}")
         }
 
-        deleteItemComment(itemCommentToDelete, si)
+        deleteItemComment(itemCommentToDelete, serviceItem)
 
         String reviewOwner = itemCommentToDelete.author.displayName
         ChangeDetail changeDetail = new ChangeDetail(fieldName: "reviewOwner", newValue: reviewOwner)
-        Profile activityAuthor = profileService.findByUsername(sessionParams.username)
+        Profile activityAuthor = profileService.findByUsername(username)
         ServiceItemActivity activity = new ServiceItemActivity(action: Action.REVIEW_DELETED, author: activityAuthor)
         activity.addToChangeDetails(changeDetail)
-        serviceItemActivityInternalService.addServiceItemActivity(si, activity)
+        serviceItemActivityInternalService.addServiceItemActivity(serviceItem, activity)
 
         //return the serviceitem because the new rating stats will be useful in the response
-        return si;
+        return serviceItem
     }
 
     @Transactional
-    def deleteItemComment(itemCommentToDelete, si) {
-        def si_id = itemCommentToDelete.serviceItem.id
-
-        Lock lock = new ReentrantLock();
-        lock.lock();
+    void deleteItemComment(ItemComment itemComment, ServiceItem serviceItem) {
+        Lock lock = new ReentrantLock()
+        lock.lock()
         try {
-            log.debug "Deleting itemComment: ServiceID: ${si_id} / CommentId: ${itemCommentToDelete.id}"
+            Long serviceItemId = itemComment.serviceItem.id
+            log.debug "Deleting itemComment: ServiceID: ${serviceItemId} / CommentId: ${itemComment.id}"
 
-            def userRate = itemCommentToDelete.rate ?: null
+            Float userRate = itemComment.rate ?: null
             if (userRate) {
                 userRate = Math.round(userRate)
-                si.avgRate = Utils.removeRatingFromAverageRate(si.avgRate, si.totalVotes, userRate)
-                if (si.totalVotes > 0) {
-                    si.totalVotes -= 1
+                serviceItem.avgRate = Utils.removeRatingFromAverageRate(serviceItem.avgRate, serviceItem.totalVotes, userRate)
+                if (serviceItem.totalVotes > 0) {
+                    serviceItem.totalVotes -= 1
                 }
-                if (userRate && Utils.rangeCheck(userRate, itemCommentToDelete.author.username) == 1) {
-                    if (si."totalRate${userRate}" && (si."totalRate${userRate}" > 0)) {
-                        si."totalRate${userRate}"--
+                if (userRate && isValidRatingRange(userRate)) {
+                    def intRate = userRate as Integer
+                    if (serviceItem."totalRate${intRate}" && (serviceItem."totalRate${intRate}" > 0)) {
+                        serviceItem."totalRate${intRate}"--
                     }
                 }
             }
-            si.totalComments -= 1
-            si.removeFromItemComments(itemCommentToDelete)
-            itemCommentToDelete.delete()
-            si.save()
+            serviceItem.totalComments -= 1
+            serviceItem.removeFromItemComments(itemComment)
+            itemComment.delete()
+            serviceItem.save()
         } finally {
-            lock.unlock();
+            lock.unlock()
         }
     }
 
     /*********************************************************************************************
      * RATING METHODS
      ********************************************************************************************* */
-    @Transactional(readOnly = true)
-    def retrieveItemCommentByAuthorId(Long author_id, Long si_id) {
-
-        def crit = ItemComment.createCriteria()
-        def itemComment = crit.get {
+    @ReadOnly
+    ItemComment retrieveItemCommentByAuthorId(Long authorId, Long serviceItemId) {
+        ItemComment.createCriteria().get {
             author {
-                eq("id", author_id)
+                eq("id", authorId)
             }
             serviceItem {
-                eq("id", si_id)
+                eq("id", serviceItemId)
             }
-        }
-        return itemComment
+        } as ItemComment
     }
 
-    @Transactional(readOnly = true)
-    def retrieveItemCommentListByValue(Long si_id, Integer rateValue) {
-        def crit = ItemComment.createCriteria()
-        def itemComment = crit.list {
+    @ReadOnly
+    List<ItemComment> retrieveItemCommentListByValue(Long serviceItemId, Integer rateValue) {
+        ItemComment.createCriteria().list {
             and {
                 eq("rate", Float.valueOf(rateValue))
                 serviceItem {
-                    eq("id", si_id)
+                    eq("id", serviceItemId)
                 }
             }
-        }
-        return itemComment
+        } as List
     }
 
-    @Transactional(readOnly = true)
-    int yourRating(def author_id, def si_id) {
-        def itemComment = retrieveItemCommentByAuthorId(author_id, si_id)
-        return itemComment?.rate ?: 0
+    @ReadOnly
+    int yourRating(Long authorId, Long serviceItemId) {
+        retrieveItemCommentByAuthorId(authorId, serviceItemId)?.rate ?: 0
     }
 
-    private Float performRate(def si, def itemComment, def newRate) {
-        int rate = newRate.toInteger()
+    private Float performRate(ServiceItem serviceItem, ItemComment itemComment, Integer rate) {
 
-        if (Utils.rangeCheck(rate, itemComment.author.username) == 0) {
-            return 0;
+        if (!isValidRatingRange(rate)) {
+            return 0
         }
-
         //if this profile already rated this ServiceItem, then update the rating, else create a new one
-        def ratMessage
-        int old_rate = 0
+        int oldRate = 0
         if (itemComment.rate) {
-            old_rate = Math.round(itemComment.rate)
+            oldRate = Math.round(itemComment.rate)
 
-            if (Utils.rangeCheck(old_rate, itemComment.author.username) == 0) {
-                return 0;
+            if (!isValidRatingRange(oldRate)) {
+                return 0
             }
 
-            log.debug("${itemComment.author.username} already rated ${si.title}, just update the rate to ${rate}")
-            ratMessage = "${itemComment.author.username} already rated ${si.title}, just update the rate to ${rate}"
-            si.avgRate = Utils.removeRatingFromAverageRate(si.avgRate, si.totalVotes, old_rate)
-            si.avgRate = Utils.addRatingToAverageRate(si.avgRate, (si.totalVotes - 1), rate)
+
+            log.debug("${itemComment.author.username} already rated ${serviceItem.title}, just update the rate to ${rate}")
+            serviceItem.avgRate = Utils.removeRatingFromAverageRate(serviceItem.avgRate, serviceItem.totalVotes, oldRate)
+            serviceItem.avgRate = Utils.addRatingToAverageRate(serviceItem.avgRate, (serviceItem.totalVotes - 1), rate)
         }
         else {
-            log.debug("New rating by ${itemComment.author.username} for ${si.title}, set to ${rate}")
-            ratMessage = "New rating by ${itemComment.author.username} for ${si.title}, set to ${rate}"
-            si.avgRate = Utils.addRatingToAverageRate(si.avgRate, si.totalVotes, rate)
-            si.totalVotes += 1
+            log.debug("New rating by ${itemComment.author.username} for ${serviceItem.title}, set to ${rate}")
+            serviceItem.avgRate = Utils.addRatingToAverageRate(serviceItem.avgRate, serviceItem.totalVotes, rate)
+            serviceItem.totalVotes += 1
         }
         itemComment.rate = rate
 
         //Update total rate counts
-        log.debug "Service Item: ${si.title}:${si.id} has new rate count: old (${old_rate}) -> new (${rate})"
-        if (old_rate && Utils.rangeCheck(old_rate, itemComment.author.username) == 1) {
-            if (si."totalRate${old_rate}" && (si."totalRate${old_rate}" > 0)) {
-                si."totalRate${old_rate}"--
+        log.debug "Service Item: ${serviceItem.title}:${serviceItem.id} has new rate count: old (${oldRate}) -> new (${rate})"
+        if (oldRate && isValidRatingRange(oldRate)) {
+            if (serviceItem."totalRate${oldRate}" && (serviceItem."totalRate${oldRate}" > 0)) {
+                serviceItem."totalRate${oldRate}"--
             }
         }
 
-        if (Utils.rangeCheck(rate, itemComment.author.username) == 1) {
-            if (!si."totalRate${rate}") {
-                si."totalRate${rate}" = 1
-            } else {
-                si."totalRate${rate}"++
+        if (isValidRatingRange(rate)) {
+            if (!serviceItem."totalRate${rate}") {
+                serviceItem."totalRate${rate}" = 1
             }
-            log.debug "Service Item: ${si.title}:${si.id} <> Star Counts [5 (${si.totalRate5}), 4 (${si.totalRate4}), 3 (${si.totalRate3}), 2 (${si.totalRate2}), 1 (${si.totalRate1})] "
+            else {
+                serviceItem."totalRate${rate}"++
+            }
+            log.debug "Service Item: ${serviceItem.title}:${serviceItem.id} <> Star Counts [5 (${serviceItem.totalRate5}), 4 (${serviceItem.totalRate4}), 3 (${serviceItem.totalRate3}), 2 (${serviceItem.totalRate2}), 1 (${serviceItem.totalRate1})] "
         }
 
-        if (si.save()) {
-            log.debug "${si.title} was given a ${rate} star rating. Avergae Rating: ${si.avgRate}. Total Votes: ${si.totalVotes}"
-        } else {
-            log.error("Failure trying to add ${rate} star rating to ${si.title} Avergae Rating: ${si.avgRate}. Total Votes: ${si.totalVotes}")
-            si.errors.each { log.error it }
+        if (serviceItem.save()) {
+            log.debug "${serviceItem.title} was given a ${rate} star rating. Avergae Rating: ${serviceItem.avgRate}. Total Votes: ${serviceItem.totalVotes}"
+        }
+        else {
+            log.error("Failure trying to add ${rate} star rating to ${serviceItem.title} Avergae Rating: ${serviceItem.avgRate}. Total Votes: ${serviceItem.totalVotes}")
+            serviceItem.errors.each { log.error it }
             throw new ValidationException(message: "rating.add.failure")
         }
-        return si.avgRate
+        return serviceItem.avgRate
     }
 
     @Transactional
-    def rate(def itemComment, def newRate) {
+    Float rate(ItemComment itemComment, Integer newRate) {
         if (!itemComment?.serviceItem || !itemComment?.author) return 0
 
-        def si = ServiceItem.get(itemComment.serviceItem.id)
-        Lock lock = new ReentrantLock();
-        lock.lock();
+        ServiceItem serviceItem = ServiceItem.get(itemComment.serviceItem.id)
+        Lock lock = new ReentrantLock()
+        lock.lock()
         try {
-            return performRate(si, itemComment, newRate)
+            return performRate(serviceItem, itemComment, newRate)
         } finally {
-            lock.unlock();
+            lock.unlock()
         }
     }
+
 }

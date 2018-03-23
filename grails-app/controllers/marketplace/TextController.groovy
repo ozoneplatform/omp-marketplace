@@ -2,7 +2,7 @@ package marketplace
 
 class TextController extends MarketplaceAdminController {
 
-    def textService
+    TextService textService
 
     protected retrieveDomain() { return Text.get(params.id) }
 

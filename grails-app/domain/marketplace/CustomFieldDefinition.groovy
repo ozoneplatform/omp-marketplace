@@ -1,14 +1,17 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import org.codehaus.groovy.grails.web.json.JSONArray
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
+
 import org.hibernate.criterion.CriteriaSpecification
-import ozone.marketplace.enums.CustomFieldSection;
-import ozone.utils.Utils
+
 import marketplace.JSONUtil as JS
 
-@gorm.AuditStamp
-class CustomFieldDefinition implements Serializable {
+import ozone.marketplace.enums.CustomFieldSection
+import ozone.utils.Utils
+
+
+class CustomFieldDefinition extends AuditStamped implements Serializable, ToJSON {
 
     static bindableProperties = [
         'name', 'label',
@@ -43,7 +46,8 @@ class CustomFieldDefinition implements Serializable {
 
     static hasMany = [types: Types]
 
-    List types
+    List<Types> types
+
     static constraints = {
         name(blank: false, maxSize: 50)
         label(blank: false, maxSize: 50)
@@ -93,23 +97,21 @@ class CustomFieldDefinition implements Serializable {
         )
     }
 
-    def asJSON()
-	{
-        return new JSONObject(
-            id: id,
-            class: getClass(),
-            uuid: uuid,
-            name: name,
-            label: label,
-            tooltip: tooltip,
-            description: description,
-            isRequired: isRequired,
-            isPermanent: isPermanent,
-            allTypes: allTypes,
-            types: ((types == null) ? new JSONArray() : new JSONArray(types?.collect { it?.asJSONRef() })),
-            fieldType: styleType?.name(),
-            section: section?.name() ?: CustomFieldSection.typeProperties.name()
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id         : id,
+                  class      : getClass(),
+                  uuid       : uuid,
+                  name       : name,
+                  label      : label,
+                  tooltip    : tooltip,
+                  description: description,
+                  isRequired : isRequired,
+                  isPermanent: isPermanent,
+                  allTypes   : allTypes,
+                  types      : ((types == null) ? new JSONArray() : new JSONArray(types?.collect { it?.asJSONRef() })),
+                  fieldType  : styleType?.name(),
+                  section    : section?.name() ?: CustomFieldSection.typeProperties.name()])
     }
 
     protected bindFromJSON(JSONObject json) {
@@ -177,22 +179,4 @@ class CustomFieldDefinition implements Serializable {
         other?.class == this.class && other.uuid == this.uuid
     }
 
-    /**
-     * @return CustomFieldDefinitions that are required for the given type
-     */
-    static Collection<CustomFieldDefinition> findAllRequiredByType(Types type) {
-        createCriteria().list {
-            or {
-                if (type) {
-                    //use an outer join
-                    createAlias("types", 't', CriteriaSpecification.LEFT_JOIN)
-                    eq('t.id', type.id)
-                }
-
-                eq('allTypes', true)
-            }
-
-            eq('isRequired', true)
-        }
-    }
 }

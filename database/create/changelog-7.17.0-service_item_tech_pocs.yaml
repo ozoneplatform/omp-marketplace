@@ -1,0 +1,75 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-service_item_tech_pocs
+      author: omp
+      comment: create 'service_item_tech_pocs' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: service_item_tech_pocs
+
+            columns:
+              - column:
+                  name: service_item_id
+                  type: bigint
+              - column:
+                  name: tech_poc
+                  type: varchar(256)
+
+
+  - changeSet:
+      id: 7.17.0-service_item_tech_pocs
+      author: omp
+      comment: create 'service_item_tech_pocs' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: service_item_tech_pocs
+
+            columns:
+              - column:
+                  name: service_item_id
+                  type: number(38,0)
+              - column:
+                  name: tech_poc
+                  type: varchar(256 BYTE)
+
+
+  - changeSet:
+      id: 7.17.0-service_item_tech_pocs
+      author: omp
+      comment: create 'service_item_tech_pocs' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: service_item_tech_pocs
+
+            columns:
+              - column:
+                  name: service_item_id
+                  type: number(19,0)
+              - column:
+                  name: tech_poc
+                  type: varchar(256)
+
+
+  - changeSet:
+      id: 7.17.0-service_item_tech_pocs-constraints
+      author: omp
+      comment: create 'service_item_tech_pocs' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: service_item_id
+            baseTableName: service_item_tech_pocs
+            referencedColumnNames: id
+            referencedTableName: service_item
+            constraintName: FKA55CFB56C7E5C662

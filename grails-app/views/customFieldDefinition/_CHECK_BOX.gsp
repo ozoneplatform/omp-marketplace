@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="marketplace.*" %>
 <%
   def selectedByDefault = false
   def readOnly = false
@@ -17,8 +19,8 @@
 %>
 <tr class="customFieldAdmin CHECK_BOX">
     <td valign="top" class="nameAdmin">
-        <label for="checkBoxDefault">
-            <g:message code="Selected by Default:" encodeAs="HTML"/>
+        <label for="selectedByDefault">
+            <g:message code="customFieldDefinition.selected.by.default" encodeAs="HTML"/>
         </label>
     </td>
     <g:if test="${readOnly}">
@@ -26,7 +28,7 @@
     </g:if>
     <g:else>
       <td valign="top" class="value admin_create_field">
-          <g:checkBox name="selectedByDefault" value="${selectedByDefault}" class="switch ios brand-success"></g:checkBox>
+          <g:checkBox name="selectedByDefault" value="${selectedByDefault}" class="switch ios brand-success"/>
       </td>
     </g:else>
 </tr>

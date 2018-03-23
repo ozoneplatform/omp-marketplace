@@ -1,0 +1,130 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-service_item_custom_field
+      author: omp
+      comment: create 'service_item_custom_field' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: service_item_custom_field
+
+            columns:
+              - column:
+                  name: service_item_custom_fields_id
+                  type: bigint
+              - column:
+                  name: custom_field_id
+                  type: bigint
+              - column:
+                  name: custom_fields_idx
+                  type: integer
+
+
+  - changeSet:
+      id: 7.17.0-service_item_custom_field
+      author: omp
+      comment: create 'service_item_custom_field' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: service_item_custom_field
+
+            columns:
+              - column:
+                  name: service_item_custom_fields_id
+                  type: number(19,0)
+              - column:
+                  name: custom_field_id
+                  type: number(19,0)
+              - column:
+                  name: custom_fields_idx
+                  type: number(10,0)
+
+
+  - changeSet:
+      id: 7.17.0-service_item_custom_field
+      author: omp
+      comment: create 'service_item_custom_field' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: service_item_custom_field
+
+            columns:
+              - column:
+                  name: service_item_custom_fields_id
+                  type: number(19,0)
+              - column:
+                  name: custom_field_id
+                  type: number(19,0)
+              - column:
+                  name: custom_fields_idx
+                  type: int
+
+
+  - changeSet:
+      id: 7.17.0-service_item_custom_field-constraints
+      author: omp
+      comment: create 'service_item_custom_field' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: custom_field_id
+            baseTableName: service_item_custom_field
+            referencedColumnNames: id
+            referencedTableName: custom_field
+            constraintName: FK46E9894E7B56E054
+
+
+  - changeSet:
+      id: 7.17.0-service_item_custom_field-indices_1
+      author: omp
+      comment: create 'service_item_custom_field' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: service_item_custom_field
+            indexName: svc_item_cst_fld_id_idx
+            columns:
+              - column:
+                  name: service_item_custom_fields_id
+
+
+  - changeSet:
+      id: 7.17.0-service_item_custom_field-indices_mysql
+      author: omp
+      comment: create 'service_item_custom_field' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: service_item_custom_field
+            indexName: FK46E9894E7B56E054
+            columns:
+              - column:
+                  name: custom_field_id
+
+
+  - changeSet:
+      id: 7.17.0-service_item_custom_field-indices_2
+      author: omp
+      comment: create 'service_item_custom_field' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: service_item_custom_field
+            indexName: si_cf_cf_id_idx
+            columns:
+              - column:
+                  name: custom_field_id

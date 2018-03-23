@@ -1,0 +1,329 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-import_task
+      author: omp
+      comment: create 'import_task' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: import_task
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: import_taskPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp with time zone
+              - column:
+                  name: cron_exp
+                  type: varchar(255)
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: timestamp with time zone
+              - column:
+                  name: enabled
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: exec_interval
+                  type: integer
+              - column:
+                  name: extra_url_params
+                  type: varchar(512)
+              - column:
+                  name: interface_config_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: last_run_result_id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: update_type
+                  type: varchar(7)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(255)
+              - column:
+                  name: keystore_pass
+                  type: varchar(2048)
+              - column:
+                  name: keystore_path
+                  type: varchar(2048)
+              - column:
+                  name: truststore_path
+                  type: varchar(2048)
+
+
+  - changeSet:
+      id: 7.17.0-import_task
+      author: omp
+      comment: create 'import_task' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: import_task
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: cron_exp
+                  type: varchar(255)
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: enabled
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: exec_interval
+                  type: integer
+              - column:
+                  name: extra_url_params
+                  type: varchar(512)
+              - column:
+                  name: interface_config_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: last_run_result_id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: update_type
+                  type: varchar(7)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(255)
+              - column:
+                  name: keystore_pass
+                  type: varchar(2048)
+              - column:
+                  name: keystore_path
+                  type: varchar(2048)
+              - column:
+                  name: truststore_path
+                  type: varchar(2048)
+
+
+  - changeSet:
+      id: 7.17.0-import_task
+      author: omp
+      comment: create 'import_task' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: import_task
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: import_taskPK
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: cron_exp
+                  type: varchar(255 CHAR)
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: enabled
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: exec_interval
+                  type: number(19,0)
+              - column:
+                  name: extra_url_params
+                  type: varchar(512 CHAR)
+              - column:
+                  name: interface_config_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: last_run_result_id
+                  type: number(19,0)
+              - column:
+                  name: name
+                  type: varchar(50 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: update_type
+                  type: varchar(7 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(255 CHAR)
+              - column:
+                  name: keystore_pass
+                  type: varchar(2048 CHAR)
+              - column:
+                  name: keystore_path
+                  type: varchar(2048 CHAR)
+              - column:
+                  name: truststore_path
+                  type: varchar(2048 CHAR)
+
+
+  - changeSet:
+      id: 7.17.0-import_task
+      author: omp
+      comment: create 'import_task' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: import_task
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: import_taskPK
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: cron_exp
+                  type: nvarchar(255)
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: enabled
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: exec_interval
+                  type: int
+              - column:
+                  name: extra_url_params
+                  type: nvarchar(512)
+              - column:
+                  name: interface_config_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: last_run_result_id
+                  type: number(19,0)
+              - column:
+                  name: name
+                  type: nvarchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: update_type
+                  type: nvarchar(7)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: nvarchar(255)
+              - column:
+                  name: keystore_pass
+                  type: nvarchar(2048)
+              - column:
+                  name: keystore_path
+                  type: nvarchar(2048)
+              - column:
+                  name: truststore_path
+                  type: nvarchar(2048)

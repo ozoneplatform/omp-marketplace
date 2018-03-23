@@ -1,0 +1,83 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-service_item_score_card_item
+      author: omp
+      comment: create 'service_item_score_card_item' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: service_item_score_card_item
+
+            columns:
+              - column:
+                  name: service_item_id
+                  type: bigint
+              - column:
+                  name: score_card_item_id
+                  type: bigint
+
+
+  - changeSet:
+      id: 7.17.0-service_item_score_card_item
+      author: omp
+      comment: create 'service_item_score_card_item' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: service_item_score_card_item
+
+            columns:
+              - column:
+                  name: service_item_id
+                  type: number(38,0)
+              - column:
+                  name: score_card_item_id
+                  type: number(38,0)
+
+
+  - changeSet:
+      id: 7.17.0-service_item_score_card_item
+      author: omp
+      comment: create 'service_item_score_card_item' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: service_item_score_card_item
+
+            columns:
+              - column:
+                  name: service_item_id
+                  type: number(19,0)
+              - column:
+                  name: score_card_item_id
+                  type: bigint
+
+
+  - changeSet:
+      id: 7.17.0-service_item_score_card_item-constraints
+      author: omp
+      comment: create 'service_item_score_card_item' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: score_card_item_id
+            baseTableName: service_item_score_card_item
+            referencedColumnNames: id
+            referencedTableName: score_card_item
+            constraintName: FKBF91F93EF469C97
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: service_item_id
+            baseTableName: service_item_score_card_item
+            referencedColumnNames: id
+            referencedTableName: service_item
+            constraintName: FKBF91F939C51FA9F

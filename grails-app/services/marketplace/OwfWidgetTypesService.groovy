@@ -1,6 +1,6 @@
 package marketplace
 
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 class OwfWidgetTypesService extends MarketplaceService {
 

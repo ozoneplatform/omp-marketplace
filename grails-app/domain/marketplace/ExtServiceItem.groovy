@@ -1,6 +1,9 @@
 package marketplace
 
-class ExtServiceItem extends ServiceItem {
+import org.grails.web.json.JSONObject
+
+
+class ExtServiceItem extends ServiceItem implements ToJSON {
 
     String systemUri
     String externalId
@@ -31,16 +34,22 @@ class ExtServiceItem extends ServiceItem {
 		cache true
 	}
 
-	public String toString(){
+	String toString(){
 		return "${super.toString()} || ${systemUri}, ${externalId}, ${externalViewUrl}, ${externalEditUrl}"
 	}
 
-    def asJSON(){
-        def jsonObject = super.asJSON()
+	@Override
+	JSONObject asJSON() {
+		def json = super.asJSON()
+		json.putAll([systemUri      : systemUri,
+					 externalId     : externalId,
+					 externalViewUrl: externalViewUrl,
+					 externalEditUrl: externalEditUrl,
+					 id             : id])
+		json
+	}
 
-        jsonObject.putAll(systemUri : systemUri, externalId : externalId,
-			externalViewUrl : externalViewUrl,externalEditUrl : externalEditUrl,
-            id: id)
-        return jsonObject
+	String propertyMissing(String name) {
+		super.getCustomFieldValue(name)
 	}
 }

@@ -9,7 +9,7 @@ import org.quartz.core.QuartzScheduler
 
 import org.springframework.scheduling.quartz.SchedulerFactoryBean
 
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 
 import marketplace.ImportTask
 import marketplace.InterfaceConfiguration

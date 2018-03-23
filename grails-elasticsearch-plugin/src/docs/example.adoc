@@ -1,0 +1,8 @@
+[[example]]
+== Example
+
+include::example/twitter.adoc[]
+
+include::example/geoDistanceSearch.adoc[]
+
+include::example/parentChildExample.adoc[]

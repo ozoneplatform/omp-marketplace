@@ -1,0 +1,288 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-field_value
+      author: omp
+      comment: create 'field_value' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: field_value
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: custom_field_definition_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_enabled
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: display_text
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: field_values_idx
+                  type: integer
+
+
+  - changeSet:
+      id: 7.17.0-field_value
+      author: omp
+      comment: create 'field_value' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: field_value
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: custom_field_definition_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_enabled
+                  type: int(11)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: display_text
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: field_values_idx
+                  type: int(11)
+
+
+  - changeSet:
+      id: 7.17.0-field_value
+      author: omp
+      comment: create 'field_value' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: field_value
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: custom_field_definition_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_enabled
+                  type: number(10,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: display_text
+                  type: varchar(255 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: field_values_idx
+                  type: number(10,0)
+
+        - addPrimaryKey:
+            tableName: field_value
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-field_value
+      author: omp
+      comment: create 'field_value' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: field_value
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: custom_field_definition_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: is_enabled
+                  type: int
+                  constraints:
+                      nullable: false
+              - column:
+                  name: display_text
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: field_values_idx
+                  type: int
+
+        - addPrimaryKey:
+            tableName: field_value
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-field_value-constraints
+      author: omp
+      comment: create 'field_value' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: field_value
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK29F571EC7666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: field_value
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK29F571ECE31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: custom_field_definition_id
+            baseTableName: field_value
+            referencedColumnNames: id
+            referencedTableName: drop_down_cfd
+            constraintName: FK29F571ECF1F14D3C
+
+
+  - changeSet:
+      id: 7.17.0-field_value-indices_mysql
+      author: omp
+      comment: create 'field_value' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: field_value
+            indexName: FK29F571ECF1F14D3C
+            columns:
+              - column:
+                  name: custom_field_definition_id
+
+
+  - changeSet:
+      id: 7.17.0-field_value-indices
+      author: omp
+      comment: create 'field_value' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: field_value
+            indexName: field_value_cfd_idx
+            columns:
+              - column:
+                  name: custom_field_definition_id

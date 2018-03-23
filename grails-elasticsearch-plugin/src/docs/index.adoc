@@ -1,0 +1,20 @@
+= Elasticsearch Plugin - Reference Documentation
+Puneet Behl
+
+:elasticsearch: http://www.elasticsearch.org
+
+include::introduction.adoc[]
+
+include::configuration.adoc[]
+
+include::mapping.adoc[]
+
+include::indexing.adoc[]
+
+include::searching.adoc[]
+
+include::admin.adoc[]
+
+include::lowLevelAPI.adoc[]
+
+include::example.adoc[]

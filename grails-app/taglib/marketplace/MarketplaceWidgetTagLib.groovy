@@ -4,9 +4,10 @@ import grails.converters.*
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 
 class MarketplaceWidgetTagLib {
+
     static namespace = "mpwidget"
 
-    def serviceItemService
+    ServiceItemService serviceItemService
 
     private def isInWidget() {
         return params.widget || session.widget

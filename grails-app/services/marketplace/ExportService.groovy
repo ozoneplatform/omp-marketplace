@@ -1,22 +1,34 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import grails.core.GrailsApplication
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
+
+import marketplace.rest.ContactTypeRestService
+
 import ozone.marketplace.dataexchange.ExportSettings
 
 class ExportService {
 
     boolean transactional = true
-    def grailsApplication
-    def stateService
-    def typesService
-    def categoryService
-    def profileService
-    def customFieldDefinitionService
-    def serviceItemService
-    def relationshipService
 
-    def contactTypeRestService
+    GrailsApplication grailsApplication
+
+    StateService stateService
+
+    TypesService typesService
+
+    CategoryService categoryService
+
+    ProfileService profileService
+
+    CustomFieldDefinitionService customFieldDefinitionService
+
+    ServiceItemService serviceItemService
+
+    RelationshipService relationshipService
+
+    ContactTypeRestService contactTypeRestService
 
     def retrieveStates(def params) {
         params.sort = 'title'
@@ -97,15 +109,13 @@ class ExportService {
         return serviceItems
     }
 
-    def retrieveExportData(ExportSettings settings, boolean isAdmin, String username) {
+    Map retrieveExportData(ExportSettings settings, boolean isAdmin, String username) {
         def searchParams = [:]
         if (settings.editedSinceDate) {
             searchParams.editedSinceDate = settings.editedSinceDate
         }
-        def model
-        def total
 
-        model = [:]
+        def model = [:]
 
         if (settings.includeStates) {
             model.states = retrieveStates(searchParams)
@@ -164,10 +174,6 @@ class ExportService {
             pruneProfiles(model)
         }
 
-        total = 0
-
-
-        log.debug "model.getClass() = ${model.getClass()}"
         return model
     }
 

@@ -1,11 +1,13 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import ozone.marketplace.domain.ValidationException
 
-class ImageURLCustomField extends CustomField {
+class ImageURLCustomField extends CustomField implements ToJSON {
 
-    String value
-
+    def value
+    final static bindableProperties = ['value']
     static constraints = {
         value(maxSize: Constants.MAX_URL_SIZE, nullable: true)
     }
@@ -44,12 +46,12 @@ class ImageURLCustomField extends CustomField {
         }
     }
 
-    def asJSON() {
-        def jsonObject = super.asJSON()
-        jsonObject.putAll(
-            id: id,
-            value: value
-        )
-        return jsonObject
+    @Override
+    JSONObject asJSON() {
+        def json = super.asJSON()
+        json.putAll([id : id,
+                     val: value])
+        json
     }
+
 }

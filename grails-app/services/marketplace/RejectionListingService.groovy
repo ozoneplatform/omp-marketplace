@@ -1,15 +1,22 @@
 package marketplace
 
+import org.hibernate.SessionFactory
+
+import marketplace.rest.ServiceItemActivityInternalService
+
 import ozone.marketplace.domain.ValidationException
 
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 public class RejectionListingService {
 
-    def sessionFactory
-    def serviceItemService
-    def profileService
-    def serviceItemActivityInternalService
+    SessionFactory sessionFactory
+
+    ServiceItemService serviceItemService
+
+    ProfileService profileService
+
+    ServiceItemActivityInternalService serviceItemActivityInternalService
 
     @Transactional(readOnly = true)
     def getLatestRejection(def serviceItemId) {

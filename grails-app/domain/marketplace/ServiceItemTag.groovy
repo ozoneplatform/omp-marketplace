@@ -1,10 +1,12 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
 
-class ServiceItemTag implements Serializable {
+
+class ServiceItemTag implements Serializable, ToJSON {
 
     static belongsTo = [serviceItem: ServiceItem, tag: Tag, createdBy: Profile]
 
@@ -36,20 +38,15 @@ class ServiceItemTag implements Serializable {
         })
     }
 
-    JSONObject asJSONwithCreatedBy(){
-        return new JSONObject(
-            id: id,
-            tag: new JSONObject(
-                id: tag.id,
-                title: tag.title
-            ),
-            createdBy: new JSONObject(
-                id: createdBy?.id,
-                username: createdBy?.username
-            )
-        )
+    JSONObject asJSONwithCreatedBy() {
+        new JSONObject([id       : id,
+                        tag      : new JSONObject([id   : tag.id,
+                                                   title: tag.title]),
+                        createdBy: new JSONObject([id      : createdBy?.id,
+                                                   username: createdBy?.username ])])
     }
 
+    @Override
     JSONObject asJSON() {
         asJSONwithCreatedBy()
     }
@@ -73,7 +70,4 @@ class ServiceItemTag implements Serializable {
         return false
     }
 
-    def beforeValidate() {
-        this.tag.beforeValidate()
-    }
 }

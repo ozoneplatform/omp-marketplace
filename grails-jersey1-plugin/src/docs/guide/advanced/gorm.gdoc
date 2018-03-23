@@ -1,0 +1,123 @@
+This section explains what's happening behind the scenes of the scaffolding example and how GORM inside JAX-RS resource
+classes.
+
+h3. PersonCollectionResource.groovy
+
+Here's the source code for @PersonCollectionResource.groovy@.
+{code}
+package hello
+
+import static org.grails.jaxrs.response.Responses.*
+
+import javax.ws.rs.Consumes
+import javax.ws.rs.GET
+import javax.ws.rs.Produces
+import javax.ws.rs.Path
+import javax.ws.rs.PathParam
+import javax.ws.rs.POST
+import javax.ws.rs.core.Response
+
+@Path('/api/person')
+@Consumes(['application/xml','application/json'])
+@Produces(['application/xml','application/json'])
+class PersonCollectionResource {
+
+    @POST
+    Response create(Person dto) {
+        created dto.save()
+    }
+
+    @GET
+    Response readAll() {
+        ok Person.findAll()
+    }
+
+    @Path('/{id}')
+    PersonResource getResource(@PathParam('id') String id) {
+        new PersonResource(id:id)
+    }
+}
+{code}
+It is based on JSR 311 classes and annotations and uses static methods from @org.grails.jaxrs.response.Responses@. This
+is a helper class provided by the plugin that implements a very simple DSL consisting of elements created and ok.
+Supported content types for requests and responses are @application/xml@ and @application/json@. This is given by the
+class-level @Consumes@ and @Produces@ annotations.
+
+The @PersonCollectionResource@ class responds to HTTP operations that are related to person lists. The URL of the person
+list is @http://localhost:8080/api/person@ where the @/api/person@ path is defined by the class-level
+@Path('/api/person')@ annotation.
+
+* The @create@ method responds to POST requests by storing a new @Person@ object in the database using GORM. The XML or\
+  JSON request entity is converted by the plugin to a @Person@ domain object and passed to the method via a dto\
+  parameter. The conversion is done by a domain object provider. The persisted domain object is passed to the created\
+  method which creates a response from it using the JAX-RS API (see source code for details). The created method\
+  constructs a URI for the @Location@ response header from the domain object @id@. The @Person@ object is set to the\
+  Response entity.
+* The @readAll@ method responds to GET requests and returns a person list. Again we use GORM to get all person objects\
+  from the database and pass that list as argument to the @ok@ method. This method uses the JAX-RS API to create a\
+  response (see link source code for details).
+* The @getResource@ method creates another JAX-RS resource whenever a request to the URI template\
+  @http://localhost:8080/api/person/{id}@ is made. The @id@ path parameter in the template is bound to the id parameter\
+  of the @getResource@ method. The created JAX-RS @PersonResource@ is then used by the JAX-RS runtime to handle the\
+  request to the person with the given id.
+
+h3. PersonResource.groovy
+
+Here's the source code for @PersonResource.groovy@.
+
+{code}
+package hello
+
+import static org.grails.jaxrs.response.Responses.*
+
+import javax.ws.rs.Consumes
+import javax.ws.rs.DELETE
+import javax.ws.rs.GET
+import javax.ws.rs.Produces
+import javax.ws.rs.PUT
+import javax.ws.rs.core.Response
+
+import org.grails.jaxrs.provider.DomainObjectNotFoundException
+
+@Consumes(['application/xml','application/json'])
+@Produces(['application/xml','application/json'])
+class PersonResource {
+
+    def id
+
+    @GET
+    Response read() {
+        def obj = Person.get(id)
+        if (!obj) {
+            throw new DomainObjectNotFoundException(Person.class, id)
+        }
+        ok obj
+    }
+
+    @PUT
+    Response update(Person dto) {
+        def obj = Person.get(id)
+        if (!obj) {
+            throw new DomainObjectNotFoundException(Person.class, id)
+        }
+        obj.properties = dto.properties
+        ok obj
+    }
+
+    @DELETE
+    void delete() {
+        def obj = Person.get(id)
+        if (obj) {
+            obj.delete()
+        }
+    }
+}
+{code}
+
+The @id@ property is set during construction of the resource and is used for database operations. This class implements
+the methods @read@, @update@ and @delete@ to handle GET, PUT and DELETE requests, respectively. It also uses GORM for
+database operations and relies on helper methods of @org.grails.jaxrs.response.Responses@ to create responses via the
+JAX-RS API.
+
+If there's no person with given @id@ in the database, a @DomainObjectNotFoundException@ is thrown. This exception class
+generates a custom 404 response using the JAX-RS API (see source code for details).

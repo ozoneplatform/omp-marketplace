@@ -1,9 +1,9 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject;
+import org.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class Text implements Serializable {
+
+class Text extends AuditStamped implements Serializable, ToJSON {
 
     //TODO: This class and its associated controller/service are uneeded
 
@@ -46,12 +46,12 @@ class Text implements Serializable {
 
     }
 
-    def asJSON() {
-        return new JSONObject(
-            id: id,
-            name: name,
-            value: value,
-            readOnly: readOnly
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id      : id,
+                  name    : name,
+                  value   : value,
+                  readOnly: readOnly])
     }
+
 }

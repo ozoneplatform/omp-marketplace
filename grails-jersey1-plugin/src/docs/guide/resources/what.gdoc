@@ -1,0 +1,9 @@
+*Root resources* are classes that contain RESTful API services as defined by the JSR-311 JAX-RS standard. Such classes
+contain methods that service an API endpoint. These classes and methods make extensive use of annotations to define
+their properties and behavior, such as the path in a URL, what content types endpoints consume and produce, and what
+HTTP methods each endpoint supports.
+
+{note}
+Oracle has an excellent [article|http://docs.oracle.com/javaee/6/tutorial/doc/giepu.html] explaining how to create root
+resource classes and detail the annotations provided byJAX-RS.
+{note}

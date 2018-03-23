@@ -1,0 +1,66 @@
+h3. Create The Application
+Use Grails 3.x to create a new application. As an example, let's create an application called
+*jaxrs-example*:
+{code}
+[budjb@laptop Projects]$ grails create-app jaxrs-example
+| Application created at /Users/budjb/Projects/jaxrs-example
+{code}
+
+h3. Add JAX-RS Plugin to Dependencies
+In the @build.gradle@ file, add the plugin to the project's dependencies. For the example,
+we'll use the Jersey 1.x implementation.
+
+{code}
+dependencies {
+    compile "org.grails.plugins:jaxrs-jersey1:1.0.0"
+
+    // other dependencies below...
+}
+{code}
+
+{note}
+Be sure to use the updated version number of the plugin you are using. The version number
+above is likely out of date.
+{note}
+
+h3. Create a Resource
+The plugin comes bundled with a helper script to generate a basic resource, which we'll use here.
+
+{code}
+[budjb@laptop jaxrs-example]$ grails create-resource com.budjb.Test
+
+BUILD SUCCESSFUL
+
+| Rendered template Resource.groovy to destination grails-app/resources/com/budjb/TestResource.groovy
+{code}
+
+The resulting file should look like the class below. Notice the path information in the generated Resource.
+
+{code}
+package com.budjb
+
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
+
+@Path('/api/test')
+class TestResource {
+    @GET
+    @Produces('text/plain')
+    String getTestRepresentation() {
+        'Test'
+    }
+}
+{code}
+
+h3. Start the Application
+Everything we need is in place, so now we can start the application.
+{code}
+[budjb@laptop jaxrs-example]$ ./gradlew bootRun
+Grails application running at http://localhost:8080 in environment: development
+> Building 97% > :jaxrs-example:bootRun
+{code}
+
+h3. Try It Out!
+Point your web browser to @http://localhost:8080/api/test@, and you should be greeted with
+the word @Test@.

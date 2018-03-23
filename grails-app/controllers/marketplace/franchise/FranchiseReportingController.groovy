@@ -1,12 +1,14 @@
 package marketplace.franchise
 
 import marketplace.BaseMarketplaceRestController
+import marketplace.GenericQueryService
+
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 
 
 class FranchiseReportingController extends BaseMarketplaceRestController {
 
-    def genericQueryService
+    GenericQueryService genericQueryService
 
     static defaultAction = "show"
 

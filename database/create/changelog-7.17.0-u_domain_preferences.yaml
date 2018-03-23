@@ -1,0 +1,100 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-u_domain_preferences
+      author: omp
+      comment: create 'u_domain_preferences' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: u_domain_preferences
+
+            columns:
+              - column:
+                  name: preferences
+                  type: bigint
+              - column:
+                  name: preferences_idx
+                  type: varchar(255)
+              - column:
+                  name: preferences_elt
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-u_domain_preferences
+      author: omp
+      comment: create 'u_domain_preferences' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: u_domain_preferences
+
+            columns:
+              - column:
+                  name: preferences
+                  type: bigint
+              - column:
+                  name: preferences_idx
+                  type: varchar(255)
+              - column:
+                  name: preferences_elt
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-u_domain_preferences
+      author: omp
+      comment: create 'u_domain_preferences' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: u_domain_preferences
+
+            columns:
+              - column:
+                  name: preferences
+                  type: number(19,0)
+              - column:
+                  name: preferences_idx
+                  type: varchar(255 CHAR)
+              - column:
+                  name: preferences_elt
+                  type: varchar(255 CHAR)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-u_domain_preferences
+      author: omp
+      comment: create 'u_domain_preferences' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: u_domain_preferences
+
+            columns:
+              - column:
+                  name: preferences
+                  type: number(19,0)
+              - column:
+                  name: preferences_idx
+                  type: nvarchar(255)
+              - column:
+                  name: preferences_elt
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false

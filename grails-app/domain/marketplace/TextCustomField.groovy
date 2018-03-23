@@ -1,9 +1,11 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
 
-class TextCustomField extends CustomField {
 
-    String value
+class TextCustomField extends CustomField implements ToJSON {
+
+    def value
 
     static constraints = {
         value(maxSize: 256, nullable: true)
@@ -36,12 +38,11 @@ class TextCustomField extends CustomField {
         }
     }
 
-    def asJSON() {
-        def jsonObject = super.asJSON()
-        jsonObject.putAll(
-            id: id,
-            value: value
-        )
-        return jsonObject
+    @Override
+    JSONObject asJSON() {
+        def json = super.asJSON()
+        json.putAll([id   : id,
+                     value: value])
+        json
     }
 }

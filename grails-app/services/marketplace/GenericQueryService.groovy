@@ -1,9 +1,27 @@
 package marketplace
 
-import org.hibernate.criterion.*
+import javax.annotation.Nonnull
 
+import grails.core.GrailsApplication
+import org.grails.datastore.mapping.model.PersistentEntity
+import org.grails.datastore.mapping.model.PersistentProperty
+import org.grails.datastore.mapping.query.api.BuildableCriteria
+
+import org.hibernate.criterion.DetachedCriteria
+import org.hibernate.criterion.Property
+import org.hibernate.criterion.Restrictions
+import org.hibernate.criterion.Subqueries
+
+/**
+ * TODO: This needs major refactoring.
+ * Looks like it was a work-in-progress, and is currently only used to search ServiceItems
+ */
 class GenericQueryService extends OzoneService {
-    static def modelFields = [(ServiceItem.class): ServiceItem.class.declaredFields.collect { f -> f.name }]
+
+    GrailsApplication grailsApplication
+
+    private static final Map<Class<?>, Map<String, Class<?>>> MODEL_FIELD_MAPPINGS = [:]
+
     static def stringCondition = { field, value, criteria ->
         def m = value =~ /\*(.+)\*/
         if (m.matches())
@@ -11,11 +29,14 @@ class GenericQueryService extends OzoneService {
         else
             criteria.eq(field, value)
     }
+
     static def opsMap = ['<': 'lt', '<=': 'le', '>': 'gt', '>=': 'ge', '<>': 'ne']
+
     static def intCondition = { field, value, criteria ->
         def pair = getConditionAndValue(value)
         criteria."${pair[0]}"(field, Integer.parseInt(pair[1]))
     }
+
     static def longCondition = { field, value, criteria ->
         def pair = getConditionAndValue(value.toString())
         Long val = pair[1] instanceof Long ? pair[1] : Long.parseLong(pair[1])
@@ -62,11 +83,9 @@ class GenericQueryService extends OzoneService {
 
     boolean transactional = false
 
-    def serviceItems(params) {
-        log.debug "serviceItems: params = ${params}"
-        checkReturnSettings(params)
-        def model = [:]
-        def c = ServiceItem.createCriteria()
+    def serviceItems(Map params, String username, String accessType) {
+        setDefaultPagingParameters(params)
+
         def useSort = false
         if (params.sort) {
             useSort = true
@@ -74,24 +93,23 @@ class GenericQueryService extends OzoneService {
             params.remove("sort")
         }
 
-        def serviceItemList = c.list(params) {
+        BuildableCriteria criteria = ServiceItem.createCriteria()
+        def serviceItemList = criteria.list(params) {
             and {
-                addAccessConstraints(c, params)
-                addVisibilityConstraints(c, params)
-                addFieldConstraints(c, params)
-                addSorting(c, params)
-                addAuthor(c, params)
+                addAccessConstraints(criteria, username, accessType)
+                addVisibilityConstraints(criteria, params)
+                addFieldConstraints(criteria, params)
+                addSorting(criteria, params)
+                addAuthor(criteria, params)
             }
         }
+
         if (useSort) {
             params.sort = params.sort_0
             params.remove("sort_0")
         }
-        model.put("serviceItemList", serviceItemList)
-        model.put("listSize", serviceItemList.totalCount)
-        model.put("params", params)
 
-        return model
+        return new SearchResult<ServiceItem>(serviceItemList, serviceItemList?.totalCount, params)
     }
 
     //This is to get counts instead of the detail items
@@ -113,7 +131,7 @@ class GenericQueryService extends OzoneService {
     }
 
 
-    void checkReturnSettings(params) {
+    void setDefaultPagingParameters(Map params) {
         params.max = params.max ?: 5
         params.offset = params.offset ?: 0
     }
@@ -122,24 +140,21 @@ class GenericQueryService extends OzoneService {
         return params.find { it -> it.key.startsWith('author') }
     }
 
-    void addAccessConstraints(def c, def params) {
-        def session = getSession()
+    void addAccessConstraints(BuildableCriteria criteria, String username, String accessType) {
+        if (accessType != Constants.VIEW_USER) return
 
-        def accessType = params.accessType ?: session.accessType
-        if (accessType == Constants.VIEW_USER) {
-            def val = c.and {
-                or {
-                    ilike('approvalStatus', Constants.APPROVAL_STATUSES["APPROVED"])
-                    owners {
-                        eq('username', session.username)
-                    }
+        criteria.and {
+            or {
+                ilike('approvalStatus', Constants.APPROVAL_STATUSES["APPROVED"])
+                owners {
+                    eq('username', username)
                 }
-                and {
-                    or {
-                        eq('isHidden', 0)
-                        owners {
-                            eq('username', session.username)
-                        }
+            }
+            and {
+                or {
+                    eq('isHidden', 0)
+                    owners {
+                        eq('username', username)
                     }
                 }
             }
@@ -222,10 +237,10 @@ class GenericQueryService extends OzoneService {
         }
     }
 
-    void addFieldConstraints(c, params) {
+    void addFieldConstraints(BuildableCriteria criteria, Map params) {
         def ord = [:]
         params.each { param ->
-            List keys = Arrays.asList(param.key.split('_'))
+            List keys = Arrays.asList((param.key as String).split('_'))
             def value = param.value
             def field = keys[0] == 'or' ? keys[1] : keys[0]
             if (isField(field)) {
@@ -233,14 +248,14 @@ class GenericQueryService extends OzoneService {
                     ord[keys.tail()] = value
                 } else {
                     if (value.class.isArray()) {
-                        c.or {
+                        criteria.or {
                             value.each { v ->
-                                addCondition(keys, v, c, ServiceItem.class)
+                                addCondition(keys, v, criteria, ServiceItem.class)
                             }
                         }
                     } else {
-                        c.and {
-                            addCondition(keys, value, c, ServiceItem.class)
+                        criteria.and {
+                            addCondition(keys, value, criteria, ServiceItem.class)
                         }
                     }
                 }
@@ -248,14 +263,15 @@ class GenericQueryService extends OzoneService {
         }
 
         if (ord) {
-            c.or {
+            criteria.or {
                 ord.each { key, value ->
-                    addCondition(key, value, c, ServiceItem.class)
+                    addCondition(key, value, criteria, ServiceItem.class)
                 }
             }
         }
     }
 
+    /** TODO: Pretty sure this is broken */
     private def isHasManyField(field, klass) {
         return klass?.hasMany[field]
     }
@@ -291,27 +307,49 @@ class GenericQueryService extends OzoneService {
         if (klass) conditionMap[klass](field, v, c)
     }
 
-    private def isField(field) {
+    private boolean isField(String field) {
         try {
-            return ServiceItem.class.getDeclaredField(field)
-        } catch (Exception e) {
+            return ServiceItem.class.getDeclaredField(field) != null
+        } catch (Exception ignored) {
             return null
         }
     }
 
-    private def getFieldClass(field, model) {
-        /* def fieldList = modelFields[model]
-        if (!fieldList)
-        {
-        fieldList = model.declaredFields.collect{ f -> f.name }
-        modelFields[model] = fieldList
-        }*/
+    private Class<?> getFieldClass(String field, Class<?> model) {
         try {
-            return model.getDeclaredField(field).type
-        }
-        catch (Exception e) {
+            return getFieldsForClass(model)[field]
+        } catch (Exception ignored) {
             return null
         }
+    }
+
+    @Nonnull
+    private Map<String, Class<?>> getFieldsForClass(Class<?> clazz) {
+        def fieldMapping = MODEL_FIELD_MAPPINGS[clazz]
+        if (!fieldMapping) {
+            fieldMapping = mapFieldsForClass(clazz)
+            MODEL_FIELD_MAPPINGS[clazz] = fieldMapping
+        }
+
+        return fieldMapping
+    }
+
+    @Nonnull
+    private Map<String, Class<?>> mapFieldsForClass(Class<?> clazz) {
+        Map<String, Class<?>> fieldMapping = [:]
+
+        PersistentEntity entity = grailsApplication.mappingContext.getPersistentEntity(clazz.canonicalName)
+
+        // Implicit identity (id) field
+        PersistentProperty identity = entity.getIdentity()
+        fieldMapping.put(identity.name, identity.type)
+
+        // Explicitly declared fields
+        clazz.declaredFields.each { field ->
+            fieldMapping.put(field.name, field.type)
+        }
+
+        return fieldMapping
     }
 
     private addAuthor(c, params) {

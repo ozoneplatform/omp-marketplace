@@ -1,0 +1,10 @@
+[[elasticSearchService]]
+== ElasticSearchService
+
+include::elasticSearchService/countHits.adoc[]
+
+include::elasticSearchService/index.adoc[]
+
+include::elasticSearchService/search.adoc[]
+
+include::elasticSearchService/unindex.adoc[]

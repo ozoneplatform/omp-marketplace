@@ -1,53 +1,40 @@
 package marketplace
 
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 import ozone.marketplace.enums.ImageType;
 
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 import org.springframework.validation.FieldError
 import ozone.utils.Utils
 import org.apache.commons.lang.StringUtils
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 
 class AffiliatedMarketplaceService {
 
-    def imagesService
+    ImagesService imagesService
 
-    def marketplaceApplicationConfigurationService
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
 
-    /***
-     *
-     * @param params
-     * @return
-     */
+    private static final PageAndSort DEFAULT_PAGE_SORT = new PageAndSort(0, 25, "name", "asc")
+
     @Transactional(readOnly = true)
     def listAsJSON(def params) {
-        log.debug "listAsJSON: params = ${params}"
-        // Set up Default params if necessary
-        if (params != null) {
-            if (!params.start) params.start = "0"
-            if (!params.limit) params.limit = "25"
-            if (!params.sort) params.sort = "name"
-            if (!params.dir) params.dir = "asc"
-        }
+        def pageSort = PageAndSort.from(params, DEFAULT_PAGE_SORT)
 
-        def ampList = AffiliatedMarketplace.createCriteria().list([max: params.limit, offset: params.start]) {
-            if (params.sort) {
-                order(params.sort, params.dir?.toLowerCase())
+        def ampList = AffiliatedMarketplace.createCriteria().list([max: pageSort.max, offset: pageSort.offset]) {
+            if (pageSort.sort) {
+                order(pageSort.sort, pageSort.dir)
             }
-			if(params.active){
+			if (params.active){
 				eq("active", 1)
 			}
-        }
+        } as List
+
         return [ampList: ampList, totalCount: ampList.size()]
     }
 
-    /***
-     *
-     * @param params
-     * @param request
-     * @return
-     */
     @Transactional
     def buildItemFromParams(def params, request) {
         def affiliatedMarketplace = new AffiliatedMarketplace(params)
@@ -55,13 +42,8 @@ class AffiliatedMarketplaceService {
         return affiliatedMarketplace
     }
 
-    /***
-     *
-     * @param affiliatedMarketplace
-     * @param request
-     */
     @Transactional
-    public void checkAndUpdateAmpServerIconUploadFromRequest(affiliatedMarketplace, request) {
+    void checkAndUpdateAmpServerIconUploadFromRequest(affiliatedMarketplace, request) {
         if (request instanceof DefaultMultipartHttpServletRequest) {
             def ampMaxImageSize = marketplaceApplicationConfigurationService.valueOf(MarketplaceApplicationSetting.AMP_IMAGE_MAX_SIZE)
             Long maxFileSize = Long.valueOf(ampMaxImageSize)
@@ -95,12 +77,6 @@ class AffiliatedMarketplaceService {
         affiliatedMarketplace?.delete(failOnError: true, flush: true)
     }
 
-    /***
-     *
-     * @param params
-     * @param request
-     * @return
-     */
     @Transactional(readOnly = true)
     def getItemFromParams(def params, request) {
         def affiliatedMarketplace = AffiliatedMarketplace.get(params.id)

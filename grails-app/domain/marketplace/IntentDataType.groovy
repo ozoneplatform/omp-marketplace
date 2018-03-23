@@ -1,12 +1,14 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
+
 import ozone.utils.Utils
 
-@gorm.AuditStamp
-class IntentDataType implements Serializable {
+
+class IntentDataType extends AuditStamped implements Serializable, ToJSON {
     static searchable = {
         root false
         title index: 'analyzed'
@@ -38,13 +40,12 @@ class IntentDataType implements Serializable {
         batchSize 50
     }
 
-    def asJSON() {
-        new JSONObject(
-            id: id,
-            uuid: uuid,
-            title: title,
-            description: description
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id         : id,
+                  uuid       : uuid,
+                  title      : title,
+                  description: description])
     }
 
     def asJSONRef() {

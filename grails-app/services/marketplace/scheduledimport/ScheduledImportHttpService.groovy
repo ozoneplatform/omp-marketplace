@@ -1,5 +1,7 @@
 package marketplace.scheduledimport
 
+import util.MarketplaceTrustStrategy
+
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -9,20 +11,16 @@ import javax.net.ssl.SSLContext
 
 import javax.ws.rs.core.MediaType
 
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 import org.springframework.transaction.annotation.Propagation
 
 import groovyx.net.http.URIBuilder
-
-import org.codehaus.groovy.grails.web.json.JSONObject
-
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory
-import org.apache.http.conn.ssl.SSLContexts
-import org.apache.http.conn.ssl.SSLContextBuilder
+import org.apache.http.ssl.SSLContexts
+import org.apache.http.ssl.SSLContextBuilder
 import org.apache.http.client.methods.HttpGet
 
 import marketplace.ImportTask
@@ -74,7 +72,9 @@ class ScheduledImportHttpService {
         SSLContextBuilder sslBuilder = SSLContexts.custom()
 
         if (trustStore) {
-            sslBuilder.loadTrustMaterial(trustStore)
+            def strategy =  new MarketplaceTrustStrategy()
+            sslBuilder.loadTrustMaterial(trustStore, strategy)
+//            sslBuilder.loadTrustMaterial(trustStore)
         }
 
         if (keyStore) {
@@ -83,9 +83,7 @@ class ScheduledImportHttpService {
 
         SSLContext sslcontext = sslBuilder.build();
 
-        return HttpClients.custom()
-                .setSslcontext(sslcontext)
-                .build();
+        return HttpClients.custom().setSSLContext(sslcontext).build()
     }
 
     /**

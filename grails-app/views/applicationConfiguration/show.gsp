@@ -5,6 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="layout" content="${session.marketplaceLayout}" />
         <title>Configuration</title>
+        <marketplaceTheme:vendor src="requirejs/requirejs-2.1.9.js"/>
     </head>
     <body>
         <div id="marketContentWrapper">
@@ -43,12 +44,13 @@
             </div>
          </div>
 
+        <marketplaceTheme:javascript src="applicationConfiguration/main.js"/>
+        <!--<script type="text/javascript" src="${request.contextPath}/static/vendor/backbone/json2.js"></script>-->
         <!--[if lt IE 8]>
-            <script type="text/javascript" src="../js/backbone/json2.js"></script>
+            <marketplaceTheme:vendor src="backbone/json2.js"/>
         <![endif]-->
 
         <script type="text/javascript">
-            require(['applicationConfiguration/main']);
             jQuery.noConflict();
 
             jQuery(function($){

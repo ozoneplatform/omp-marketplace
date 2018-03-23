@@ -1,14 +1,15 @@
 package marketplace
 
-import ozone.marketplace.util.event.*
-import grails.converters.JSON
-
 class UserAccountController {
 
-    def userAccountService
-    def accountService
+    UserAccountService userAccountService
 
-    def index = { redirect(action: list, params: params) }
+    AccountService accountService
+
+    def index = {
+        redirect(action: 'list', params: params)
+        return
+    }
 
     def list = {
         if (!params.max) params.max = 10

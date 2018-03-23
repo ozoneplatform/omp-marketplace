@@ -8,8 +8,8 @@ import grails.converters.JSON
 
 import javax.ws.rs.Produces
 import javax.ws.rs.ext.Provider
-import org.grails.jaxrs.support.DomainObjectWriterSupport
-import static org.grails.jaxrs.support.ConverterUtils.idFromMap
+import org.grails.plugins.jaxrs.provider.DomainObjectWriterSupport
+//import static org.grails.plugins.jaxrs.provider.ConverterUtils.idFromMap
 
 @Provider
 @Produces(['text/x-json', 'application/json'])

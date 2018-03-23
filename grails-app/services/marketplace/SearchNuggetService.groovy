@@ -6,6 +6,7 @@ import marketplace.search.SearchCriteria
 class SearchNuggetService {
 
     boolean transactional = false
+
     MessageSource messageSource
 
     private Map ratingNuggets

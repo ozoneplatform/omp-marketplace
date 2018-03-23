@@ -1,30 +1,35 @@
 package marketplace
 
+import grails.gorm.transactions.NotTransactional
+import grails.gorm.transactions.ReadOnly
+import grails.gorm.transactions.Transactional
+
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
-import org.springframework.transaction.annotation.Transactional
 
+
+@Transactional
 class PreferencesService extends OzoneService implements ApplicationContextAware {
 
-    def applicationContext
-    def accountService
+    ApplicationContext applicationContext
 
+    AccountService accountService
+
+    @NotTransactional
     void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext
     }
 
-    @Transactional
-    def enableAnimations(def enableAnimations) {
+    void enableAnimations(String enableAnimations) {
         def user = accountService.getLoggedInUser()
-        if (user) {
-            log.debug("Setting user enable animation preference to ${enableAnimations} for ${user}")
-            def userDomain = accountService.getUserDomain(user)
-            userDomain.setAnimationsEnabled(enableAnimations)
-            userDomain.save(failOnError: true, flush: true)
-        }
+        if (!user) return
+
+        log.debug("Setting user enable animation preference to ${enableAnimations} for ${user}")
+        def userDomain = accountService.getUserDomain(user)
+        userDomain.setAnimationsEnabled(enableAnimations)
+        userDomain.save(failOnError: true)
     }
 
-    @Transactional
     def enableSPA(def enableSPA) {
         def user = accountService.getLoggedInUser()
         if (user) {
@@ -35,6 +40,7 @@ class PreferencesService extends OzoneService implements ApplicationContextAware
         }
     }
 
+    @ReadOnly
     def getAnimationsEnabled() {
         def animationsEnabled = null
         try {
@@ -52,6 +58,7 @@ class PreferencesService extends OzoneService implements ApplicationContextAware
         return animationsEnabled
     }
 
+    @ReadOnly
     def getSPAEnabled() {
         def spaEnabled = null
         try {
@@ -68,4 +75,5 @@ class PreferencesService extends OzoneService implements ApplicationContextAware
         log.debug "Getting SPA enabled, returning: ${spaEnabled}"
         return spaEnabled
     }
+
 }

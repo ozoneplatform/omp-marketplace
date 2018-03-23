@@ -1,35 +1,32 @@
 package marketplace
 
-import ozone.marketplace.domain.ValidationException
-import org.springframework.transaction.annotation.Transactional
-import ozone.utils.User
-//import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
-import grails.util.Holders
-import marketplace.AccountService
-import static marketplace.Constants.*
-class ProfileService extends OzoneService {
+import grails.gorm.transactions.ReadOnly
+import grails.gorm.transactions.Transactional
 
-    def config = Holders.config
+import marketplace.data.ServiceItemDataService
+
+import ozone.marketplace.domain.ValidationException
+import ozone.utils.User
+
+
+@Transactional
+class ProfileService extends OzoneService {
 
     AccountService accountService
 
-    // TODO: Remove this once I get logging from the integration test working.
-    def logIt(def strIn) {
-        log.info strIn
+    ServiceItemDataService serviceItemDataService
+
+    @ReadOnly
+    Profile findByUsername(String username) {
+        Profile.findByUsername(username, [cache: true])
     }
 
-    @Transactional(readOnly = true)
-    def findByUsername(def username) {
-        return Profile.findByUsername(username, [cache: true])
+    @ReadOnly
+    Profile getCurrentUserProfile(){
+        findByUsername(accountService.loggedInUsername)
     }
 
-    @Transactional(readOnly=true)
-    def getCurrentUserProfile(){
-         findByUsername(accountService.loggedInUsername)
-    }
-
-    @Transactional
-    def saveProfile(def profile) {
+    Profile saveProfile(def profile) {
         def session = getSession()
         if (!session.isAdmin && profile.username != session.username) {
             throw new ValidationException(message: "profile.edit.accessDenied")
@@ -40,13 +37,13 @@ class ProfileService extends OzoneService {
         return profile
     }
 
-    @Transactional(readOnly = true)
-    def get(def params) {
-        return Profile.get(params.id)
+    @ReadOnly
+    Profile get(Map params) {
+        Profile.get(params.id as Long)
     }
 
-    @Transactional(readOnly = true)
-    def list(def params) {
+    @ReadOnly
+    List<Profile> list(Map params) {
         def results
         def dateSearch = parseEditedSinceDate(params)
         if (dateSearch) {
@@ -58,54 +55,27 @@ class ProfileService extends OzoneService {
         return results
     }
 
-    @Transactional(readOnly = true)
-    def total() {
-        return Profile.count()
+    @ReadOnly
+    int total() {
+        Profile.count()
     }
 
-    @Transactional(readOnly = true)
-    def getAllowableUser(def id, def sessionParams) throws AccessControlException {
+    @ReadOnly
+    Profile getAllowableUser(Long id, Map sessionParams) throws AccessControlException {
         def user = Profile.get(id)
-        def isUser = false
-        def matchesRule = false
 
-        if (user) {
-            isUser = (sessionParams?.username == user.username)
+        if (!user) return null
 
-            if (sessionParams?.isAdmin) {
-                matchesRule = true
-            }
-            if (isUser) {
-                matchesRule = true
-            }
-
-            if (matchesRule) {
-                return user
-            } else {
-                throw new AccessControlException('User is not authorized to access this user');
-            }
+        def isSameUser = (sessionParams?.username == user.username)
+        if (!(sessionParams?.isAdmin || isSameUser)) {
+            throw new AccessControlException('User is not authorized to access this user');
         }
-        return null;
+
+        user
     }
 
-    // Reindex serviceItems in the Compass index to account for a change to the author
-    void reindexServiceItemsByUser(def id) {
-        log.info "reindexServiceItemsByUsers for Profile ${id} (with query)"
-
-        def criteria = ServiceItem.createCriteria()
-        def serviceItems = criteria.list {
-            owners {
-                eq('id', new Long(id))
-            }
-        }
-        serviceItems.each() {
-            log.info("reindexing ${it}")
-            it.index() // index() is used as it appears more reliable than reindex().
-        }
-    }
-
-    def search(def params) {
-
+    @ReadOnly
+    Map search(Map params) {
         def model = [:]
         def c = Profile.createCriteria()
         if (params.containsKey('query') && !params.query) params.remove('query')
@@ -128,38 +98,47 @@ class ProfileService extends OzoneService {
         return model
     }
 
-    @Transactional
     Profile createProfile(User user, Date creationDate) {
-        log.debug "Adding Profile for ${user.username}"
-        def profile = new Profile()
-        profile.username = user.username
-        profile.displayName = user.name ?: user.username
-        profile.email = user.email
-        profile.createdDate = creationDate
-        profile.userRoles = accountService.getloggedInUserAuthorities()
-        profile.save()
-        profile
+        return accountService.runAsSystemUser {
+            log.debug "Adding Profile for ${user.username}"
+            Profile profile = new Profile()
+            profile.username = user.username
+            profile.displayName = user.name ?: user.username
+            profile.email = user.email
+            profile.createdDate = creationDate
+            profile.userRoles = accountService.getloggedInUserAuthorities()
+            profile.save()
+            profile
+        }
     }
 
-    @Transactional
     Profile updateProfile(Profile profile, User user, Date creationDate) {
         log.debug "Updating display name and email for ${user.username}"
-        if (profile) {
+
+        if (!profile) return null
+
+        return accountService.runAsSystemUser {
             def oldName = profile.displayName
             profile.displayName = user.name ?: user.username
             profile.email = user.email
             profile.userRoles = accountService.getloggedInUserAuthorities()
             profile.save()
             if (oldName != profile.displayName) {
-                reindexServiceItemsByUser(profile.id)
+                serviceItemDataService.reindexAllByOwnerId(profile.id)
             }
+            profile
         }
-        profile
     }
 
+    @ReadOnly
+    List<Profile> getProfilesWithAdminRole(){
+        return Profile.findByUserRolesLike("%ADMIN%").findAll{ person ->
+            person.userRoles =~ Constants.ADMIN ||  person.userRoles =~ Constants.EXTERNADMIN
+        }
+    }
 
-    @Transactional(readOnly = false)
-    def createRequired() {
+    @Transactional
+    void createRequired() {
         def profilesInConfig = config.marketplace.metadata.profiles
 
         if (profilesInConfig) {
@@ -177,10 +156,4 @@ class ProfileService extends OzoneService {
         }
 	}
 
-    @Transactional(readOnly=true)
-    def getProfilesWithAdminRole(){
-        return Profile.findByUserRolesLike("%ADMIN%").findAll{ person ->
-            person.userRoles =~ Constants.ADMIN ||  person.userRoles =~ Constants.EXTERNADMIN
-        }
-    }
 }

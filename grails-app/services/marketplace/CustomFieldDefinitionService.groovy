@@ -1,26 +1,22 @@
 package marketplace
 
-import ozone.marketplace.domain.ValidationException
-import org.apache.commons.lang.exception.ExceptionUtils
-import org.hibernate.FlushMode
-import org.hibernate.criterion.DetachedCriteria
-import org.hibernate.criterion.Restrictions
+import grails.gorm.transactions.Transactional
 import grails.orm.PagedResultList
-import ozone.utils.Utils
-import org.hibernate.CacheMode
-import org.springframework.transaction.annotation.Transactional
+
+import org.hibernate.FlushMode
+import org.hibernate.SessionFactory
+
+import org.apache.commons.lang.exception.ExceptionUtils
+
+import ozone.marketplace.domain.ValidationException
+
 
 class CustomFieldDefinitionService extends MarketplaceService {
 
-    def sessionFactory
-
-    // TODO: Remove this once I get logging from the integration test working.
-    def logIt(def strIn) {
-        log.info strIn
-    }
+    SessionFactory sessionFactory
 
     @Transactional(readOnly = true)
-    def list(def params = [sort: 'label', order: 'asc']) {
+    List<CustomFieldDefinition> list(def params = [sort: 'label', order: 'asc']) {
         def results
         def dateSearch = parseEditedSinceDate(params)
         if (dateSearch) {
@@ -67,19 +63,21 @@ class CustomFieldDefinitionService extends MarketplaceService {
                 customFieldList.each{
                     if(serviceItem.customFields.contains(it)){
                        serviceItem.customFields.remove(it)
-                       serviceItem.save()
+                       serviceItem.save(flush:true)
                     }
+
                 }
             }
-            customFieldList*.delete()
+
+            //customFieldList*.delete()
             cfd.delete()
         }
         catch (ValidationException ve) {
             throw ve
         }
-        catch (Exception e) {
-            String message = ExceptionUtils.getRootCauseMessage(e)
-            log.error e
+        catch (Exception ex) {
+            String message = ExceptionUtils.getRootCauseMessage(ex)
+            log.error(message, ex)
             // Need this to prevent flush exception. See http://jira.codehaus.org/browse/GRAILS-5865
             def session = sessionFactory.currentSession
             session.setFlushMode(FlushMode.MANUAL)
@@ -211,7 +209,7 @@ class CustomFieldDefinitionService extends MarketplaceService {
 
             //if this value is not in the input, delete it
             if (!newFieldValueStr) {
-                if (isFieldValueInUse(existingValue.id)) {
+                if (isFieldValueInUse(existingValue.id.toString())) {
                     throw new ozone.marketplace.domain.ValidationException(
                         message: "Field value '${fieldValue.displayText}' is being referenced " +
                             "by a listing and so cannot be deleted. Disabling is an " +
@@ -291,14 +289,17 @@ class CustomFieldDefinitionService extends MarketplaceService {
     }
 
     @Transactional(readOnly = true)
-    boolean isFieldValueInUse(def fieldValueId) {
+    boolean isFieldValueInUse(String fieldValueId) {
         def criteria = DropDownCustomField.createCriteria()
+        Long id = Long.parseLong(fieldValueId)
+        //def equal = criteria.eq('id', id)
+
         def cnt = criteria.get {
             projections {
                 count('id')
             }
             value {
-                eq('id', new Long(fieldValueId))
+                eq('id',id)
             }
         }
         log.debug "isFieldValueInUse: fieldValueId = ${fieldValueId} cnt = ${cnt}"

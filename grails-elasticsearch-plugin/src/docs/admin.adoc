@@ -1,0 +1,8 @@
+[[admin]]
+== Admin
+
+The plugin implements a few convenience methods for a few admin-oriented actions.
+
+include::admin/refresh.adoc[]
+
+include::admin/deleteIndex.adoc[]

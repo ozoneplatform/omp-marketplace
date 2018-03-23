@@ -1,0 +1,76 @@
+task copyExampleSecurityContexts(type: Copy, group: 'bundle') {
+    from fileTree("bundle-resources/security")
+    into file("$tomcatBundleStaging/security")
+}
+
+task extractCustomTomcat(type: Sync, group: 'bundle') {
+    dependsOn(configurations.customTomcat)
+
+    from { // use of closure defers evaluation until execution time
+        configurations.customTomcat.collect { zipTree(it) }
+    }
+    into "$tomcatBundleStaging"
+}
+
+task copyTomcatCustomizations(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from fileTree("bundle-resources/tomcat-files")
+    into file("$tomcatBundleStaging/tomcat")
+}
+
+task copyDatabaseDrivers(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from configurations.drivers
+    into file("$tomcatBundleStaging/drivers")
+}
+
+task copyFrameworkSpringConfigurations(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from fileTree("src/main/resources/ozone/marketplace")
+    into file("$tomcatBundleStaging/tomcat/lib/ozone/marketplace")
+}
+
+task copyMarketplaceConfigurations(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from fileTree("bundle-resources/config")
+    into file("$tomcatBundleStaging/tomcat/lib/config")
+}
+
+task copyMarketplaceWar(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat, ':war')
+
+    from tasks.getByPath(':war')
+    rename("omp-marketplace.*", 'marketplace.war')
+    into file("$tomcatBundleStaging/tomcat/webapps")
+}
+
+task copyDatabaseScripts(type: Copy, group: 'bundle') {
+    from fileTree("database/scripts")
+    include "**/*.sql"
+    into file("$tomcatBundleStaging/dbscripts")
+}
+
+task copyDocumentation(type: Copy, group: 'bundle') {
+    from fileTree("docs")
+    into file("$tomcatBundleStaging/docs")
+}
+
+task bundle(type: Zip, group: 'build') {
+    dependsOn(copyDatabaseDrivers,
+              copyTomcatCustomizations,
+              copyFrameworkSpringConfigurations,
+              copyMarketplaceConfigurations,
+              copyMarketplaceWar,
+              copyDatabaseScripts,
+              copyDocumentation)
+
+    from file(tomcatBundleStaging)
+
+    archiveName "ozone-marketplace-${releaseVersion}.zip"
+
+    destinationDir buildDir
+}

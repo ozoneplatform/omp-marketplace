@@ -1,0 +1,57 @@
+{
+
+  "service-item-js-bundle": [
+    "src/serviceItem/ServiceItemCarousel.js"
+  ],
+
+  "backbone-with-deps": [
+    "vendor/lodash.compat.js",
+    "vendor/backbone/backbone-1.0.0.js"
+  ],
+
+  "require-js": [
+    "vendor/requirejs/require-2.1.9.js"
+  ],
+
+  "handlebars": [
+    "vendor/handlebars/handlebars-1.0.0.js"
+  ],
+
+  "marketplace-js-bundle": [
+    "vendor/lodash.compat.js",
+    "vendor/backbone/json2.js",
+    "vendor/css_browser_selector.js",
+    "vendor/jquery/js/jquery-1.10.2.js",
+    "vendor/jquery/jquery.serialize-object.js",
+    "vendor/jquery-validation-1.11.1/dist/jquery.validate.js",
+    "vendor/jquery/jquery-deparam.js",
+    "vendor/jquery/jquery.browser.js",
+    "vendor/jquery/jquery.AutoEllipsis.js",
+    "vendor/jquery/jquery.highlight-3.js",
+    "vendor/jquery/jquery.raty.js",
+    "vendor/bxslider/jquery.bxSlider.min.js",
+    "vendor/jquery/jquery.dataTables.min.js",
+    "vendor/jquery.magnific-popup/jquery.magnific-popup.js",
+    "vendor/bootstrap/bootstrap-select.js",
+    "vendor/backbone/backbone-1.0.0.js",
+    "vendor/backbone/backbone.paginator.js",
+    "vendor/bootstrap/bootstrap-2.3.2.js",
+    "vendor/bootstrap-editable/bootstrap-editable.js",
+    "vendor/bootstrap-datepicker/bootstrap-datepicker.js",
+    "vendor/handlebars/handlebars-1.0.0.js",
+    "vendor/moment.js",
+    "vendor/spin.js",
+    "src/application.js",
+    "src/listbox.js",
+    "src/BootstrapUtil.js",
+    "vendor/owf-widget-debug.js",
+    "src/marketplace.js",
+    "src/patches.js",
+    "src/AddWidgetClient.js",
+    "vendor/bxslider/jquery.bxSlider.min.js",
+    "vendor/bootstrap/bootstrap-fileupload.js",
+    "vendor/bootstrap/bootstrap-select.js",
+    "src/quickview/modal.js"
+  ]
+
+}

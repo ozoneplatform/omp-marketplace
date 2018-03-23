@@ -1,0 +1,122 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-relationship_activity_log
+      author: omp
+      comment: create 'relationship_activity_log' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: relationship_activity_log
+
+            columns:
+              - column:
+                  name: mod_rel_activity_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: service_item_snapshot_id
+                  type: bigint
+              - column:
+                  name: items_idx
+                  type: integer
+
+
+  - changeSet:
+      id: 7.17.0-relationship_activity_log
+      author: omp
+      comment: create 'relationship_activity_log' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: relationship_activity_log
+
+            columns:
+              - column:
+                  name: mod_rel_activity_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: service_item_snapshot_id
+                  type: number(19,0)
+              - column:
+                  name: items_idx
+                  type: number(10,0)
+
+
+  - changeSet:
+      id: 7.17.0-relationship_activity_log
+      author: omp
+      comment: create 'relationship_activity_log' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: relationship_activity_log
+
+            columns:
+              - column:
+                  name: mod_rel_activity_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: service_item_snapshot_id
+                  type: number(19,0)
+              - column:
+                  name: items_idx
+                  type: int
+
+
+  - changeSet:
+      id: 7.17.0-relationship_activity_log-constraints
+      author: omp
+      comment: create 'relationship_activity_log' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: service_item_snapshot_id
+            baseTableName: relationship_activity_log
+            referencedColumnNames: id
+            referencedTableName: service_item_snapshot
+            constraintName: FK594974BB25A20F9D
+
+
+
+  - changeSet:
+      id: 7.17.0-relationship_activity_log-indices_mysql
+      author: omp
+      comment: create 'relationship_activity_log' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: relationship_activity_log
+            indexName: FK594974BB25A20F9D
+            columns:
+              - column:
+                  name: service_item_snapshot_id
+
+
+  - changeSet:
+      id: 7.17.0-relationship_activity_log-indices
+      author: omp
+      comment: create 'relationship_activity_log' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: relationship_activity_log
+            indexName: rel_act_log_mod_si_snpsht_idx
+            columns:
+              - column:
+                  name: service_item_snapshot_id

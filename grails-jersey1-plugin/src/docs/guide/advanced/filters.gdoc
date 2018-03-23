@@ -1,0 +1,24 @@
+Grails filters can be applied to JAX-RS resources as well. For example, to add a filter for the @/api/test/**@ URL
+pattern, create a file @TestFilters.groovy@ under @grails-app/conf@ that looks like:
+
+{warning}
+Filters have been deprecated in Grails 3. This documentation will be updated with details about using interceptors.
+{warning}
+
+{code}
+class TestFilters {
+
+    def filters = {
+
+        testUris(uri:'/api/test/**') {
+            before = {
+                // do some preprocessing
+            }
+            after = {
+                // do some postprocessing
+            }
+
+        }
+    }
+}
+{code}

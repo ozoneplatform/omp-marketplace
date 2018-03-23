@@ -1,0 +1,8 @@
+rootProject.name = 'omp-marketplace'
+
+include 'marketplace-extensions'
+
+include 'grails-elasticsearch-plugin'
+include 'mapper-attachments-plugin'
+
+include 'grails-jersey1-plugin'
