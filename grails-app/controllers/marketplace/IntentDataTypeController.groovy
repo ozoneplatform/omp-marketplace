@@ -1,7 +1,8 @@
 package marketplace
 
 class IntentDataTypeController extends MarketplaceAdminWithDeleteController {
-    def intentDataTypeService
+
+    IntentDataTypeService intentDataTypeService
 
     @Override
     protected String getDomainName() {
@@ -25,7 +26,7 @@ class IntentDataTypeController extends MarketplaceAdminWithDeleteController {
 
     @Override
     protected deleteDomain() {
-        intentDataTypeService.delete(params.id)
+        intentDataTypeService.delete(params.id as Long)
     }
 
     @Override

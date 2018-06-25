@@ -1,0 +1,236 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-custom_field
+      author: omp
+      comment: create 'custom_field' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: custom_field
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: custom_field_definition_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: timestamp
+
+
+  - changeSet:
+      id: 7.17.0-custom_field
+      author: omp
+      comment: create 'custom_field' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: custom_field
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: custom_field_definition_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: datetime
+
+
+  - changeSet:
+      id: 7.17.0-custom_field
+      author: omp
+      comment: create 'custom_field' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: custom_field
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: custom_field_definition_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: timestamp
+
+        - addPrimaryKey:
+            tableName: custom_field
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-custom_field
+      author: omp
+      comment: create 'custom_field' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: custom_field
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: custom_field_definition_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: datetime
+
+        - addPrimaryKey:
+            tableName: custom_field
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-custom_field-constraints
+      author: omp
+      comment: create 'custom_field' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: custom_field
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK2ACD76AC7666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: custom_field
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK2ACD76ACE31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: custom_field_definition_id
+            baseTableName: custom_field
+            referencedColumnNames: id
+            referencedTableName: custom_field_definition
+            constraintName: FK2ACD76AC6F62C9ED
+
+
+  - changeSet:
+      id: 7.17.0-custom_field-indices_mysql
+      author: omp
+      comment: create 'custom_field' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: custom_field
+            indexName: FK2ACD76AC6F62C9ED
+            columns:
+              - column:
+                  name: custom_field_definition_id
+
+
+  - changeSet:
+      id: 7.17.0-custom_field-indices
+      author: omp
+      comment: create 'custom_field' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: custom_field
+            indexName: cf_cfd_idx
+            columns:
+              - column:
+                  name: custom_field_definition_id

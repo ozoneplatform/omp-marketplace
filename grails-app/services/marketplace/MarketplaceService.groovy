@@ -3,7 +3,7 @@ package marketplace
 import org.apache.commons.lang.exception.ExceptionUtils
 
 import ozone.marketplace.domain.ValidationException
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 import org.springframework.transaction.annotation.Propagation
 
 class MarketplaceService extends OzoneService {
@@ -41,4 +41,5 @@ class MarketplaceService extends OzoneService {
 	def delete(def domain){
 		domain.delete()
 	}
+
 }

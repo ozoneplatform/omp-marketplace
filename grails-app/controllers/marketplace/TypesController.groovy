@@ -1,15 +1,18 @@
 package marketplace
 
 import org.apache.commons.lang.exception.ExceptionUtils
-import grails.plugin.cache.CacheEvict
-
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Caching
 import grails.converters.JSON
+
 
 class TypesController extends MarketplaceAdminWithDeleteController {
 
-    def typesService
-    def imagesService
-    def searchableService
+    TypesService typesService
+
+    ImagesService imagesService
+
+    SearchableService searchableService
 
     protected retrieveDomain() {
         def resultMap = typesService.getItemFromParams(params, request)
@@ -35,7 +38,7 @@ class TypesController extends MarketplaceAdminWithDeleteController {
 
     @Override
     protected deleteDomain() {
-        typesService.delete(params.id)
+        typesService.delete(params.id as Long)
     }
 
     protected retrieveDomainList() {
@@ -61,6 +64,7 @@ class TypesController extends MarketplaceAdminWithDeleteController {
         ] as JSON)
     }
 
+    /** TODO: Is this being used anywhere? */
     def defaultTypesIconImage = {
         def currTypeIconImageMap = typesService.getTypeIconImage([contextPath: request.contextPath])
         forward(controller: "images", action: "get", id: currTypeIconImageMap?.id)
@@ -125,13 +129,21 @@ class TypesController extends MarketplaceAdminWithDeleteController {
         render typesList as JSON
     }
 
-    @CacheEvict(["typeIconImageCache", "serviceItemBadgeCache", "serviceItemIconCache", "serviceItemIconImageCache"])
+
+    @Caching(evict = [
+        @CacheEvict(value = "typeIconImageCache"),
+        @CacheEvict(value = "serviceItemBadgeCache"),
+        @CacheEvict(value = "serviceItemIconCache"),
+        @CacheEvict(value = "serviceItemIconImageCache")
+    ])
+    //@CacheEvict(["typeIconImageCache", "serviceItemBadgeCache", "serviceItemIconCache", "serviceItemIconImageCache"])
     def update(){
         Types type = Types.get(params.id)
         if (!type) {
             flash.message = "objectNotFound"
             flash.args = [params.id]
             redirect(action: 'edit', id: params.id)
+            return
         } else if (!type.isPermanent) {
             log.debug "TypesController.update: params = ${params}"
             super.update()
@@ -139,6 +151,7 @@ class TypesController extends MarketplaceAdminWithDeleteController {
             flash.message = "update.failure.isImmutable"
             flash.args = [type.title]
             redirect(action: 'edit', id: type.id)
+            return
         }
     }
 
@@ -149,7 +162,7 @@ class TypesController extends MarketplaceAdminWithDeleteController {
             return;
         }
 
-        Images typesImage = types.image ?: typesService.getDefaultTypesImage([title: types.title])
+        Images typesImage = types.image ?: typesService.getDefaultTypesImage(types.title)
         if (!typesImage || !typesImage.bytes || !typesImage.contentType) {
             response.sendError(404)
             return;

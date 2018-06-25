@@ -11,20 +11,22 @@
 
     <title><g:layoutTitle default="Marketplace" /></title>
 
-    <p:favicon/>
+    %{--<p:favicon/>--}%
 
     <!-- ** CSS ** -->
     <!-- base library -->
-    <p:css id='theme' name='${marketplaceTheme.defaultCssPath()}'
-           absolute='true' />
-    <p:css id='theme-bootstrap' name='${marketplaceTheme.defaultThemeBasePath()}css/bootstrap.css' absolute='true'/>
-    <p:css id='theme-dataTables' name='${marketplaceTheme.defaultThemeBasePath()}css/dataTables.css' absolute='true'/>
-
+    %{--<p:css id='theme' name='${marketplaceTheme.defaultCssPath()}'--}%
+           %{--absolute='true' />--}%
+    %{--<p:css id='theme-bootstrap' name='${marketplaceTheme.defaultThemeBasePath()}css/bootstrap.css' absolute='true'/>--}%
+    %{--<p:css id='theme-dataTables' name='${marketplaceTheme.defaultThemeBasePath()}css/dataTables.css' absolute='true'/>--}%
+    <marketplaceTheme:themeStylesheet/>
+    <marketplaceTheme:bootstrapStylesheet/>
+    <marketplaceTheme:dataTablesStylesheet/>
 
     <!-- ** JavaScript ** -->
-    <g:javascript library="../vendor/modernizr" />
+    <g:javascript library="../static/vendor/modernizr" />
     <g:javascript src="../config.js" />
-    <p:javascript src="marketplace-js-bundle" />
+    <g:javascript src="../static/js/marketplace-js-bundle.js"/>
 
     <script type="text/javascript">
         jQuery('html').addClass('widget');
@@ -55,9 +57,9 @@
 </head>
 
 <body class="widget-content">
-    <script src="${request.contextPath}/vendor/requirejs/requirejs-2.1.9.js"></script>
-    <script src="${request.contextPath}/js/requirejsConfig.js"></script>
-    <script src="${request.contextPath}/js/RouterMain.js"></script>
+    <script src="${request.contextPath}/static/vendor/requirejs/requirejs-2.1.9.js"></script>
+    <script src="${request.contextPath}/static/js/requirejsConfig.js"></script>
+    <script src="${request.contextPath}/static/js/RouterMain.js"></script>
     <div id="omp_content_frame" class="omp_widget">
             <g:render template="/theme/marketplace/content"/>
     </div>

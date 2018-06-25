@@ -1,17 +1,16 @@
 package marketplace
 
-import gorm.AuditStamp
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
 
 /**
  * A Domain class representing a pair of screenshots.  This pair should consist of
  * a large version and a small version of the same image.  The large version is optional.
  * If it is not present, the small version should be used for both
  */
-@AuditStamp
-class Screenshot implements Serializable {
+class Screenshot extends AuditStamped implements Serializable, ToJSON {
 
     static searchable = {
         root false
@@ -20,11 +19,11 @@ class Screenshot implements Serializable {
         only = ['smallImageUrl', 'largeImageUrl']
     }
 
-    private static smallImageUrlValidator =
-        ValidationUtil.&validateUrlConstraint.curry('screenshot.smallImageUrl.url.invalid')
-
-    private static largeImageUrlValidator =
-        ValidationUtil.&validateUrlConstraint.curry('screenshot.largeImageUrl.url.invalid')
+//    private static smallImageUrlValidator =
+//        ValidationUtil.&validateUrlConstraint.curry('screenshot.smallImageUrl.url.invalid')
+//
+//    private static largeImageUrlValidator =
+//        ValidationUtil.&validateUrlConstraint.curry('screenshot.largeImageUrl.url.invalid')
 
     static bindableProperties = ['smallImageUrl', 'largeImageUrl']
     static modifiableReferenceProperties = []
@@ -35,22 +34,32 @@ class Screenshot implements Serializable {
     String largeImageUrl
 
     static constraints = {
-        smallImageUrl(blank:false, nullable:false, maxSize:Constants.MAX_URL_SIZE,
-            validator: smallImageUrlValidator)
         largeImageUrl(blank:false, nullable:true, maxSize:Constants.MAX_URL_SIZE,
-            validator: largeImageUrlValidator)
+                validator: { val, obj ->
+                    def valid = ValidationUtil.&validateUrlConstraint
+                    return valid != null
+                            //.curry('screenshot.largeImageUrl.url.invalid')
+                   // println(x)
+                }
+        )
+        smallImageUrl(blank:false, nullable:false, maxSize:Constants.MAX_URL_SIZE,
+            validator: { val, obj ->
+                def valid = ValidationUtil.&validateUrlConstraint
+                return valid != null
+                        //.curry('screenshot.smallImageUrl.url.invalid')
+            }
+        )
     }
 
     public String getLargeImageUrl() {
         this.largeImageUrl == null ? this.smallImageUrl : this.largeImageUrl
     }
 
+    @Override
     JSONObject asJSON() {
-        new JSONObject([
-            id: this.id,
-            smallImageUrl: this.smallImageUrl,
-            largeImageUrl: this.getLargeImageUrl()
-        ])
+        new JSONObject([id           : id,
+                        smallImageUrl: smallImageUrl,
+                        largeImageUrl: getLargeImageUrl()])
     }
 
     @Override

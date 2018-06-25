@@ -2,50 +2,48 @@ package marketplace.scheduledimport
 
 import java.lang.reflect.UndeclaredThrowableException
 
-import org.springframework.validation.Errors
-import org.springframework.transaction.annotation.Transactional
-import org.springframework.transaction.annotation.Propagation
-import org.springframework.security.core.context.SecurityContextHolder as SCH
-
+import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
+import org.grails.datastore.gorm.GormEntity
 
-import marketplace.ImportTask
+import org.springframework.security.core.context.SecurityContextHolder as SCH
+import org.springframework.transaction.annotation.Propagation
 
 import marketplace.AccountService
-import marketplace.AuditLoggingService
-import marketplace.rest.RestService
-import marketplace.rest.ProfileRestService
-import marketplace.rest.CategoryRestService
-import marketplace.rest.TypeRestService
-import marketplace.rest.StateRestService
-import marketplace.rest.ServiceItemRestService
-import marketplace.rest.AgencyRestService
-import marketplace.rest.DropDownCustomFieldDefinitionRestService
-import marketplace.rest.TextCustomFieldDefinitionRestService
-import marketplace.rest.TextAreaCustomFieldDefinitionRestService
-import marketplace.rest.ImageURLCustomFieldDefinitionRestService
-import marketplace.rest.CheckBoxCustomFieldDefinitionRestService
-
-import marketplace.CustomFieldDefinition
-import marketplace.CustomField
-import marketplace.ServiceItem
-import marketplace.Profile
-import marketplace.Types
 import marketplace.Agency
+import marketplace.AuditLoggingService
 import marketplace.Category
-import marketplace.State
-import marketplace.Relationship
-import marketplace.DropDownCustomFieldDefinition
-import marketplace.TextCustomFieldDefinition
-import marketplace.TextAreaCustomFieldDefinition
-import marketplace.ImageURLCustomFieldDefinition
 import marketplace.CheckBoxCustomFieldDefinition
+import marketplace.CustomField
+import marketplace.CustomFieldDefinition
+import marketplace.DropDownCustomFieldDefinition
+import marketplace.ImageURLCustomFieldDefinition
 import marketplace.ImportStatus
+import marketplace.ImportTask
 import marketplace.ImportTaskResult
-import marketplace.Constants
-import ozone.marketplace.enums.RelationshipType
-import static ozone.utils.Utils.singleOrCollectionDo
+import marketplace.Profile
+import marketplace.Relationship
+import marketplace.ServiceItem
+import marketplace.State
+import marketplace.TextAreaCustomFieldDefinition
+import marketplace.TextCustomFieldDefinition
+import marketplace.Types
+import marketplace.rest.AgencyRestService
+import marketplace.rest.CategoryRestService
+import marketplace.rest.CheckBoxCustomFieldDefinitionRestService
+import marketplace.rest.DropDownCustomFieldDefinitionRestService
+import marketplace.rest.ImageURLCustomFieldDefinitionRestService
+import marketplace.rest.ProfileRestService
+import marketplace.rest.RestService
+import marketplace.rest.ServiceItemRestService
+import marketplace.rest.StateRestService
+import marketplace.rest.TextAreaCustomFieldDefinitionRestService
+import marketplace.rest.TextCustomFieldDefinitionRestService
+import marketplace.rest.TypeRestService
 
+import ozone.marketplace.enums.RelationshipType
+
+import static ozone.utils.Utils.singleOrCollectionDo
 
 /**
  * This class re-implements Scheduled Import for OMP 7.16.  It is separate from
@@ -180,18 +178,22 @@ class ScheduledImportService {
      * @param items the items to import
      * @param equivalenceField The field to check for existing items (defaults to 'uuid')
      */
-    private <T> void importUsingService(Class<T> dtoClass,
-            RestService<T> service, ImportStatus.Summary summary, Collection<T> items,
-            String equivalenceField='uuid', boolean skipValidation=false) {
-
+    private <T extends GormEntity> void importUsingService(Class<T> dtoClass,
+                                                           RestService<T> service,
+                                                           ImportStatus.Summary summary, Collection<T> items,
+                                                           String equivalenceField = 'uuid',
+                                                           boolean skipValidation = false)
+    {
         runAndCatchErrors(items, summary) { item ->
             importOneUsingService(dtoClass, service, item, equivalenceField, skipValidation)
         }
     }
 
-    private <T> CreationStatus importOneUsingService(Class<T> dtoClass,
-            RestService<T> service, T item, String equivalenceField='uuid',
-            boolean skipValidation=false) {
+    private <T extends GormEntity> CreationStatus importOneUsingService(Class<T> dtoClass,
+                                                                        RestService<T> service, T item,
+                                                                        String equivalenceField = 'uuid',
+                                                                        boolean skipValidation = false)
+    {
         def existing = null
         if (item.hasProperty(equivalenceField)) {
             existing = dtoClass."findBy${equivalenceField.capitalize()}"(item[equivalenceField])

@@ -1,12 +1,16 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import ozone.marketplace.domain.ValidationException
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.StringUtils
 
-class DropDownCustomField extends CustomField {
+import ozone.marketplace.domain.ValidationException
+
+
+class DropDownCustomField extends CustomField implements ToJSON {
 
     FieldValue value
+   //TODO BVEST followup
     List<FieldValue> fieldValueList
 
     static bindableProperties = ['value'] + CustomField.bindableProperties
@@ -184,17 +188,14 @@ class DropDownCustomField extends CustomField {
         return this.@value ? this.@value?.displayText : (this.@fieldValueList ? this.@fieldValueList*.displayText.join(',') : '')
     }
 
-    def asJSON() {
-        def jsonObject = super.asJSON()
-        jsonObject.putAll(
-            id: id,
-            value: getFieldValueText(),
-            fieldValue: value ? fieldValueAsJSON() :
-                fieldValueList ? fieldValueListAsJSON() :
-                    EMPTY_JSON_OBJECT
-        )
-
-        return jsonObject
+    @Override
+    JSONObject asJSON() {
+        def json = super.asJSON()
+        json.putAll([id        : id,
+                     value     : getFieldValueText(),
+                     fieldValue: value ? fieldValueAsJSON() :
+                                 fieldValueList ? fieldValueListAsJSON() : EMPTY_JSON_OBJECT])
+        json
     }
 
     def fieldValueAsJSON() {

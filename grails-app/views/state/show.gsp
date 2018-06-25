@@ -28,7 +28,7 @@
 						<g:else>
 							<div class="errorText">
 						</g:else>
-							<b><g:message code="${flash.message}" args="${flash.args}" default="${flash.defaultMsg}" encodeAs="HTML"  encodeAs="HTML" /></b>
+							<b><g:message code="${flash.message}" args="${flash.args}" default="${flash.defaultMsg}" encodeAs="HTML" /></b>
 							<br>
 						</div>
 					</g:if>
@@ -50,7 +50,7 @@
 		                         <tr class="prop">
 		                            <td  class="nameAdmin"><g:message code="label.createdBy" encodeAs="HTML" /></td>
 		                            <td  class="admin_create_field">
-		                              <g:set var="creatorId" value="${state.createdBy?.id}" />
+		                              <g:set var="creatorId" value="${state.createdBy}" />
 		                              <g:set var="creatorDisplay" value="${AdminObjectFormatter.creatorNameDisplay(state)}" />
 		                              <g:if test="${creatorId}">
 		                                <g:link controller="profile" action="detail" id="${creatorId.encodeAsHTML()}">${creatorDisplay?.encodeAsHTML()}</g:link>
@@ -67,7 +67,7 @@
 		                         <tr class="prop">
 		                            <td  class="nameAdmin"><g:message code="label.lastEditedBy" encodeAs="HTML" /></td>
 		                            <td  class="admin_create_field">
-		                              <g:set var="editorId" value="${state.editedBy?.id}" />
+		                              <g:set var="editorId" value="${state.editedBy}" />
 		                              <g:set var="editorDisplay" value="${AdminObjectFormatter.editorNameDisplay(state)}" />
 		                              <g:if test="${editorId}">
 		                                <g:link controller="profile" action="detail" id="${editorId}">${editorDisplay?.encodeAsHTML()}</g:link>

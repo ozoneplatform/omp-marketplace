@@ -12,54 +12,54 @@
     <g:if test="${comingFromLogout != 'true'}">
         <div id="footer" class="one-top-edge-shadow">
             <div id="footer_content_center">
-            <table  class="widget-footer-table">
-                <tr>
-                    <td class="featured-table">
-                        <div class="widget_footer_text"></div>
-                        <div><p class="widget_footer_featured_subtext"></p></div>
-                    </td>
+                <table  class="widget-footer-table">
+                    <tr>
+                        <td class="featured-table">
+                            <div class="widget_footer_text"></div>
+                            <div><p class="widget_footer_featured_subtext"></p></div>
+                        </td>
 
-                    <td class="franchise-options-table">
-                        <div class="widget_footer_text">Resources</div>
-                        <a href='${request.contextPath}${session.spaEnabled ? "/spa" : "/serviceItem/shoppe?max=5&offset=0"}'>
-                            <div class="widget_footer_subtext">Home</div>
-                        </a>
+                        <td class="franchise-options-table">
+                            <div class="widget_footer_text">Resources</div>
+                            <a href='${request.contextPath}${session.spaEnabled ? "/spa" : "/serviceItem/shoppe?max=5&offset=0"}'>
+                                <div class="widget_footer_subtext">Home</div>
+                            </a>
 
-                        <g:link controller="media" action='show'>
-                            <div class="widget_footer_subtext">Tutorials</div>
-                        </g:link>
+                            <g:link controller="media" action='show'>
+                                <div class="widget_footer_subtext">Tutorials</div>
+                            </g:link>
 
-                        <a href="#about" ><div class="widget_footer_subtext"><g:message code="label.about" default="About" encodeAs="HTML" /></div></a>
-                        <a id="contact-us" href="mailto:${contactEmailAddress.encodeAsHTML()}" ><div class="widget_footer_subtext"><g:message code="label.contactUs" default="Contact Us"  encodeAs="HTML" /></div></a>
-                    </td>
+                            <a href="#about" ><div class="widget_footer_subtext"><g:message code="label.about" default="About" encodeAs="HTML" /></div></a>
+                            <a id="contact-us" href="mailto:${contactEmailAddress.encodeAsHTML()}" ><div class="widget_footer_subtext"><g:message code="label.contactUs" default="Contact Us"  encodeAs="HTML" /></div></a>
+                        </td>
 
-                    <td class="browse-options-table">
-                        <div class="widget_footer_text">Browse</div>
-                        <g:link action="search" controller="serviceItem"
-                                params="[sort:'title',order:'asc',offset:0,accessType:session.accessType]">
-                            <div class="see-all-text widget_footer_subtext">All Listings</div>
-                        </g:link>
-                        <g:link action="search" controller="serviceItem"
-                                params="[sort:'approvedDate',order:'desc',offset:0,accessType:session.accessType,status_any_checkbox: 'on']">
-                            <div class="see-all-text widget_footer_subtext">New Arrivals</div>
-                        </g:link>
-                        <g:link action="search" controller="serviceItem"
-                                params="[sort:'avgRate',order:'desc',offset:0,accessType:session.accessType,status_any_checkbox:'on']">
-                            <div class="see-all-text widget_footer_subtext">Highest Rated</div>
-                        </g:link>
-                        <a href="#tags"><div class="see-all-text widget_footer_subtext">Tags</div></a>
-                    </td>
-                    <td class="account-options-table">
-                        <div class="widget_footer_text">My Account</div>
-                        <a href="#profile/self">
-                            <div class="widget_footer_subtext"><g:message code="userMenu.profile" default="Profile" encodeAs="HTML" /></div>
-                        </a>
-                        <a class="create-listing" href="#">
-                            <div class="widget_footer_subtext"><g:message code="userMenu.createListing" default="Add a Listing" encodeAs="HTML" /></div>
-                        </a>
-                    </td>
-                </tr>
-            </table>
+                        <td class="browse-options-table">
+                            <div class="widget_footer_text">Browse</div>
+                            <g:link action="search" controller="serviceItem"
+                                    params="[sort:'title',order:'asc',offset:0,accessType:session.accessType]">
+                                <div class="see-all-text widget_footer_subtext">All Listings</div>
+                            </g:link>
+                            <g:link action="search" controller="serviceItem"
+                                    params="[sort:'approvalDate',order:'desc',offset:0,accessType:session.accessType,status_any_checkbox: 'on']">
+                                <div class="see-all-text widget_footer_subtext">New Arrivals</div>
+                            </g:link>
+                            <g:link action="search" controller="serviceItem"
+                                    params="[sort:'avgRate',order:'desc',offset:0,accessType:session.accessType,status_any_checkbox:'on']">
+                                <div class="see-all-text widget_footer_subtext">Highest Rated</div>
+                            </g:link>
+                            <a href="#tags"><div class="see-all-text widget_footer_subtext">Tags</div></a>
+                        </td>
+                        <td class="account-options-table">
+                            <div class="widget_footer_text">My Account</div>
+                            <a href="#profile/self">
+                                <div class="widget_footer_subtext"><g:message code="userMenu.profile" default="Profile" encodeAs="HTML" /></div>
+                            </a>
+                            <a class="create-listing" href="#">
+                                <div class="widget_footer_subtext"><g:message code="userMenu.createListing" default="Add a Listing" encodeAs="HTML" /></div>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
         <script type="text/javascript">Marketplace.widget.initOwfAPI();</script>
@@ -96,6 +96,10 @@
             var logo = _.find(Marketplace.appconfigs, function(conf) {
                 return conf.code === 'store.logo';
             }).value;
+
+            if(logo.startsWith('/')) {
+                logo = '${request.contextPath}' + logo;
+            }
 
             $('.widget-footer-table .featured-table')
                 .children('.widget_footer_text').text(footerTitle)

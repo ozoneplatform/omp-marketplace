@@ -4,9 +4,14 @@ class MediaController {
 
     static defaultAction = "show"
 
+    private static final String MEDIA_DESCRIPTOR_CLASSPATH = 'classpath:public/media/MediaDescriptor.txt'
+
     def show = {
-        def folder = grailsAttributes.getApplicationContext().getResource('/').getFile().toString() + '/media'
-        def allFiles = FileUtil.mediaInfoFromDescriptor(folder)
+        def mediaDescriptorResource = grailsApplication.mainContext.getResource(MEDIA_DESCRIPTOR_CLASSPATH)
+        def mediaDescriptorFile
+        if (mediaDescriptorResource.exists()) { mediaDescriptorFile = mediaDescriptorResource.file }
+
+        def allFiles = mediaDescriptorFile.exists() ? FileUtil.mediaInfoFromDescriptorFile(mediaDescriptorFile) : [:]
         def noviceMap = [:]
         def expertMap = [:]
         def guideMap = [:]

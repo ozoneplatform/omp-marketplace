@@ -1,11 +1,12 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class Tag implements Serializable, Comparable<Tag> {
+
+class Tag extends AuditStamped implements Serializable, Comparable<Tag>, ToJSON {
 
     String title
 
@@ -48,12 +49,12 @@ class Tag implements Serializable, Comparable<Tag> {
         return false
     }
 
+    @Override
     JSONObject asJSON() {
-        new JSONObject([
-            id: id,
-            title: title,
-            itemCount: serviceItemTags.size()  //Note this will cause a transient object exception if a new ServiceItemTag was added in the same transaction
-        ])
+        marshall([id       : id,
+                  title    : title,
+                  //Note this will cause a transient object exception if a new ServiceItemTag was added in the same transaction
+                  itemCount: serviceItemTags?.size() ?: 0])
     }
 
     String prettyPrint() {

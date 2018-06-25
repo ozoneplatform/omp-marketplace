@@ -1,65 +1,122 @@
 package marketplace
 
-import grails.util.Holders
+import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpSession
+
+import grails.converters.JSON
+
+import org.hibernate.SessionFactory
+
 import marketplace.search.SearchCriteria
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.apache.commons.lang.time.FastDateFormat
 import org.elasticsearch.action.search.SearchPhaseExecutionException
-import org.hibernate.FlushMode
-import ozone.marketplace.domain.ValidationException
+
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 import ozone.utils.User
-import grails.converters.JSON
 
-import javax.servlet.http.HttpServletResponse
 
 class ServiceItemController extends BaseMarketplaceRestController {
-    def config = Holders.config
-    def sessionFactory
-
-    def searchableService
-    def searchNuggetService
-    def accountService
-    def serviceItemService
-    def imagesService
-    def profileService
-    def genericQueryService
-    def itemCommentService
-    def serviceItemActivityService
-    def typesService
-    def categoryService
-    def stateService
-    def customFieldDefinitionService
-    def relationshipService
-    def importStackService
-    def aggregationsService
 
     static SLASHES_DATE_FORMAT = 'MM/dd/yyyy'
 
     static FastDateFormat dateFormatter = FastDateFormat.getInstance(SLASHES_DATE_FORMAT)
 
+    SearchableService searchableService
 
-    def index = {
+    SearchNuggetService searchNuggetService
+
+    AccountService accountService
+
+    ServiceItemService serviceItemService
+
+    ImagesService imagesService
+
+    ProfileService profileService
+
+    GenericQueryService genericQueryService
+
+    ItemCommentService itemCommentService
+
+    ServiceItemActivityService serviceItemActivityService
+
+    TypesService typesService
+
+    CategoryService categoryService
+
+    StateService stateService
+
+    CustomFieldDefinitionService customFieldDefinitionService
+
+    RelationshipService relationshipService
+
+    ImportStackService importStackService
+
+    AggregationsService aggregationsService
+
+    SessionFactory sessionFactory
+
+    def index() {
         if(session.spaEnabled) {
             redirect(uri: '/spa')
             return
         }
+
         params.sort="editedDate"
         params.order="desc"
         session.sorttype=""
         session.sortid=0
-
         log.debug "Using accessType: ${session.accessType}"
         processSort()
 
-        if (session.accessType == Constants.VIEW_USER)
+        if (session.accessType == Constants.VIEW_USER) {
             redirect(action: "shoppe", params: params)
-        else
-            redirect(action:'adminView', params:params)
+            return
+        }
+
+        redirect(action: 'adminView', params: params)
     }
 
-    def getOwfCompatibleItems = {
+    /** TODO: Are these session properties used? Put them on the request instead of the session. */
+    private void processSort() {
+        session.sortTitle = "desc"
+        session.sortCreatedDate = "desc"
+        session.sortRating = "desc"
+        session.sortTypes = "desc"
+        session.sortState = "desc"
+        session.sortApprovalStatus = "desc"
+
+        if (params.order != "desc") return
+
+        switch (params.sort) {
+            case "title":
+                session.sortTitle = "asc"
+                break
+
+            case "createdDate":
+                session.sortCreatedDate = "asc"
+                break
+
+            case "avgRate":
+                session.sortRating = "asc"
+                break
+
+            case "types":
+                session.sortTypes = "asc"
+                break
+
+            case "state":
+                session.sortState = "asc"
+                break
+
+            case "approvalStatus":
+                session.sortApprovalStatus = "asc"
+                break
+        }
+    }
+
+    def getOwfCompatibleItems() {
         params.types_ozoneAware = true
         params.state_isPublished = true
         params.enabled_only = true
@@ -71,7 +128,8 @@ class ServiceItemController extends BaseMarketplaceRestController {
         getServiceItemsAsJSON()
     }
 
-    def getListFromIndexAsModel = { searchBean ->
+    /** TODO: Unused? */
+    def getListFromIndexAsModel(searchBean) {
         try {
             def result = searchableService.searchListings(searchBean)
             def model = [:]
@@ -87,47 +145,44 @@ class ServiceItemController extends BaseMarketplaceRestController {
         }
     }
 
-    def getListFromIndexAsModel2 = { searchBean ->
+    private SearchResult<ServiceItem> getListFromIndexAsModel2(SearchCriteria searchBean) {
         def result = searchableService.searchListings(searchBean)
-        def model = [:]
-        def serviceItemList = result.searchResults
-        model.put("serviceItemList", serviceItemList)
-        model.put("listSize", result?.total)
-        model.put("params", params)
-        return model
+
+        return new SearchResult<ServiceItem>(result?.searchResults, result?.total, params)
     }
 
     /**
      * Advanced search method to return serviceItem models as JSON objects
      */
-    def getServiceItemsAsJSON = {
-        log.debug "getServiceItemsAsJSON: params = ${params}"
+    def getServiceItemsAsJSON() {
         if (!params.max) params.max = 10
         if (!params.method_name) params.method_name = 'getServiceItemsAsJSON'
         params.accessType = Constants.VIEW_USER
-        def result
-        def model = []
-        int total
+
         try {
-            if (Boolean.valueOf(params.useIndex)) {
+            HttpSession session = getSession()
+            SearchResult<ServiceItem> result
+            if (params.boolean('useIndex')) {
                 prepDefaultParamsForIndex(params)
                 // Create new Search Bean
                 session.searchBean = new SearchCriteria(params)
                 result = getListFromIndexAsModel2(session.searchBean)
             } else {
-                result = genericQueryService.serviceItems(params)
+                String username = session?.getAttribute('username')
+                String accessType = session?.getAttribute('accessType')
+
+                result = genericQueryService.serviceItems(params, username, accessType)
             }
-            result['serviceItemList']?.collect { model.add(it.asJSON()) }
-            total = result['listSize']
-            renderResult(model, total, HttpServletResponse.SC_OK)
+
+            def model = result.items.collect { it.asJSON() }
+            renderResult(model, result.total, HttpServletResponse.SC_OK)
         }
         catch (Exception e) {
             handleException(e, params.method_name)
         }
     }
 
-    def shoppe = {
-
+    def shoppe() {
         def defaultParams = [:]
         prepDefaultParamsForIndex(defaultParams)
         session.searchBean = new SearchCriteria(defaultParams)
@@ -154,7 +209,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
             params.max = grailsApplication.config.marketplace.defaultLandingPageSize
 
             //RECENTLY ADDED LISTINGS
-            params.sort = 'approvedDate'
+            params.sort = 'approvalDate'
             def recentlyAdded = searchableService.searchListings(new SearchCriteria(params))
             log.debug "${params.max} ${recentlyAdded.searchResults.size()}"
 
@@ -189,10 +244,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
         }
     }
 
-
-
-    def list = {
-        log.debug "list:"
+    def list() {
         if ((session.modelMap) && (session.modelMap['flashMessage'])) {
             flash.message = session.modelMap['flashMessage']
             session.modelMap = null
@@ -202,9 +254,8 @@ class ServiceItemController extends BaseMarketplaceRestController {
         getListFromIndex(false, session.searchBean)
     }
 
-    def search = {
-        log.debug "search: params = ${params}"
 
+    def search() {
         if (!params.sort) {
             //if there is a search query, default sort is by relevance score,
             //otherwise, default sort is by rating
@@ -218,7 +269,8 @@ class ServiceItemController extends BaseMarketplaceRestController {
         getListFromIndex(false, session.searchBean)
     }
 
-    def lastSearch = {
+    /** TODO: Unused? */
+    def lastSearch() {
         prepDefaultParamsForIndex(params)
         SearchCriteria searchCriteria = session.searchBean
         if (searchCriteria) {
@@ -229,7 +281,11 @@ class ServiceItemController extends BaseMarketplaceRestController {
         getListFromIndex(false, searchCriteria)
     }
 
-    def relist = {
+    /**
+     * Retrieve the detail-listing of a service item as a JSON object
+     * TODO: Unused?
+     */
+    def relist() {
         prepDefaultParamsForIndex(params)
         if (session.searchBean) {
             session.searchBean.updateBean(params)
@@ -239,10 +295,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
         getListFromIndex(true, session.searchBean)
     }
 
-    /*
-     * Retrieve the detail-listing of a service item as a JSON object
-     */
-    def getDetailListingForServiceItemAsJSON = {
+    def getDetailListingForServiceItemAsJSON()  {
         def model
 
         try {
@@ -267,11 +320,12 @@ class ServiceItemController extends BaseMarketplaceRestController {
 
     /**
      * Imports a stack from a stack descriptor file
+     * TODO: Unused?
      */
-    def importStack = {
+    def importStack() {
         try {
             def descriptorFile = request.getFile('descriptorFile')
-            def descriptorText = org.apache.commons.io.IOUtils.toString(descriptorFile.getInputStream(), "UTF-8")
+            def descriptorText = IOUtils.toString(descriptorFile.getInputStream(), "UTF-8")
             User user = accountService.getLoggedInUser()
 
             ServiceItem stack = importStackService.importStackDescriptor(descriptorText, user)
@@ -282,6 +336,13 @@ class ServiceItemController extends BaseMarketplaceRestController {
             log.error message(code: "sic.log.error.cannotParseStackFile", args: ["${e.getMessage()}"])
             flash.message = "sic.flash.msg.cannotParseStackFile"
             redirect(action: 'list')
+            return
+        }
+    }
+
+    def beforeInterceptor = {
+        if (session.baseUrl == null) {
+            session.baseUrl = request.scheme + "://" + request.serverName + ":" + request.serverPort + request.getContextPath()
         }
     }
 
@@ -299,14 +360,17 @@ class ServiceItemController extends BaseMarketplaceRestController {
         }
     }
 
-    def adminView = {
-        log.debug "adminView: params = ${params}"
-        []
+    /**
+     * TODO: this is used by the my listings page to populate the recent activities. It can be removed when that feature is migrated to the REST API
+     */
+    def adminView() {
+        // render(view: "adminView")
     }
 
-    //TODO: this is used by the my listings page to populate the recent activities. It can be removed when that feature is migrated to the REST API
-    def myListingView = {
-
+    /**
+     * TODO: this is used by the my listings page. It can be removed when that feature is migrated to the REST API
+     */
+    def myListingView() {
         def activities
 
         try {
@@ -322,8 +386,12 @@ class ServiceItemController extends BaseMarketplaceRestController {
         [activities: activities]
     }
 
-    //TODO: this is used by the my listings page. It can be removed when that feature is migrated to the REST API
-    def getActiveListings = {
+    /**
+     * TODO: this is used by the my listings page. It can be removed when that feature is migrated to the REST API
+     */
+    def getActiveListings() {
+        HttpSession session = getSession()
+
         params.offset = params.start
         params.max = params.limit;
         params.order = params?.dir?.toLowerCase() ?: '';
@@ -333,19 +401,22 @@ class ServiceItemController extends BaseMarketplaceRestController {
         if (params.sort == "state") params.sort = "state_title"
         def json
 
+        String username = session?.getAttribute('username')
+        String accessType = session?.getAttribute('accessType')
+
         try {
-            def items = genericQueryService.serviceItems(params)['serviceItemList']
+            def result = genericQueryService.serviceItems(params, username, accessType)
             json = [
                 success: true,
-                totalCount: items.totalCount,
-                data: items.collect { si ->
+                totalCount: result.total,
+                data: result.items.collect { serviceItem ->
                     [
-                        id: si.id,
-                        title: si.title,
-                        state: si.state?.title,
-                        types: si.types?.title,
-                        lastActivity: si.lastActivityString(),
-                        isHidden: si.isHidden
+                        id: serviceItem.id,
+                        title: serviceItem.title,
+                        state: serviceItem.state?.title,
+                        types: serviceItem.types?.title,
+                        lastActivity: serviceItem.lastActivityString(),
+                        isHidden: serviceItem.isHidden
                     ]
                 }
             ]
@@ -362,8 +433,10 @@ class ServiceItemController extends BaseMarketplaceRestController {
         render (json as JSON)
     }
 
-    //TODO: this is used by the my listings page. It can be removed when that feature is migrated to the REST API
-    def getInactiveListings = {
+
+    def getInactiveListings() {
+        HttpSession session = getSession()
+
         params.offset = params.start
         params.max = params.limit;
         params.order = params?.dir?.toLowerCase() ?: '';
@@ -371,21 +444,25 @@ class ServiceItemController extends BaseMarketplaceRestController {
         if (params.sort == "types") params.sort = "types_title"
         String[] strArr = new String[3]
         params.approvalStatus = [Constants.APPROVAL_STATUSES["IN_PROGRESS"], Constants.APPROVAL_STATUSES["PENDING"], Constants.APPROVAL_STATUSES["REJECTED"]].toArray(strArr)
+
+        String username = session?.getAttribute('username')
+        String accessType = session?.getAttribute('accessType')
+
         def json
         try {
-            def items = genericQueryService.serviceItems(params)['serviceItemList']
+            def result = genericQueryService.serviceItems(params, username, accessType)
 
             json = [
                 success: true,
-                totalCount: items.totalCount,
-                data: items.collect { si ->
+                totalCount: result.total,
+                data: result.items.collect { serviceItem ->
                     [
-                        id: si.id,
-                        title: si.title,
-                        approvalStatus: si.approvalStatus,
-                        types: si.types?.title,
-                        lastActivity: si.lastActivityString(),
-                        isHidden: si.isHidden
+                        id: serviceItem.id,
+                        title: serviceItem.title,
+                        approvalStatus: serviceItem.approvalStatus,
+                        types: serviceItem.types?.title,
+                        lastActivity: serviceItem.lastActivityString(),
+                        isHidden: serviceItem.isHidden
                     ]
                 }
             ]
@@ -402,47 +479,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
         render (json as JSON)
     }
 
-    def processSort = {
-
-        // Title
-        session.sortTitle = "desc"
-        if ("title" == params.sort && "desc" == params.order) {
-            session.sortTitle = "asc"
-        }
-
-        // Create Date
-        session.sortCreatedDate = "desc"
-        if ("createdDate" == params.sort && "desc" == params.order) {
-            session.sortCreatedDate = "asc"
-        }
-
-        // Average Rating
-        session.sortRating = "desc"
-        if ("avgRate" == params.sort && "desc" == params.order) {
-            session.sortRating = "asc"
-        }
-
-        // Type
-        session.sortTypes = "desc"
-        if ("types" == params.sort && "desc" == params.order) {
-            session.sortTypes = "asc"
-        }
-
-        // State
-        session.sortState = "desc"
-        if ("state" == params.sort && "desc" == params.order) {
-            session.sortState = "asc"
-        }
-
-        // Approval Status
-        session.sortApprovalStatus = "desc"
-        if ("approvalStatus" == params.sort && "desc" == params.order) {
-            session.sortApprovalStatus = "asc"
-        }
-
-    }
-
-    private void getListFromIndex (boolean remote, def searchBean) {
+    private void getListFromIndex (boolean remote, SearchCriteria searchBean) {
         log.debug "getListFromIndex:"
         try {
             searchBean.aggregations = true
@@ -521,7 +558,6 @@ class ServiceItemController extends BaseMarketplaceRestController {
     protected handleNonJSONException(Exception e, String message, List args) {
         flash.message = message ?: "sic.flash.msg.exceptionOccurred"
         flash.args = args ?: [e?.getMessage()]
-
         def requestReferer = request.getHeader("referer")
         def requestServletPath = request.getServletPath()
         def grailsUrl = "/grails"
@@ -542,12 +578,7 @@ class ServiceItemController extends BaseMarketplaceRestController {
         }
     }
 
-    public handleNonJSONException(Exception e) {
+    def handleNonJSONException(Exception e) {
         handleNonJSONException(e, null, null)
-    }
-
-    def beforeInterceptor = {
-        if(session.baseUrl == null)
-            session.baseUrl = request.scheme + "://" + request.serverName + ":" + request.serverPort + request.getContextPath()
     }
 }

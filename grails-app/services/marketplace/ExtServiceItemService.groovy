@@ -1,6 +1,10 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
+import ozone.decorator.JSONDecoratorService
 import ozone.marketplace.domain.ValidationException
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 import ozone.utils.User
@@ -9,18 +13,25 @@ import ozone.utils.Utils
 import java.text.ParseException
 import org.apache.commons.lang.StringUtils
 import org.apache.commons.lang.WordUtils
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 class ExtServiceItemService {
 
-    def serviceItemService
-    def accountService
-    def marketplaceApplicationConfigurationService
-    def customFieldDefinitionService
-    def changeLogService
-    def JSONDecoratorService
-    def owfWidgetTypesService
-    def profileService
+    ServiceItemService serviceItemService
+
+    AccountService accountService
+
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
+    CustomFieldDefinitionService customFieldDefinitionService
+
+    ChangeLogService changeLogService
+
+    JSONDecoratorService JSONDecoratorService
+
+    OwfWidgetTypesService owfWidgetTypesService
+
+    ProfileService profileService
 
     static final String CUSTOM_FIELD_JSON_STYLE_TYPE_LABEL = "fieldType"
     static final String VALID_CUSTOM_FIELD_CFD_MSG = "Add a valid Custom Field JSON field 'customFieldDefinitionUuid', 'name' or 'customFieldDefinitionId'."
@@ -57,7 +68,7 @@ class ExtServiceItemService {
     @Transactional(readOnly = true)
     protected boolean approvalStatusOKForCreate(String approvalStatus) {
         boolean returnValue = false
-        if (accountService.isExternAdmin()) {
+        if (accountService.isExtAdmin()) {
             returnValue = (approvalStatus == Constants.APPROVAL_STATUSES["APPROVED"] ||
                 approvalStatus == Constants.APPROVAL_STATUSES["PENDING"])
         } else {
@@ -246,7 +257,7 @@ class ExtServiceItemService {
 
         def autoApprove = false
         if (createFl) {
-            if (accountService.isExternAdmin()) {
+            if (accountService.isExtAdmin()) {
                 if (extSvc.approvalStatus == Constants.APPROVAL_STATUSES["APPROVED"]) {
                     log.debug "ExtServiceItem will be auto approved"
                     autoApprove = true
@@ -356,20 +367,20 @@ class ExtServiceItemService {
         // Extract Date-based properties.
         // We're not allowing external systems to set the 'createdDate' property
         if (json.has('releaseDate')) {
-            if (json.releaseDate == null || json.releaseDate == JSONObject.NULL) {
+            if (json.releasedDate == null || json.releasedDate == null /*JSONObject.NULL*/) {
                 svc.releaseDate = null
             }
 
             else {
                 try {
-                    svc.setReleaseDate(json.releaseDate)
+                    svc.setReleasedDateFromStr(json.releasedDate.toString())
                 } catch (ParseException pe) {
                     try {
                         JSONUtil.optDate(json, svc, 'releaseDate')
                     }
                     catch (ParseException pe2) {
                         throw new ValidationException(message: "Release Date sent " +
-                            "(${json?.releaseDate}) " +
+                            "(${json?.releasedDate}) " +
                             "must have time format of ${Constants.OPT_DATE_FORMAT} or " +
                             "${Constants.RELEASE_DATE_FORMAT_STRING}"
                         )

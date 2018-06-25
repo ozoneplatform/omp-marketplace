@@ -1,15 +1,9 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
-/**
- * Created by IntelliJ IDEA.
- * Date: Jul 21, 2010
- * Time: 4:33:22 PM
- */
 
-@gorm.AuditStamp
-public class RejectionListing implements Comparable, Serializable {
+class RejectionListing extends AuditStamped implements Comparable, Serializable, ToJSON {
 
     static bindableProperties = [
         'justification',
@@ -74,14 +68,13 @@ public class RejectionListing implements Comparable, Serializable {
         }
     }
 
-    def asJSON() {
-        new JSONObject(
-            id: id,
-                description: description,
-                author: author?.asJSONRef(),
-                justification: justification?.asJSON(),
-                createdDate: createdDate
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id           : id,
+                  description  : description,
+                  author       : author?.asJSONRef(),
+                  justification: justification?.asJSON(),
+                  createdDate  : createdDate])
     }
 
     //ensure that carriage returns are always removed

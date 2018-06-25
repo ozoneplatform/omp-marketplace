@@ -1,5 +1,9 @@
 package marketplace
 
+import javax.annotation.Nullable
+
+import grails.gorm.transactions.ReadOnly
+import grails.gorm.transactions.Transactional
 import grails.util.Environment
 
 import java.util.concurrent.locks.Lock
@@ -8,34 +12,70 @@ import java.util.concurrent.locks.ReentrantLock
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.context.SecurityContextImpl
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
+import org.hibernate.SessionFactory
+
 import ozone.utils.User
+
 
 class AccountService extends OzoneService {
 
-    def sessionFactory
+    SessionFactory sessionFactory
 
+    Long systemUserId
 
-    public Authentication getAuthentication() {
+    private useSystemUserId = false
+
+    def <T> T runAsSystemUser(Closure<T> closure) {
+        try {
+            useSystemUserId = true
+            return closure()
+        }
+        finally {
+            useSystemUserId = false
+        }
+    }
+
+    Authentication getAuthentication() {
         // Some services will run outside of the request context
         def authentication = SCH.getContext().getAuthentication()
+
         if (session && !session.authentication) {
             if (authentication != null) {
-                session.authentication = authentication;
+                session.authentication = authentication
             }
         }
+
         return authentication
     }
 
-
-    def getLoggedInUsername() {
+    String getLoggedInUsername() {
         return this.getAuthentication()?.principal?.username
+    }
+
+    @ReadOnly
+    @Nullable
+    Profile findLoggedInUserProfile() {
+        if (useSystemUserId) return Profile.get(systemUserId)
+
+        String username = loggedInUsername
+
+        if (!username) return null
+
+        Profile.findByUsername(username)
+    }
+
+    @ReadOnly
+    @Nullable
+    Long getLoggedInUserProfileId() {
+        if (useSystemUserId) return systemUserId
+
+        findLoggedInUserProfile()?.id
     }
 
     def getLoggedInUserRoles() {
@@ -46,10 +86,10 @@ class AccountService extends OzoneService {
         return getLoggedInUserRoles().collect{it instanceof String ? it : it.authority}.toString()
     }
 
-    def getLoggedInUser() {
+    User getLoggedInUser() {
         User usr = null
         def p = this.getAuthentication()?.principal
-        if (p && p.username) {
+        if (p != 'anonymousUser' && p && p?.username) {
             usr = new User()
             usr.username = p.username
             if (p?.metaClass.hasProperty(p, "displayName")) {
@@ -120,17 +160,18 @@ class AccountService extends OzoneService {
         return roleName == auth?.authority
     }
 
+
     def roleMatches(String roleName, String auth) {
         return roleName == auth
     }
 
-
     @Transactional
-    def getUserDomain(User usr) {
+    UserDomainInstance getUserDomain(User usr) {
         if (usr && (usr?.username) && (usr?.username != "unknown")) {
             Lock lock = new ReentrantLock();
             lock.lock();
             try {
+
                 def usrDomainInstance = UserDomainInstance.findByUsername(usr.username)
                 if (null != usrDomainInstance) {
                     log.debug "Using existing instance for ${usr.username}"
@@ -161,7 +202,8 @@ class AccountService extends OzoneService {
         }
     }
 
-    public void setDefaultView(String userName, String accessType) {
+    //This will compare the organization from the authentication object to the agency that is defined in the store
+    void setDefaultView(String userName, String accessType) {
 
         try {
             log.info "setDefaultView: userName = ${userName} accessType = ${accessType}"
@@ -189,8 +231,7 @@ class AccountService extends OzoneService {
         }
     }
 
-    //This will compare the organization from the authentication object to the agency that is defined in the store
-    public boolean isUserFromStoreAgency(def store) {
+    boolean isUserFromStoreAgency(def store) {
         def principal = this.getAuthentication()?.principal
 
         if (!principal || !store) return false
@@ -202,19 +243,20 @@ class AccountService extends OzoneService {
     }
 
     @Transactional
-    public UserAccount createUserAccount(String username, Date creationDate) {
+    UserAccount createUserAccount(String username, Date creationDate) {
         log.debug "Adding UserAccount and saving last login for ${username}"
         def userAccount = new UserAccount()
         userAccount.username = username
         userAccount.lastLogin = creationDate
         userAccount.save()
+
         def userDomainInstance = new UserDomainInstance(username: username)
         userDomainInstance.save()
         userAccount
     }
 
     @Transactional
-    public UserAccount updateUserAccount(UserAccount userAccount) {
+    UserAccount updateUserAccount(UserAccount userAccount) {
         if (userAccount) {
             log.debug "Saving last login for UserAccount: ${userAccount.username}"
             userAccount.save()
@@ -227,15 +269,16 @@ class AccountService extends OzoneService {
      * updates the lastLogin time on that account
      */
     @Transactional
-    public UserAccount loginAccount(String username) {
-            Date currDate = new Date()
+    UserAccount loginAccount(String username) {
+        Date currDate = new Date()
 
-            // ADDING USER ACCOUNT....
-            //DO NOT CACHE THIS! - A UserAccount can be manually deleted
-            //from the DB, this needs to be a
-            //fresh pull of the data EVERY time.
-            UserAccount userAccount = UserAccount.findByUsername(username,
-                [cache: false])
+        // ADDING USER ACCOUNT....
+        //DO NOT CACHE THIS! - A UserAccount can be manually deleted
+        //from the DB, this needs to be a
+        //fresh pull of the data EVERY time.
+
+        UserAccount userAccount = UserAccount.findByUsername(username, [cache: false])
+        runAsSystemUser {
             userAccount?.refresh()
             if (!userAccount) {
                 userAccount = createUserAccount(username, currDate)
@@ -244,6 +287,7 @@ class AccountService extends OzoneService {
                 userAccount.lastLogin = currDate
                 userAccount = updateUserAccount(userAccount)
             }
+        }
 
         return userAccount
     }
@@ -252,13 +296,13 @@ class AccountService extends OzoneService {
      * @throws AccessDeniedException if the current user in not an Admin
      * @param msg the Message for the exception
      */
-    public void checkAdmin(String msg = "Attempt to access Admin-only functionality") {
+    void checkAdmin(String msg = "Attempt to access Admin-only functionality") {
         if (!isAdmin()) {
             throw new AccessDeniedException(msg)
         }
     }
 
-    public void loginSystemUser() {
+    void loginSystemUser() {
         if (!SCH.context) {
             SCH.context = new SecurityContextImpl()
         }

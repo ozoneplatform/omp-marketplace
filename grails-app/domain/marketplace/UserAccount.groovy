@@ -1,7 +1,7 @@
 package marketplace
 
-@gorm.AuditStamp
-class UserAccount implements Serializable {
+
+class UserAccount extends AuditStamped implements Serializable {
 
     String username
     Date lastLogin

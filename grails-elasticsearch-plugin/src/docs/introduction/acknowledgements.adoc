@@ -1,0 +1,25 @@
+=== Acknowledgments
+
+Many thanks to all the users who reported issues and sent me pull requests.
+
+#### Authors and Contributors
+
+* https://github.com/noamt[Noam Y. Tenne]
+* https://github.com/stefanrother[Stefan Rother-Stübs (Dating Cafe)]
+* https://github.com/skies[Sven Kiesewetter (Dating Cafe)]
+* Michael Schwartz (Dating Cafe)
+* https://github.com/marcoscarceles[Marcos Carceles]
+* https://github.com/puneetbehl[Puneet Behl]
+
+#### Authors and Contributors of the original plugin
+
+* https://github.com/mstein[Manuarii Stein (doc4web consulting)]
+* https://github.com/smaldini[Stephane Maldini (doc4web consulting)]
+* https://github.com/spn[Serge P. Nekoval]
+
+
+#### Previous work
+
+Graeme Rocher started the first draft which this plugin is based on.
+
+Get the full and updated list of contributors on the https://github.com/noamt/elasticsearch-grails-plugin/graphs/contributors[github] repository.

@@ -1,0 +1,40 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-import_task-constraints
+      author: omp
+      comment: create 'import_task' constraints
+      context: create
+
+      changes:
+        - addUniqueConstraint:
+            tableName: import_task
+            columnNames: name
+
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: import_task
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK578EF9DF7666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: import_task
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK578EF9DFE31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: interface_config_id
+            baseTableName: import_task
+            referencedColumnNames: id
+            referencedTableName: interface_configuration
+            constraintName: FK578EF9DFA31F8712
+
+        - addForeignKeyConstraint:
+            baseColumnNames: last_run_result_id
+            baseTableName: import_task
+            referencedColumnNames: id
+            referencedTableName: import_task_result
+            constraintName: FK578EF9DF919216CA

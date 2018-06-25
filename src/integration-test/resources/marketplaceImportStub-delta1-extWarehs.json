@@ -1,0 +1,64 @@
+{
+	"maxClassification" : "ORANGES",
+	"serviceItems" : [
+
+	
+			{
+			"maxClassification" : "ORANGES",
+			"launchUrl" : "http://localhost:8080/launchUrl.html",
+			
+			"state" : "4 - Operations and Support",
+			"versionName" : "2.2",
+			"title" : "(U) Convert Widget 02",
+			"releasedDate" : "2011-12-07T19:57:26.000Z",
+			"editedDate" : "2012-02-07T19:57:26.000Z",
+			"description" : "(U) Second test widget (made in ICP).  Description updated by stub data!",
+			"approvalStatus" : "Approved",
+			"categories" : [
+				
+					{ "title" : "Conversion Tools" },
+					{ "title" : "Category ER2" }
+					
+			],
+			"types" : "Widget",
+			"isEnabled" : "True",
+			"requirements" : "Some requirements; even more requirements; updated by stub data!",
+			"dependencies" : "Some dependencies; even more depencides; updated by stub data!",
+			"organization" : "Directorate for Intelligence, Joint Chiefs of Staff (JCSJ2)",
+			"docUrl" : "",
+			"recommendedLayouts" : [
+            "Tabbed"
+       ],
+			"customFields" : 
+			[
+					{
+					"name" : "Classification",
+					"value" : "ORANGES"
+					},{
+					"name" : "storefront",
+					"value" : "Storefront Z"
+					},{	
+					"name" : "storefrontID",
+					"value" : "AAAA-ZZZ"	
+					},{
+					"name" : "Producing Agency",
+					"value" : "Directorate for Intelligence"				
+					}
+			],
+			"installUrl" : "http://yahoo.com/index.html",
+			"screenshot1Url" : "http://localhost:8080/screen.gif",
+			"screenshot2Url" : "http://localhost:8080/screen2.gif",
+			
+			"techPoc" : "(U) Provider 1",
+			"author" : "admin",
+			"imageSmallUrl" : "http://localhost:8080/tomcat-power.gif",
+			"imageLargeUrl" : "http://localhost:8080/tomcat.gif",
+			"systemUri" : "ER2",
+			"externalId" : "1111-AA",
+			
+			"externalViewUrl" : "https://er211repo.opl.domain/ews/service?id=52617&format=OMPHTML",
+			
+			"externalEditUrl" : "https://er211repo.opl.domain/oer/index.jsp?assetid=52617"
+			} 
+    ]
+}

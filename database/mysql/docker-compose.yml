@@ -1,0 +1,11 @@
+version: '3.2'
+
+services:
+
+  mysql:
+    image: omp/mysql
+    build:
+      context: ./container
+    restart: always
+    ports:
+     - 3306:3306

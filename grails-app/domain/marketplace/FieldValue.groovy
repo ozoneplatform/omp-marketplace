@@ -1,19 +1,19 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
+
 
 /*
  * This Domain object will hold a list of values that correspond to:
  * - Drop Down Custom Field Values
  */
-@gorm.AuditStamp
-class FieldValue implements Serializable {
+class FieldValue extends AuditStamped implements Serializable, ToJSON {
 
     static bindableProperties = ['displayText', 'isEnabled']
     static modifiableReferenceProperties = []
 
 	String displayText
-
+	Long id
 	Integer isEnabled = 1
 
     FieldValue(String displayText) {
@@ -52,15 +52,14 @@ class FieldValue implements Serializable {
 		"${displayText}"
 	}
 
-	def asJSON() {
-		return new JSONObject(
-			id: id,
-			displayText: displayText,
-			isEnabled: isEnabled,
-			createdDate: AdminObjectFormatter.standardDateDisplay(createdDate),
-			customFieldDefinitionId: customFieldDefinition?.id
-		)
-	}
+    @Override
+	JSONObject asJSON() {
+        new JSONObject([id                     : id,
+                        displayText            : displayText,
+                        isEnabled              : isEnabled,
+                        createdDate            : AdminObjectFormatter.standardDateDisplay(createdDate),
+                        customFieldDefinitionId: customFieldDefinition?.id])
+    }
 
 	def asJSONRef() {
 		return new JSONObject(

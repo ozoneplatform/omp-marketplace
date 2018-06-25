@@ -1,0 +1,293 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-interface_configuration
+      author: omp
+      comment: create 'interface_configuration' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: interface_configuration
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: interface_conPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: allow_truncate
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: auto_create_meta_data
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: default_large_icon_url
+                  type: varchar(2048)
+              - column:
+                  name: default_small_icon_url
+                  type: varchar(2048)
+              - column:
+                  name: delta_since_time_param
+                  type: varchar(64)
+              - column:
+                  name: delta_static_parameters
+                  type: varchar(2048)
+              - column:
+                  name: full_static_parameters
+                  type: varchar(2048)
+              - column:
+                  name: loose_match
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: query_date_format
+                  type: varchar(32)
+              - column:
+                  name: response_date_format
+                  type: varchar(32)
+              - column:
+                  name: download_images
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-interface_configuration
+      author: omp
+      comment: create 'interface_configuration' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: interface_configuration
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: allow_truncate
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: auto_create_meta_data
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: default_large_icon_url
+                  type: varchar(2048)
+              - column:
+                  name: default_small_icon_url
+                  type: varchar(2048)
+              - column:
+                  name: delta_since_time_param
+                  type: varchar(64)
+              - column:
+                  name: delta_static_parameters
+                  type: varchar(2048)
+              - column:
+                  name: full_static_parameters
+                  type: varchar(2048)
+              - column:
+                  name: loose_match
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: query_date_format
+                  type: varchar(32)
+              - column:
+                  name: response_date_format
+                  type: varchar(32)
+              - column:
+                  name: download_images
+                  type: tinyint(1)
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-interface_configuration
+      author: omp
+      comment: create 'interface_configuration' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: interface_configuration
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: interface_conPK
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: allow_truncate
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: auto_create_meta_data
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: default_large_icon_url
+                  type: varchar(2048 CHAR)
+              - column:
+                  name: default_small_icon_url
+                  type: varchar(2048 CHAR)
+              - column:
+                  name: delta_since_time_param
+                  type: varchar(64 CHAR)
+              - column:
+                  name: delta_static_parameters
+                  type: varchar(2048 CHAR)
+              - column:
+                  name: full_static_parameters
+                  type: varchar(2048 CHAR)
+              - column:
+                  name: loose_match
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(256 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: query_date_format
+                  type: varchar(32 CHAR)
+              - column:
+                  name: response_date_format
+                  type: varchar(32 CHAR)
+              - column:
+                  name: download_images
+                  type: number(1,0)
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-interface_configuration
+      author: omp
+      comment: create 'interface_configuration' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: interface_configuration
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: interface_conPK
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: allow_truncate
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: auto_create_meta_data
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: default_large_icon_url
+                  type: nvarchar(2048)
+              - column:
+                  name: default_small_icon_url
+                  type: nvarchar(2048)
+              - column:
+                  name: delta_since_time_param
+                  type: nvarchar(64)
+              - column:
+                  name: delta_static_parameters
+                  type: nvarchar(2048)
+              - column:
+                  name: full_static_parameters
+                  type: nvarchar(2048)
+              - column:
+                  name: loose_match
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: nvarchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: query_date_format
+                  type: nvarchar(32)
+              - column:
+                  name: response_date_format
+                  type: nvarchar(32)
+              - column:
+                  name: download_images
+                  type: bit
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false

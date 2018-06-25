@@ -1,0 +1,259 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-state
+      author: omp
+      comment: create 'state' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: state
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: state_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: is_published
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250)
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: uuid
+                  type: varchar(255)
+
+
+  - changeSet:
+      id: 7.17.0-state
+      author: omp
+      comment: create 'state' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: state
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: is_published
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250)
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: uuid
+                  type: varchar(255)
+
+
+  - changeSet:
+      id: 7.17.0-state
+      author: omp
+      comment: create 'state' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: state
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: is_published
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(50 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(250 CHAR)
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: uuid
+                  type: varchar(255 CHAR)
+
+        - addPrimaryKey:
+            tableName: state
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-state
+      author: omp
+      comment: create 'state' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: state
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: is_published
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: nvarchar(50)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: nvarchar(250)
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: uuid
+                  type: nvarchar(255)
+
+        - addPrimaryKey:
+            tableName: state
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-state-constraints
+      author: omp
+      comment: create 'state' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: state
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK68AC4917666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: state
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK68AC491E31CB353
+
+
+  - changeSet:
+      id: 7.17.0-state-indices
+      author: omp
+      comment: create 'state' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: state
+            indexName: state_uuid_idx
+            unique: true
+            columns:
+              - column:
+                  name: uuid

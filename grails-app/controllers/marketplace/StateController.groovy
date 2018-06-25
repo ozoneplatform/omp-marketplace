@@ -1,12 +1,14 @@
 package marketplace
 
-import grails.plugin.cache.CacheEvict
 import grails.converters.JSON
+import grails.plugin.cache.CacheEvict
+
 
 class StateController extends MarketplaceAdminWithDeleteController {
 
-    def stateService
-    def searchableService
+    StateService stateService
+
+    SearchableService searchableService
 
     protected String getDomainName() { return "state" }
 
@@ -18,7 +20,7 @@ class StateController extends MarketplaceAdminWithDeleteController {
 
     @Override
     protected deleteDomain() {
-        stateService.delete(params.id)
+        stateService.delete(params.id as Long)
     }
 
     protected retrieveDomainList() {

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <defaultCache maxElementsInMemory="100000"
+                  eternal="false"
+                  timeToLiveSeconds="1200"
+                  overflowToDisk="false"
+                  memoryStoreEvictionPolicy="LRU">
+    </defaultCache>
+
+    <cache name="marketplace.UserAccount"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="1200"
+           eternal="false"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <cache name="marketplace.ServiceItem"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="marketplace.ItemComment"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="marketplace.Text"
+           maxElementsInMemory="1000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+    <cache name="marketplace.Category"
+           maxElementsInMemory="1000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+    <cache name="marketplace.State"
+           maxElementsInMemory="1000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+    <cache name="marketplace.Types"
+           maxElementsInMemory="1000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="org.hibernate.cache.StandardQueryCache"
+           maxElementsInMemory="10000"
+           timeToIdleSeconds="1200">
+    </cache>
+
+    <cache name="org.hibernate.cache.UpdateTimestampsCache"
+           maxElementsInMemory="5000"
+           eternal="true"
+           overflowToDisk="true">
+    </cache>
+
+    <!-- Setup Spring Caches here -->
+    <cache name="serviceItemBadgeCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="serviceItemIconImageCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+
+    <cache name="serviceItemDescriptionCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+
+    <cache name="typeIconImageCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+
+    <cache name="nuggetCache"
+           maxElementsInMemory="100000"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+
+    <cache name="org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration"
+           maxElementsInMemory="100"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="query.org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration.findByCode"
+           maxElementsInMemory="100"
+           timeToLiveSeconds="3600"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false">
+    </cache>
+
+
+</ehcache>

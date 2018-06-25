@@ -1,9 +1,9 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class Agency implements Serializable {
+
+class Agency extends AuditStamped implements Serializable, ToJSON {
     final static bindableProperties = ['title', 'iconUrl']
     final static modifiableReferenceProperties = []
 
@@ -31,12 +31,11 @@ class Agency implements Serializable {
     String iconUrl
     //long parentId
 
+    @Override
     JSONObject asJSON() {
-        new JSONObject([
-            id: this.id,
-            title: this.title,
-            iconUrl: this.iconUrl
-        ])
+        marshall([id     : this.id,
+                  title  : this.title,
+                  iconUrl: this.iconUrl])
     }
 
 	//For searching

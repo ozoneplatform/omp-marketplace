@@ -1,43 +1,48 @@
 package marketplace
 
-import org.apache.commons.lang.exception.ExceptionUtils
+import grails.gorm.transactions.Transactional
+
 import org.hibernate.FlushMode
-import org.springframework.transaction.annotation.Transactional
+import org.hibernate.SessionFactory
+
+import org.apache.commons.lang.exception.ExceptionUtils
 
 import ozone.marketplace.domain.ValidationException
+
 
 class ImportTaskService {
 
     def transactional = false
-    def sessionFactory
-    def importService;
-    def accountService
+
+    SessionFactory sessionFactory
+
+    ImportService importService
+
+    AccountService accountService
 
     /**
      * There are three cases to consider:
      * 1. State with no listing associated with it. Just delete it
      * 2. State with active listing associated with it. Throw error, don't delete it
-     * 3. State with soft deleted listing associated with it. Throw error, don't delete it
-     */
+     * 3. State with soft deleted listing associated with it. Throw error, don't delete it*/
     @Transactional(readOnly = true)
-    def getLatestSuccessfulImportTaskResult(def importTaskId) {
+    ImportTaskResult getLatestSuccessfulImportTaskResult(Long importTaskId) {
         ImportTask task
-        ImportTaskResult result
+        ImportTaskResult result = null
         try {
             task = ImportTask.get(importTaskId)
             if (!task) {
                 throw new ValidationException(message: "ImportTask Not Found", args: [importTaskId])
             }
             // Trying the criteria method for performance?
-            def criteria = ImportTaskResult.createCriteria()
-            def results = criteria {
+            def results = ImportTaskResult.withCriteria {
                 and {
                     eq('task', task)
                     eq('result', true)
                 }
                 order('runDate', 'desc')
                 order('id', 'desc') // secondary sort order in case sorting by date is inconclusive
-            }
+            } as List<ImportTaskResult>
 
             /* Alternative approach
             def results = ImportTaskResult.findAllByTaskAndResult(task, true, [sort:"runDate", order:"desc"])
@@ -46,14 +51,13 @@ class ImportTaskService {
             if (results?.size() > 0) {
                 // Pull off just the top result, will be the latest based on the sort
                 result = results[0]
-            } else {
+            }
+            else {
                 log.debug "No ImportTaskResults found for ImportTask $importTaskId"
             }
-        }
-        catch (ValidationException ve) {
+        } catch (ValidationException ve) {
             throw ve
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String message = "Error retrieving last successful import result for ImportTask $importTaskId:: "
             message += ExceptionUtils.getRootCauseMessage(e)
             log.error message

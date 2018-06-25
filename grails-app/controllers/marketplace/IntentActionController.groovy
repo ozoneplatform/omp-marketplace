@@ -2,7 +2,7 @@ package marketplace
 
 class IntentActionController extends MarketplaceAdminWithDeleteController {
 
-    def intentActionService
+    IntentActionService intentActionService
 
     @Override
     protected String getDomainName() { "intentAction" }
@@ -18,7 +18,7 @@ class IntentActionController extends MarketplaceAdminWithDeleteController {
 
     @Override
     protected deleteDomain() {
-        intentActionService.deleteIntentActionById(params.id)
+        intentActionService.deleteIntentActionById(params.id as Long)
     }
 
     @Override

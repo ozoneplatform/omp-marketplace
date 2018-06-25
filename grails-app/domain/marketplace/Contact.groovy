@@ -1,12 +1,12 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
-import gorm.AuditStamp
 
-@AuditStamp
-class Contact {
+
+class Contact extends AuditStamped implements ToJSON {
 
     static final String PHONE_REGEX = /(^\+\d((([\s.-])?\d+)?)+$)|(^(\(\d{3}\)\s?|^\d{3}[\s.-]?)?\d{3}[\s.-]?\d{4}$)/
     static final String EMAIL_REGEX = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
@@ -92,16 +92,15 @@ class Contact {
         return false
     }
 
+    @Override
     JSONObject asJSON() {
-        new JSONObject([
-                id: id,
-                type: type.asJSON(),
-                securePhone: securePhone,
-                unsecurePhone: unsecurePhone,
-                email: email,
-                name: name,
-                organization: organization
-        ])
+        marshall([id           : id,
+                  type         : type.asJSON(),
+                  securePhone  : securePhone,
+                  unsecurePhone: unsecurePhone,
+                  email        : email,
+                  name         : name,
+                  organization : organization])
     }
 
     @Override
@@ -112,5 +111,21 @@ class Contact {
         val += unsecurePhone ? ", $unsecurePhone (unsecure)" : ""
 
         return val
+    }
+
+
+    /**
+     * This method is used by the import logic to create a Domain object.
+     */
+    void bindFromJSON(JSONObject obj) {
+        this.with {
+            securePhone = obj.securePhone
+            unsecurePhone = obj.unsecurePhone
+            email = obj.email
+            name = obj.name
+            organization = obj.organization
+            type = obj.type
+
+        }
     }
 }

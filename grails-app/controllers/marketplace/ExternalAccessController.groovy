@@ -7,4 +7,5 @@ class ExternalAccessController {
         params.outside_only = true
         forward(controller: 'search', action: "getListAsJSON", params: params)
     }
+
 }

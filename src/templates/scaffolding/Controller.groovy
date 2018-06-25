@@ -6,6 +6,7 @@ class ${className}Controller {
 
     def index() {
         redirect(action: "list", params: params)
+        return
     }
 
     def list(Integer max) {
@@ -26,6 +27,7 @@ class ${className}Controller {
 
         flash.message = message(code: 'default.created.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), ${propertyName}.id])
         redirect(action: "show", id: ${propertyName}.id)
+        return
     }
 
     def show(Long id) {
@@ -77,6 +79,7 @@ class ${className}Controller {
 
         flash.message = message(code: 'default.updated.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), ${propertyName}.id])
         redirect(action: "show", id: ${propertyName}.id)
+        return
     }
 
     def delete(Long id) {
@@ -91,10 +94,12 @@ class ${className}Controller {
             ${propertyName}.delete(flush: true)
             flash.message = message(code: 'default.deleted.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), id])
             redirect(action: "list")
+            return
         }
         catch (DataIntegrityViolationException e) {
             flash.message = message(code: 'default.not.deleted.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), id])
             redirect(action: "show", id: id)
+            return
         }
     }
 }

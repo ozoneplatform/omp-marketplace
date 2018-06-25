@@ -1,8 +1,8 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
-class RejectionActivity extends ServiceItemActivity {
+class RejectionActivity extends ServiceItemActivity implements ToJSON {
 
     public RejectionActivity(){
         action = Constants.Action.REJECTED
@@ -15,9 +15,11 @@ class RejectionActivity extends ServiceItemActivity {
         rejectionListing cascade:"delete"
     }
 
+    @Override
     JSONObject asJSON() {
         def json = super.asJSON()
         json.put("rejectionListing", rejectionListing.asJSON())
-        return json
+        json
     }
+
 }

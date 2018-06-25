@@ -1,0 +1,20 @@
+As a convenience, the *jaxrs* plugin provides a script that will create a simple resource skeleton that can be built
+upon. The default template generates a simple root resource class with a single method implementing a @GET@ API. The
+script can be called as follows:
+
+{code}
+grails create-resource class.path.Name
+{code}
+
+In the above example, a new resource class will be generated at the path
+@grails-app/resources/class/path/NameResource.groovy@ with an API root path of @/api/name@.
+
+{note}
+The default template can be overridden by applications by placing a new template in
+@src/main/templates/artifacts/Resource.groovy@. Use the
+[default template|https://raw.githubusercontent.com/budjb/grails-jaxrs/grails-3.1/jaxrs-core/src/main/templates/artifacts/Resource.groovy]
+as a reference on the variables used to build the resource class.
+{note}
+
+A more powerful script that will generate root resources for a domain class is documented in the
+[Scaffolding Domains|guide:scaffolding] section.

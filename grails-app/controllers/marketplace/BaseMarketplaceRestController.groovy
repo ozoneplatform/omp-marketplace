@@ -1,20 +1,31 @@
 package marketplace
 
+import javax.servlet.http.HttpServletResponse
+
+import grails.config.Config
+import grails.converters.JSON
+import grails.gorm.PagedResultList
 import grails.util.Holders
 import grails.web.JSONBuilder
-import org.apache.commons.lang.exception.ExceptionUtils
-import org.codehaus.groovy.grails.web.json.JSONObject
-import ozone.marketplace.enums.MarketplaceApplicationSetting
-import grails.converters.JSON
+import org.grails.web.json.JSONObject
 
-import javax.servlet.http.HttpServletResponse
+import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException
+
+import org.hibernate.StaleObjectStateException
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+import org.apache.commons.lang.exception.ExceptionUtils
+
+import ozone.decorator.JSONDecoratorService
+
 
 class BaseMarketplaceRestController {
 
-    def config = Holders.config
-    def JSONDecoratorService
+    Config config = Holders.config
 
-    def marketplaceApplicationConfigurationService
+    JSONDecoratorService JSONDecoratorService
+
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
 
 
     protected handleException(Exception e, method) {
@@ -158,6 +169,24 @@ class BaseMarketplaceRestController {
             params.stateIDs = params.stateIDs ? new ArrayList<String>(JSON.parse(params.stateIDs)) : null
             params.statuses = params.statuses ? Constants.translateApprovalStatusList(new ArrayList<String>(JSON.parse(params.statuses))) : null
         }
+    }
+
+    protected <T> T retryOnLockingFailure(Closure<T> closure) {
+        def result
+        try {
+            result = closure()
+        } catch (StaleObjectStateException | HibernateOptimisticLockingFailureException ex) {
+            log.error("Exception '${ex.class.name}' thrown, retrying '$actionName'")
+            result = closure()
+            log.error("Retry successful")
+        }
+        result
+    }
+
+    static int getTotalCount(List<?> list) {
+        if (list == null) return 0
+
+        list instanceof PagedResultList ? list.totalCount : list.size()
     }
 
 

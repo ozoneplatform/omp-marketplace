@@ -1,0 +1,12 @@
+[[queryBuilder]]
+=== Query Builder
+
+A `QueryBuilder` can be passed to the search method.
+
+*Example*
+
+[source, groovy]
+----
+QueryBuilder query = QueryBuilders.matchAllQuery()
+def result = elasticSearchService.search(query)
+----

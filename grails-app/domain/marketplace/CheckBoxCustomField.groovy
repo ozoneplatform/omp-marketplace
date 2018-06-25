@@ -1,10 +1,12 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import ozone.marketplace.domain.ValidationException
 
-class CheckBoxCustomField extends CustomField {
+class CheckBoxCustomField extends CustomField implements ToJSON {
 
-    Boolean value
+    boolean value
 
     static constraints = {
         value(maxSize: 2083, nullable: true)
@@ -34,7 +36,7 @@ class CheckBoxCustomField extends CustomField {
     }
 
     def setValue(Boolean val) {
-        this.value = val
+       this.value = val
     }
 
     String toString() {
@@ -49,12 +51,12 @@ class CheckBoxCustomField extends CustomField {
         return value
     }
 
-    def asJSON() {
-        def jsonObject = super.asJSON()
-        jsonObject.putAll(
-            id: id,
-            value: value
-        )
-        return jsonObject
+    @Override
+    JSONObject asJSON() {
+        def json = super.asJSON()
+        json.putAll([id   : id,
+                     value: value])
+        json
     }
+
 }

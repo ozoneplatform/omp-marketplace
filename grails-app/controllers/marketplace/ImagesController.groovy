@@ -3,7 +3,7 @@ package marketplace
 
 class ImagesController {
 
-    def imagesService
+    ImagesService imagesService
 
     def get = {
         Images img = imagesService.get(params)

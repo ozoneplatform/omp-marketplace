@@ -1,0 +1,67 @@
+While the plugin works well out of the box without any configuration, there are several configuration options available
+to change certain behaviors of the plugin.
+
+h3. JAX-RS resource scope
+
+By default, JAX-RS resource classes are instantiated with every request which corresponds to the following entry in the
+application configuration:
+
+{code}
+org.grails.jaxrs.resource.scope = 'prototype'
+{code}
+
+Since this is the default you can omit this entry as well. On the other hand, if you prefer that your JAX-RS resources
+are singletons, add the following configuration entry.
+
+{code}
+org.grails.jaxrs.resource.scope = 'singleton'
+{code}
+
+h3. Domain object providers
+
+From version 0.3 onwards the *jaxrs* plugin comes with JAX-RS providers for converting between Grails domain objects
+and XML/JSON representations. Domain object providers are explained in detail in the domain object providers section.
+Domain object readers and writers can be disabled by adding the following entries to the application configuration.
+
+{code}
+org.grails.jaxrs.doreader.disable = true
+org.grails.jaxrs.dowriter.disable = true
+{code}
+
+This is useful in situations where applications implement custom providers. Another domain object provider configuration
+property, @org.grails.jaxrs.dowriter.require.generic.collections@, is explained in the domain object collections
+section.
+
+h3. Additional Providers
+
+{note}
+This feature is only available when the plugin uses the Jersey implementation.
+{note}
+
+By default the *jaxrs* plugin scans the @grails-app/providers@ directory for custom providers. JAX-RS provider
+implementations located elsewhere (e.g. in 3rd party libraries) are ignored. This can be changed by defining extra paths
+where the plugin should scan for additional providers. For example by adding the following to the application
+configuration the plugin additionally scans the packages @com.foo@ and @com.bar@ for providers.
+
+{code}
+org.grails.jaxrs.provider.extra.paths = 'com.foo;com.bar'
+{code}
+
+You can also define extra paths by setting the corresponding init parameter.
+
+{code}
+org.grails.jaxrs.provider.init.parameters = ['com.sun.jersey.config.property.packages': 'com.foo;com.bar']
+{code}
+
+h3. Init Parameters
+
+Init parameters for the servlet of the underlying JAX-RS implementation can be set via the
+@org.grails.jaxrs.provider.init.parameters@ configuration property in the application configuration, as in the following
+example.
+
+{code}
+org.grails.jaxrs.provider.init.parameters = [
+    'com.sun.jersey.config.property.packages': 'com.foo;com.bar',
+    'another.key': 'another.value'
+]
+{code}

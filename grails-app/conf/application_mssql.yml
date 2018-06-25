@@ -1,0 +1,390 @@
+---
+### Grails configuration
+
+grails:
+    profile: web
+
+    codegen:
+        defaultPackage: marketplace
+
+    spring:
+        transactionManagement:
+            proxies: false
+
+    gorm:
+        reactor:
+            # Whether to translate GORM events into Reactor events
+            # Disabled by default for performance reasons
+            events: false
+
+    enable:
+        # enabled native2ascii conversion of i18n properties files
+        native2ascii: true
+
+    urlmapping:
+        cache:
+            maxsize: 1000
+
+    controllers:
+        defaultScope: singleton
+
+    converters:
+        encoding: UTF-8
+
+    databinding:
+        useSpringBinder: true
+        dateFormats:
+           - "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+           - "yyyy-MM-dd'T'HH:mm:ssX"
+           - "yyyy-MM-dd'T'HH:mm:ss"
+           - "yyyy-MM-dd'T'HH:mm:ss'Z'"
+           - "yyyy-MM-dd'T'HH:mm:ssz"
+           - "MM/dd/yyyy"
+
+
+    views:
+        default:
+            codec: none
+        gsp:
+            encoding: UTF-8
+            htmlcodec: xml
+            codecs:
+                expression: html
+                scriptlets: html
+                taglib: none
+                staticparts: none
+
+    mime:
+        file:
+            extensions: false
+        disable:
+            accept:
+                header:
+                    userAgents:
+                        - Gecko
+                        - WebKit
+                        - Presto
+                        - Trident
+        types:
+            all: "*/*"
+            atom: application/atom+xml
+            css: text/css
+            csv: text/csv
+            form: application/x-www-form-urlencoded
+            html:
+              - text/html
+              - application/xhtml+xml
+            js: text/javascript
+            json:
+              - application/json
+              - text/json
+            multipartForm: multipart/form-data
+            pdf: application/pdf
+            rss: application/rss+xml
+            text: text/plain
+            hal:
+              - application/hal+json
+              - application/hal+xml
+            xml:
+              - text/xml
+              - application/xml
+
+    cache:
+        enabled: true
+        ehcache:
+            ehcacheXmlLocation: 'classpath:ozone/marketplace/ehcache3.xml'
+            lockTimeout: 200  # milliseconds
+
+info:
+    app:
+        name: "@info.app.name@"
+        version: "@info.app.version@"
+        grailsVersion: "@info.app.grailsVersion@"
+
+
+---
+### Spring configuration
+
+spring:
+    main:
+        banner-mode: "off"
+    groovy:
+        template:
+            check-template-location: false
+
+endpoints:
+    enabled: false
+    jmx:
+        enabled: true
+        unique-names: true
+
+security:
+    basic:
+        enabled: false
+
+
+---
+### Server configuration
+
+environments:
+    test:
+        server:
+            port: 8090
+
+    production:
+        server:
+            port: 8443
+            ssl:
+                enabled: true
+                key-store: './certs/keystore.jks'
+                key-store-password: 'changeit'
+
+
+---
+### Database Migration (Liquibase) plugin configuration
+grails.plugin.databasemigration:
+    changelogFileName: "changelog_master.groovy"
+    updateOnStart: false
+    updateOnStartFileNames:
+      - "changelog_master.groovy"
+
+
+---
+### JAX-RS plugin configuration (TODO: Remove after jersey1-plugin is removed)
+
+org.grails.jaxrs.enabled: false
+
+org.grails.plugins.jaxrs:
+    doreader.disable: true
+    dowriter.disable: true
+
+
+
+
+---
+### Elasticsearch configuration
+
+elasticSearch:
+    datastoreImpl: "hibernateDatastore"
+    client:
+        mode: "local"
+    unmarshallComponents: true
+
+environments:
+    test:
+        elasticSearch:
+            client:
+                mode: "local"
+            index:
+                store:
+                    type: "fs"
+
+    production:
+        elasticSearch:
+            client:
+                mode: "local"
+
+---
+### Quartz Scheduling plugin configuration
+
+quartz:
+    autoStartup: false
+    props:
+        scheduler.skipUpdateCheck: true
+
+environments:
+    production:
+        quartz:
+            autoStartup: true
+            props:
+                scheduler.skipUpdateCheck: true
+
+
+---
+### Hibernate configuration
+
+hibernate:
+    cache:
+        queries: false
+        use_second_level_cache: false  # true
+        use_query_cache: false
+        # region.factory_class: "org.hibernate.cache.ehcache.EhCacheRegionFactory"
+        # region.factory_class: "org.hibernate.cache.SingletonEhCacheRegionFactory"
+
+
+---
+### Datasource configuration
+
+dataSource:
+    pooled: true
+    jmxExport: true
+
+environments:
+    test:
+        dataSource:
+            dbCreate: none
+            driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+            url: jdbc:sqlserver://localhost:1433;databaseName=omp
+            username: sa
+            password: PASSword123!@#
+
+    development:
+        dataSource:
+            dbCreate: none
+            driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+            url: jdbc:sqlserver://localhost:1433;databaseName=omp
+            username: sa
+            password: PASSword123!@#
+
+    production:
+        dataSource:
+            dbCreate: none
+            driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+            url: jdbc:sqlserver://localhost:1433;databaseName=omp
+            username: sa
+            password: PASSword123!@#
+            properties:
+                jmxEnabled: true
+                initialSize: 5
+                maxActive: 50
+                minIdle: 5
+                maxIdle: 25
+                maxWait: 10000
+                maxAge: 600000
+                timeBetweenEvictionRunsMillis: 5000
+                minEvictableIdleTimeMillis: 60000
+                validationQuery: SELECT 1
+                validationQueryTimeout: 3
+                validationInterval: 15000
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: false
+                jdbcInterceptors: ConnectionState
+                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+
+---
+### Marketplace configuration
+
+marketplace:
+    layout: "marketplace"
+    defaultAffiliatedMarketplaceTimeout: 30000
+    defaultSearchPageSize: 24
+    defaultLandingPageSize: 18
+
+notifications:
+    enabled: false
+
+httpsession.timeout: 120
+
+system_user_id: 1
+
+discoveryMaxPerRow: 5
+discoveryWidgetMaxPerRow: 6
+
+cef:
+    device:
+        vendor: "OZONE"
+        product: "Store"
+        version: "500-27_L2::1.3"
+    version: 0
+
+
+---
+### Marketplace metadata configuration
+
+marketplace:
+    metadata:
+        profiles:
+          - username: "testAdmin1"
+            displayName: "testAdmin1"
+            password: "password"
+
+        types:
+          - title: "Web App"
+            imageFilename: "default_types_web_apps_icon.png"
+            description: "web app"
+            ozoneAware: false
+            hasLaunchUrl: true
+            hasIcons: false
+            isPermanent: false
+          - title: "App Component"
+            imageFilename: "default_types_widget_icon.png"
+            description: "app component"
+            ozoneAware: true
+            hasLaunchUrl: true
+            hasIcons: true
+            isPermanent: true
+          - title: "OZONE App"
+            imageFilename: "default_types_stack_icon.png"
+            description: "OZONE app"
+            ozoneAware: true
+            hasLaunchUrl: false
+            hasIcons: false
+            isPermanent: true
+
+        rejectionJustifications:
+          - title: "Sustainment"
+            description: "Sustainment"
+          - title: "Security Guideline"
+            description: "Security Guideline"
+          - title: "Data Content"
+            description: "Data Content"
+          - title: "Not Operational"
+            description: "Not Operational"
+          - title: "Lack of Documentation"
+            description: "Lack of Documentation"
+
+        states:
+          - title: "Active"
+            description: "Active description"
+            isPublished: true
+          - title: "Beta"
+            description: "Beta description"
+            isPublished: false
+          - title: "Deprecated"
+            description: "Deprecated description"
+            isPublished: false
+          - title: "Planned"
+            description: "Planned description"
+            isPublished: false
+          - title: "Retired"
+            description: "Retired description"
+            isPublished: false
+
+        owfWidgetTypes: 
+          - title: "standard"
+            description: "Widget will appear in OWF's Launch Menu"
+          - title: "metric"
+            description: "Widget will appear under the Metric button on OWF's toolbar"
+          - title: "marketplace"
+            description: "Widget will appear under the Marketplace button on OWF's toolbar"
+          - title: "administration"
+            description: "Widget will appear under the Administration button on OWF's toolbar"
+
+        intentDataTypes:
+          - title: "audio"
+            description: "Audio file. SAMPLE DATA TYPE."
+          - title: "image"
+            description: "Image file. SAMPLE DATA TYPE."
+          - title: "json"
+            description: "JSON document. SAMPLE DATA TYPE."
+          - title: "text"
+            description: "Textual information. SAMPLE DATA TYPE."
+          - title: "uri"
+            description: "URI - Uniform Resource Identifier. SAMPLE DATA TYPE."
+          - title: "video"
+            description: "Video file. SAMPLE DATA TYPE."
+
+        intentActions:
+          - title: "share"
+            description: "The share intent is designed to give applications the ability to offer a simple mechanism for sharing data from the current page."
+          - title: "edit"
+            description: "The edit intent is designed to give applications the ability to offer a simple mechanism to edit data from the current page."
+          - title: "view"
+            description: "The view intent is designed to give applications the ability to offer a simple mechanism to view data in their application."
+          - title: "pick"
+            description: "The pick intent is designed to give services the ability to allow their users pick files from their service for use in a client application."
+          - title: "subscribe"
+            description: "The subscribe intent is designed to give applications the ability to offer a simple mechanism for subscribing to data from the current page"
+          - title: "save"
+            description: "The Save intent is designed to give applications the ability to offer a simple mechanism to save data in their application."

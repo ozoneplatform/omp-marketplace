@@ -3,12 +3,8 @@ package marketplace
 import ozone.marketplace.enums.DefinedDefaultTypes;
 import ozone.utils.Utils
 
-/**
- * @author sbooker
- *
- */
-@gorm.AuditStamp
-public class DefaultImages implements Serializable {
+
+class DefaultImages extends AuditStamped implements Serializable {
 
     Images image
     DefinedDefaultTypes definedDefaultType

@@ -1,0 +1,112 @@
+h3. Version 0.11
+{warning}
+Version 0.11 of the plugin is a release of the Grails 2.4.x compatibility branch and is probably not compatible with any
+previous versions.
+{warning}
+
+* Grails 2.4.x compatibility modifications.
+
+h3. Version 0.10
+{warning}
+Version 0.10 of the plugin is a release of the Grails 2.3.x compatibility branch and is probably not compatible with any
+previous versions.
+{warning}
+* Re-introduced Spock testing infrastructure using Spock bundled with Grails 2.3.x
+* Includes all fixes and features added to the release of version 0.9.
+* Grails 2.3.x compatibility modifications.
+* Upgrade to Restlet 2.1.4.
+
+h3. Version 0.9
+{note}
+To improve the compatibility of this plugin across Groovy and Grails versions, the Spock test infrastructure has been
+removed and is now available through the new [Grails JAXRS-Spock plugin|https://github.com/noamt/grails-jaxrs-spock].
+Please review the new plugin's README file for installation instructions.
+{note}
+
+* Added exclusions for un-required dependencies.
+* Modified the order of the servlet configuration; the load-on-startup field is now specified last.
+* Add the ability to specify query parameters in the test request path.
+* Take Encoding into consideration when decoding the input stream.
+* Remove copy-pasted MockHttpServletRequest from plugin.
+* Allow for multiple resources creation at once.
+* Downgraded the Grails version requirement to 2.0.x.
+
+h3. Version 0.8
+{warning}
+This version enables the plugin to be used by Grails 2.2.x applications but breaks backwards compatibility for versions
+prior to 2.2.x.
+{warning}
+
+h3. Version 0.7
+* Enhancement: Added infrastructure to enable Spock integration testing
+* Fix: Cannot use *jaxrs* 0.6 with servlet 2.5 (it needs servlet api 3.0).
+* Fix: Removed usages of the deprecated Grails ConfigurationHolder.
+
+h3. Version 0.6
+* Upgrade to Grails 2.0.0
+* Upgrade to Jersey 1.8
+* Enhancement: Allow applications to configure init parameters for the @JerseyServlet@
+* Enhancement: Separate service class used by generated resources
+* Enhancement: Transaction boundaries in generated resource code
+* Enhancement: Support deep object conversion in domain object providers
+* Fix: Support for alphanumeric domain object identifiers
+* Fix: POST method doesn't work
+* Fix: @java.lang.IllegalStateException: getOutputStream() has already been called for this response@
+
+h3. Version 0.5-m1
+* New integration test framework
+* Upgrade to Grails 1.3.7
+* Upgrade to Jersey 1.5
+* Enhancement: Add support for configuring Jersey with additional provider paths
+* Enhancement: Switch to Grails' dependency management mechanism
+* Enhancement: @JaxrsController@ moved to package @org.grails.jaxrs@
+* Fix: Responses with Content-Type @text/html@ eaten by Grails
+* Fix: Service injection into resources doesn't work in integration tests
+
+h3. Version 0.4
+* Automated generation of WADL documents (with some known limitations)
+* Upgrade to Grails 1.3.1
+* Upgrade to Jersey 1.2
+* Upgrade to Restlet 2.0-RC3
+* Fix: Object ids in XML or JSON requests are not set on the domain object.
+* Fix: Unmarshalling from JSON (and XML) to nested domain objects doesn't work properly
+
+{note}
+There's a bug (issue 971) in Restlet 2.0-RC3 that forces implementors of @MessageBodyReader@ and @MessageBodyWriter@ to
+directly implement these interfaces. Extending a class that implements these interfaces doesn't work. Restlet will
+ignore the provider in this case.
+{note}
+
+h3. Version 0.3
+* Domain object providers
+  ** Convert between Grails domain objects and XML or JSON representations
+  ** Allow usage of Grails domain classes in resource method signatures
+  ** Support for content negotiation using the Accept request header
+  ** Can be disabled by means of configuration
+* Custom entity provider support
+  ** Base classes for custom domain object providers
+     *** @org.grails.jaxrs.support.DomainObjectReaderSupport@
+     *** @org.grails.jaxrs.support.DomainObjectWriterSupport@
+  ** Base classes for more general entity providers (improved)
+     *** @org.grails.jaxrs.support.MessageBodyReaderSupport@
+     *** @org.grails.jaxrs.support.MessageBodyWriterSupport@
+* Scaffolding enhancements
+  ** XML and JSON representations
+  ** Content negotiation support
+* Auto-detection of JAX-RS resource classes better aligned with the JAX-RS specification (incl. support for annotation\
+  inheritance)
+* Auto-detection of JAX-RS provider classes better aligned with the JAX-RS specification
+* Default URL mapping for @JaxrsController@ changed
+* Upgrade to Grails 1.1.2
+* Upgrade to Jersey 1.1.4.1
+* Upgrade to Restlet 2.0-M6
+
+h3. Version 0.2
+In version 0.2 the way how JAX-RS resources and providers are auto-detected has changed. In version 0.1 plain Spring
+mechanisms were used (@<context:component-scan />@, @Component@ annotation, etc.) whereas in version 0.2 the plugin
+follows Grails conventions regarding how to detect and manage resources. Now, there's no need to provide a custom Spring
+application context. The *jaxrs* plugin is now making these changes behind the scenes.
+
+Similar changes have been introduced for injection of other beans into JAX-RS resources and providers. In version 0.1
+plain Spring mechanisms were necessary such as the @Autowired@ annotation whereas in version 0.2 other beans are
+auto-injected by name similar to Grails controllers, for example.

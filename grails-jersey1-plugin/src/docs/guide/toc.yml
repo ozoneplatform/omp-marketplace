@@ -1,0 +1,30 @@
+introduction: Introduction
+quickstart: Quick Start
+installing: Installing
+resources:
+    title: Resources
+    what: What Are Resources
+    creatingresources: Creating Resources
+    generatingresources: Generating Resources
+providers:
+    title: Entity Providers
+    domainproviders: Domain Object Providers
+    xmlproviders: XML Providers
+    jsonproviders: JSON Providers
+    customproviders: Custom Providers
+configuration: Configuration
+swagger: Swagger Integration
+testing: Integration Testing
+advanced:
+    title: Advanced Features
+    wadl: Generate WADL
+    scaffolding: Scaffolding Domains
+    gorm: Using GORM
+    filters: Applying Filters
+    injection: Service Injection
+    google: Google App Engine
+acknowledgements: Acknowledgements
+changelog:
+    title: Changelog
+    v3changelog: Grails 3.x
+    v2changelog: Grails 2.x

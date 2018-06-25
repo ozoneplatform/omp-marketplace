@@ -1,0 +1,262 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-images
+      author: omp
+      comment: create 'images' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: images
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: is_default
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: content_type
+                  type: varchar(255)
+              - column:
+                  name: bytes
+                  type: bytea
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: image_size
+                  type: double precision
+
+
+  - changeSet:
+      id: 7.17.0-images
+      author: omp
+      comment: create 'images' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: images
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: is_default
+                  type: bit(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: content_type
+                  type: varchar(255)
+              - column:
+                  name: bytes
+                  type: mediumblob
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: image_size
+                  type: double
+
+
+  - changeSet:
+      id: 7.17.0-images
+      author: omp
+      comment: create 'images' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: images
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: is_default
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: type
+                  type: varchar(255 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: content_type
+                  type: varchar(255 CHAR)
+              - column:
+                  name: bytes
+                  type: long raw
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: image_size
+                  type: float(126)
+
+        - addPrimaryKey:
+            tableName: images
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-images
+      author: omp
+      comment: create 'images' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: images
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: is_default
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: type
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: content_type
+                  type: nvarchar(255)
+              - column:
+                  name: bytes
+                  type: image
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: image_size
+                  type: float
+
+        - addPrimaryKey:
+            tableName: images
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-images-constraints
+      author: omp
+      comment: create 'images' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: images
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKB95A8278E31CB353
+
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: images
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKB95A82787666C6D2

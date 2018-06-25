@@ -1,0 +1,64 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-drop_down_cf
+      author: omp
+      comment: create 'drop_down_cf' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: drop_down_cf
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: value_id
+                  type: bigint
+
+
+  - changeSet:
+      id: 7.17.0-drop_down_cf
+      author: omp
+      comment: create 'drop_down_cf' table
+      context: create
+      dbms: oracle, mssql
+
+      changes:
+        - createTable:
+            tableName: drop_down_cf
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: value_id
+                  type: number(19,0)
+
+        - addPrimaryKey:
+            tableName: drop_down_cf
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-drop_down_cf-constraints
+      author: omp
+      comment: create 'drop_down_cf' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: value_id
+            baseTableName: drop_down_cf
+            referencedColumnNames: id
+            referencedTableName: field_value
+            constraintName: FK13ADE7D0BC98CEE3

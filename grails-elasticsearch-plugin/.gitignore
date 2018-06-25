@@ -1,0 +1,36 @@
+# JetBrains IntelliJ IDEA files
+.idea/
+*.iml
+*.iws
+.gradle
+build/
+
+libs
+
+# Log files
+*.log
+
+# Libraries and others
+*.zip
+.svn
+
+# Target
+target/
+target-eclipse/
+
+.DS_Store
+/docs/
+plugin.xml
+.settings
+
+# Unused grails files
+.slcache/
+.classpath
+.project
+test/reports
+data/
+
+#Elasticserch plugin binaries
+src/integration-test/resources/elasticsearch/plugins
+
+bin

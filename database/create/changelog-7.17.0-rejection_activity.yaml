@@ -1,0 +1,95 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-rejection_activity
+      author: omp
+      comment: create 'rejection_activity' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: rejection_activity
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: rejection_listing_id
+                  type: bigint
+
+
+  - changeSet:
+      id: 7.17.0-rejection_activity
+      author: omp
+      comment: create 'rejection_activity' table
+      context: create
+      dbms: oracle, mssql
+
+      changes:
+        - createTable:
+            tableName: rejection_activity
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: rejection_listing_id
+                  type: number(19,0)
+
+        - addPrimaryKey:
+            tableName: rejection_activity
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-rejection_activity-constraints
+      author: omp
+      comment: create 'rejection_activity' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: rejection_listing_id
+            baseTableName: rejection_activity
+            referencedColumnNames: id
+            referencedTableName: rejection_listing
+            constraintName: FKF35C128582548A4A
+
+
+  - changeSet:
+      id: 7.17.0-rejection_activity-indices_mysql
+      author: omp
+      comment: create 'rejection_activity' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: rejection_activity
+            indexName: FKF35C128582548A4A
+            columns:
+              - column:
+                  name: rejection_listing_id
+
+
+  - changeSet:
+      id: 7.17.0-rejection_activity-indices
+      author: omp
+      comment: create 'rejection_activity' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: rejection_activity
+            indexName: rejection_act_listing_id_idx
+            columns:
+              - column:
+                  name: rejection_listing_id

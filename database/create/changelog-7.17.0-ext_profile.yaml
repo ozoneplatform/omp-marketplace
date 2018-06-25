@@ -1,0 +1,118 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-ext_profile
+      author: omp
+      comment: create 'ext_profile' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: ext_profile
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: external_view_url
+                  type: varchar(2083)
+              - column:
+                  name: system_uri
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: external_id
+                  type: varchar(255)
+              - column:
+                  name: external_edit_url
+                  type: varchar(2083)
+
+
+  - changeSet:
+      id: 7.17.0-ext_profile
+      author: omp
+      comment: create 'ext_profile' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: ext_profile
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: external_view_url
+                  type: varchar(2083 CHAR)
+              - column:
+                  name: system_uri
+                  type: varchar(255 CHAR)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: external_id
+                  type: varchar(255 CHAR)
+              - column:
+                  name: external_edit_url
+                  type: varchar(2083 CHAR)
+
+        - addPrimaryKey:
+            tableName: ext_profile
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-ext_profile
+      author: omp
+      comment: create 'ext_profile' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: ext_profile
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: external_view_url
+                  type: nvarchar(2083)
+              - column:
+                  name: system_uri
+                  type: nvarchar(255)
+              - column:
+                  name: external_id
+                  type: nvarchar(255)
+              - column:
+                  name: external_edit_url
+                  type: nvarchar(2083)
+
+        - addPrimaryKey:
+            tableName: ext_profile
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-ext_profile-constraints
+      author: omp
+      comment: create 'ext_profile' constraints
+      context: create
+
+      changes:
+        - addUniqueConstraint:
+            tableName: ext_profile
+            columnNames: system_uri, external_id

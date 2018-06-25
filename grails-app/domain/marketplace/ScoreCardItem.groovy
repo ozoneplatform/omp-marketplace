@@ -1,11 +1,12 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class ScoreCardItem implements Serializable {
+
+class ScoreCardItem extends AuditStamped implements Serializable, ToJSON {
 
 
     String question
@@ -29,14 +30,13 @@ class ScoreCardItem implements Serializable {
         cache true
     }
 
+    @Override
     JSONObject asJSON() {
-      new JSONObject([
-              id: id,
-              question: question,
-              description: description,
-              image: image,
-              showOnListing: showOnListing
-      ])
+        marshall([id           : id,
+                  question     : question,
+                  description  : description,
+                  image        : image,
+                  showOnListing: showOnListing])
     }
 
     @Override

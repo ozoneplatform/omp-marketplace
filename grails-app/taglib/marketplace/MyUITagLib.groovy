@@ -1,24 +1,38 @@
 package marketplace
 
+import grails.config.Config
+
 // import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import grails.util.Holders
+
+import ozone.decorator.JSONDecoratorService
+
 import static ozone.marketplace.enums.MarketplaceApplicationSetting.*
 import javax.annotation.PostConstruct
 
 class MyUITagLib {
+
     static namespace = "myui"
 
-    def config = Holders.config
-    def categoryService
-    def itemCommentService
-    def serviceItemService
-    def searchNuggetService
-    def accountService
-    def groovyPagesTemplateEngine
-    def JSONDecoratorService
-    def customHeaderFooterService
-    def bannerBean
+    Config config = Holders.config
 
+    CategoryService categoryService
+
+    ItemCommentService itemCommentService
+
+    ServiceItemService serviceItemService
+
+    SearchNuggetService searchNuggetService
+
+    AccountService accountService
+
+    def groovyPagesTemplateEngine
+
+    JSONDecoratorService JSONDecoratorService
+
+    CustomHeaderFooterService customHeaderFooterService
+
+    def bannerBean
 
     @PostConstruct
     protected void init() {

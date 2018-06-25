@@ -1,20 +1,34 @@
 package marketplace
 
 import grails.converters.JSON
+import grails.util.Holders
+import org.grails.web.json.JSONObject
+
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.core.io.Resource
+import grails.gorm.transactions.Transactional
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 import ozone.marketplace.domain.ThemeDefinition
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 
-import grails.util.Holders
 
 class ThemeService extends OzoneService implements ApplicationContextAware {
 
-    def applicationContext
-    def accountService
-    def marketplaceApplicationConfigurationService
-    def config = Holders.config
+    private static final String THEME_CLASSPATH_ROOT = 'classpath:public/themes'
+
+    AccountService accountService
+
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
+    private ApplicationContext applicationContext
+
+    @Override
+    void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext
+    }
 
     def getImageURL(def params) {
         def imageName = params.img_name
@@ -42,37 +56,34 @@ class ThemeService extends OzoneService implements ApplicationContextAware {
         return commonImgUrl
     }
 
-    void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext
-    }
-
-    def getAvailableThemes() {
-        //find all files in the webapp with a path like 'themes/*.theme/theme.json'
-        applicationContext.getResources('themes/*.theme/theme.json').collect {
+    /**
+     * find all files in the webapp with a path like 'themes/*.theme/theme.json'
+     **/
+    List<ThemeDefinition> getAvailableThemes() {
+        applicationContext.getResources("$THEME_CLASSPATH_ROOT/*.theme/theme.json").toList().findResults {
             try {
                 return getThemeDefinitionFromResource(it)
-            }
-            catch (ObjectNotFoundException e) {
+            } catch (ObjectNotFoundException ignored) {
                 return null
             }
-        } - null //remove any nulls from the list
+        }
     }
 
-    def getTheme(def themeName) {
-        def resource = applicationContext.getResource("themes/${themeName}.theme/theme.json")
+    ThemeDefinition getTheme(String themeName) {
+        def resource = applicationContext.getResource("$THEME_CLASSPATH_ROOT/${themeName}.theme/theme.json")
 
-        if (!(themeName && resource.exists()))
+        if (!themeName || !resource.exists()) {
             throw new ObjectNotFoundException("Cannot find the requested CSS theme: ${themeName}")
+        }
 
-        else
-            return getThemeDefinitionFromResource(resource)
+        return getThemeDefinitionFromResource(resource)
     }
 
-    def getCurrentTheme() {
+    ThemeDefinition getCurrentTheme() {
         def session = getSession()
 
         // Use regular theme if one is available
-        if(session && session.marketplaceLayout != 'widget' && session.regularTheme){
+        if (session && session.marketplaceLayout != 'widget' && session.regularTheme) {
             return session.regularTheme
         }
 
@@ -95,15 +106,15 @@ class ThemeService extends OzoneService implements ApplicationContextAware {
             try {
                 theme = getTheme(themeName)
                 found = true
-            }
-            catch (ObjectNotFoundException e) {
+            } catch (ObjectNotFoundException e) {
                 log.debug("User theme preference set to non-existent theme ${themeName}")
             }
         }
 
         if (!found) {
             //fall back to the default theme
-            themeName = marketplaceApplicationConfigurationService.valueOf(MarketplaceApplicationSetting.STORE_DEFAULT_THEME)
+            themeName = marketplaceApplicationConfigurationService.
+                    valueOf(MarketplaceApplicationSetting.STORE_DEFAULT_THEME)
             theme = getTheme(themeName)
         }
 
@@ -111,23 +122,22 @@ class ThemeService extends OzoneService implements ApplicationContextAware {
     }
 
     @Transactional
-    def setCurrentTheme() {
-
+    void setCurrentTheme() {
         //If there is a stored preference for this user's theme, use that
         def themeName = getUserThemePref()
         def theme = null
 
         if (!themeName) {
             //fall back to the default theme
-            themeName = marketplaceApplicationConfigurationService.valueOf(MarketplaceApplicationSetting.STORE_DEFAULT_THEME)
+            themeName = marketplaceApplicationConfigurationService.
+                    valueOf(MarketplaceApplicationSetting.STORE_DEFAULT_THEME)
             setUserThemePref(themeName)
         }
 
         if (themeName) {
             try {
                 theme = getTheme(themeName)
-            }
-            catch (ObjectNotFoundException e) {
+            } catch (ObjectNotFoundException e) {
                 log.error("User theme preference set to non-existent theme ${themeName}")
             }
         }
@@ -139,27 +149,25 @@ class ThemeService extends OzoneService implements ApplicationContextAware {
         }
     }
 
-    private ThemeDefinition getThemeDefinitionFromResource(def resource) {
+    private ThemeDefinition getThemeDefinitionFromResource(Resource resource) {
         try {
-            new ThemeDefinition(JSON.parse(new InputStreamReader(resource.inputStream)))
-        }
-        catch (e) {
+            def json = JSON.parse(new InputStreamReader(resource.inputStream)) as JSONObject
+            new ThemeDefinition(json)
+        } catch (e) {
             log.warn("Error while attempting to read Theme definition in ${resource.getURL()}. Exception: ${e}")
-
             throw new ObjectNotFoundException('Error retrieving the requested CSS theme')
         }
     }
 
-    def getUserThemePref() {
-        def theme = null
+    String getUserThemePref() {
+        String theme = null
         try {
             def user = accountService.getLoggedInUser()
             if (user) {
                 def userDomain = UserDomainInstance.findByUsername(user.username)
                 theme = userDomain?.getTheme()
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             log.warn("Exception trying to get the user's theme. Will use default theme. Exception: ${ex}")
             ex.printStackTrace()
             //log.info('Error getting theme preference', ex)
@@ -207,7 +215,8 @@ class ThemeService extends OzoneService implements ApplicationContextAware {
 //            themeName = isFranchise ? 'aml' : 'marketplace'
             // This does not really have meaning any more as either cobalt or gold could be the default theme
             // so just set to the configured default theme
-            themeName = marketplaceApplicationConfigurationService.getApplicationConfiguration(MarketplaceApplicationSetting.STORE_DEFAULT_THEME)
+            themeName = marketplaceApplicationConfigurationService.
+                    getApplicationConfiguration(MarketplaceApplicationSetting.STORE_DEFAULT_THEME)
         }
 
         // Try to match by name
@@ -223,8 +232,7 @@ class ThemeService extends OzoneService implements ApplicationContextAware {
             availableThemes.sort { Math.abs(it.font_size - themeFontSize) }
 
             matchingTheme = availableThemes.find {
-                themeContrast == it.contrast &&
-                    Math.abs(it.font_size - themeFontSize) <= 2
+                themeContrast == it.contrast && Math.abs(it.font_size - themeFontSize) <= 2
             }
             log.debug "Font and contrast match: ${matchingTheme?.name}"
         }

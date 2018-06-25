@@ -1,61 +1,56 @@
 package marketplace
 
+import grails.gorm.transactions.ReadOnly
+import grails.gorm.transactions.Transactional
+
+
+@Transactional
 class TextService extends MarketplaceService {
 
-    boolean transactional = false
+    public static String ABOUT_DESCRIPTION =
+            /The Apps Mall allows visitors to discover and explore business, mission, and convenience applications and enables user-configurable visualizations of available content./
 
-    def list(def params) {
-        return Text.findAllByReadOnly(false, params)
+    public static List<Map> REQUIRED_TEXTS =
+            [[name: Constants.TEXT_NAME_ABOUT, readOnly: false, value: ABOUT_DESCRIPTION],
+             [name: Constants.TEXT_NAME_VERSION, readOnly: true, value: "2.0"]]
+
+    public static List<String> DEPRECATED_TEXTS =
+            [Constants.TEXT_NAME_MP_DESCRIPTION,
+             Constants.TEXT_NAME_MP_ADVANCED_SEARCH_DESCRIPTION,
+             Constants.TEXT_NAME_ANALYST,
+             Constants.TEXT_NAME_DEVELOPER,
+             Constants.TEXT_NAME_ADMINISTRATOR]
+
+    @ReadOnly
+    List<Text> list(Map params) {
+        Text.findAllByReadOnly(false, params)
     }
 
-    def get(def params) {
-        def text = Text.createCriteria().get {
-            eq("id", new Long(params.id))
-            eq("readOnly", false)
-        }
-
-        return text
+    @ReadOnly
+    Text get(Map params) {
+        Text.findByIdAndReadOnly(params.id as Long, false)
     }
 
-    def countTypes() {
-        return Text.countByReadOnly(false)
+    @ReadOnly
+    int countTypes() {
+        Text.countByReadOnly(false)
     }
 
-    def manageRequiredTexts() {
-        log.info "Loading text"
-        Text textRecord;
-
-        def alphaVersionText = /The Apps Mall allows visitors to discover and explore business, mission, and convenience applications and enables user-configurable visualizations of available content./
-
-        if (Text.findByName(Constants.TEXT_NAME_ABOUT) == null) {
-            log.info "Adding Text '${Constants.TEXT_NAME_ABOUT}'..."
-            new Text(name: Constants.TEXT_NAME_ABOUT, value: "${alphaVersionText}", readOnly: false).save()
-        }
-        if (Text.findByName(Constants.TEXT_NAME_VERSION) == null) {
-            log.info "Adding Text '${Constants.TEXT_NAME_VERSION}'..."
-            new Text(name: Constants.TEXT_NAME_VERSION, value: "2.0", readOnly: true).save()
+    void manageRequiredTexts() {
+        // Add all required Texts if they do not exist
+        REQUIRED_TEXTS.each { text ->
+            if (Text.findByName(text.name as String) == null) {
+                new Text(text).save()
+            }
         }
 
-        // remove unused text records.
-        if ((textRecord = Text.findByName(Constants.TEXT_NAME_MP_DESCRIPTION)) != null) {
-            log.info "Removing Text '${Constants.TEXT_NAME_MP_DESCRIPTION}'..."
-            textRecord.delete()
-        }
-        if ((textRecord = Text.findByName(Constants.TEXT_NAME_MP_ADVANCED_SEARCH_DESCRIPTION)) != null) {
-            log.info "Removing Text '${Constants.TEXT_NAME_MP_ADVANCED_SEARCH_DESCRIPTION}'..."
-            textRecord?.delete()
-        }
-        if ((textRecord = Text.findByName(Constants.TEXT_NAME_ANALYST)) != null) {
-            log.info "Removing Text '${Constants.TEXT_NAME_ANALYST}'..."
-            textRecord.delete()
-        }
-        if ((textRecord = Text.findByName(Constants.TEXT_NAME_DEVELOPER)) != null) {
-            log.info "Removing Text '${Constants.TEXT_NAME_DEVELOPER}'..."
-            textRecord.delete()
-        }
-        if ((textRecord = Text.findByName(Constants.TEXT_NAME_ADMINISTRATOR)) != null) {
-            log.info "Removing Text '${Constants.TEXT_NAME_ADMINISTRATOR}'..."
-            textRecord.delete()
+        // Remove all deprecated Texts if they exist
+        DEPRECATED_TEXTS.each { name ->
+            Text text = Text.findByName(name)
+            if (text != null) {
+                text.delete()
+            }
         }
     }
+
 }

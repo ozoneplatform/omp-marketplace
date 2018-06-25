@@ -26,7 +26,7 @@
 			<div class="carousel_category_browselink">
 				<p:image src="carousel_content/calendar.png" class="carousel_category_image"/>
 				<g:link action="search" controller="serviceItem"
-					params="[sort:'approvedDate',order:'desc',offset:0,accessType:session.accessType,status_any_checkbox: 'on']">
+					params="[sort:'approvalDate',order:'desc',offset:0,accessType:session.accessType,status_any_checkbox: 'on']">
 					<span class="carousel_category">New Arrivals</span> 
 				</g:link>				
 			</div>

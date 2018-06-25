@@ -1,0 +1,192 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.1.0-1
+      author: omp
+      comment: update 'u_domain.preferences' mapping table
+      dbms: postgresql, mysql
+      context: upgrade
+
+      changes:
+          - renameColumn:
+              tableName: u_domain_preferences
+              oldColumnName: preferences
+              newColumnName: user_domain_instance_id
+              columnDataType: bigint
+
+          - addColumn:
+              tableName: u_domain_preferences
+              columns:
+                - column:
+                    name: preferences_object
+                    type: varchar(255)
+
+
+  - changeSet:
+      id: 7.17.1.0-1
+      author: omp
+      comment: update 'u_domain.preferences' mapping table
+      dbms: oracle
+      context: upgrade
+
+      changes:
+          - renameColumn:
+              tableName: u_domain_preferences
+              oldColumnName: preferences
+              newColumnName: user_domain_instance_id
+              columnDataType: number(19,0)
+
+          - addColumn:
+              tableName: u_domain_preferences
+              columns:
+                - column:
+                    name: preferences_object
+                    type: varchar(255 CHAR)
+
+
+  - changeSet:
+      id: 7.17.1.0-1
+      author: omp
+      comment: update 'u_domain.preferences' mapping table
+      dbms: mssql
+      context: upgrade
+
+      changes:
+          - renameColumn:
+              tableName: u_domain_preferences
+              oldColumnName: preferences
+              newColumnName: user_domain_instance_id
+              columnDataType: number(19,0)
+
+          - addColumn:
+              tableName: u_domain_preferences
+              columns:
+                - column:
+                    name: preferences_object
+                    type: nvarchar(255)
+
+
+  - changeSet:
+      id: 7.17.1.0-2
+      author: omp
+      comment: created_date and edited_date from date to timestamp
+      dbms: postgresql
+      context: upgrade
+
+      changes:
+        - modifyDataType:
+            tableName: agency
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: agency
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: application_configuration
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: application_configuration
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: contact
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: contact
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: contact_type
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: contact_type
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: import_task
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: import_task
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: intent
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: intent
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: intent_action
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: intent_action
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: intent_data_type
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: intent_data_type
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: intent_direction
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: intent_direction
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: owf_widget_types
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: owf_widget_types
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: score_card_item
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: score_card_item
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: screenshot
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: screenshot
+            columnName: edited_date
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: tag
+            columnName: created_date
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: tag
+            columnName: edited_date
+            newDataType: timestamp

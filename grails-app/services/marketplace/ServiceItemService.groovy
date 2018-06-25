@@ -1,50 +1,45 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONArray
-import ozone.marketplace.enums.OzoneSize
-import grails.orm.PagedResultList
-import ozone.utils.User
+import grails.converters.JSON
+import grails.gorm.transactions.Transactional
+import grails.plugin.cache.Cacheable
 
-import java.text.SimpleDateFormat
+import org.hibernate.SessionFactory
 
-import org.apache.commons.lang.StringUtils
-import org.codehaus.groovy.grails.web.metaclass.BindDynamicMethod
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+import marketplace.rest.ServiceItemActivityInternalService
 
 import ozone.marketplace.domain.ValidationException
-import ozone.utils.Utils
-import grails.plugin.cache.Cacheable
-import org.springframework.transaction.annotation.Transactional
-import org.hibernate.criterion.Order
-
 import ozone.marketplace.enums.MarketplaceApplicationSetting
-import grails.converters.JSON
-
-import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration;
+import ozone.utils.User
+import ozone.utils.Utils
 
 /**
  * ServiceItemService
  */
 class ServiceItemService extends OzoneService {
-    def dataSource
-    def sessionFactory
 
-    def profileService
-    def serviceItemActivityInternalService
+    SessionFactory sessionFactory
 
-    def imagesService
-    def typesService
+    ProfileService profileService
 
-    def customFieldDefinitionService
-    def accountService
-    def itemCommentService
-    def scoreCardService
-    def relationshipService
-    def contactService
+    ServiceItemActivityInternalService serviceItemActivityInternalService
 
-    def marketplaceApplicationConfigurationService
+    ImagesService imagesService
 
-    def owfWidgetTypesService
-    def importStackService
+    TypesService typesService
+
+    CustomFieldDefinitionService customFieldDefinitionService
+
+    AccountService accountService
+
+    RelationshipService relationshipService
+
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
+    OwfWidgetTypesService owfWidgetTypesService
+
+    ImportStackService importStackService
 
     @Transactional(readOnly = true)
     def list(def params) {
@@ -87,11 +82,11 @@ class ServiceItemService extends OzoneService {
             throw new ValidationException(message: message.toString())
         }
         if (!accountService.isAdmin()) {
-            if (accountService.isExternAdmin()) {
+            if (accountService.isExtAdmin()) {
                 if (!si.statApproved()) {
                     def user = Profile.findByUsername((String) accountService.getLoggedInUsername())
-                    if (user.id != si.createdBy.id && !si.isAuthor(user)) {
-                        log.error "serviceItem id ${si.id} not being returned to user.id = ${user.id} (createdBy = ${si.createdBy.id}, owners = ${si.owners})"
+                    if (user.id != si.createdBy && !si.isAuthor(user)) {
+                        log.error "serviceItem id ${si.id} not being returned to user.id = ${user.id} (createdBy = ${si.createdBy}, owners = ${si.owners})"
                         def message = "User ${accountService.getLoggedInUsername()} does not have permission to read listing (${si.id})"
                         throw new AccessControlException(message)
                     }
@@ -221,16 +216,16 @@ class ServiceItemService extends OzoneService {
     }
 
     @Transactional(readOnly = true)
-    def checkPermissionToEdit(def serviceItem, def username = accountService.getLoggedInUsername()) {
+    def checkPermissionToEdit(ServiceItem serviceItem, String username = accountService.getLoggedInUsername()) {
         if (!serviceItem) {
             def message = "User ${username} attempted to Edit a serviceItem that is Not Found, Does Not Exist"
             log.error message
             throw new ObjectNotFoundException(message)
         }
         if (!accountService.isAdmin()) {
-            if (accountService.isExternAdmin()) {
+            if (accountService.isExtAdmin()) {
                 def user = Profile.findByUsername(username)
-                if (user.id != serviceItem.createdBy.id && !serviceItem.isAuthor(user)) {
+                if (user.id != serviceItem.createdBy && !serviceItem.isAuthor(user)) {
                     def message = "User ${username} does not have permission to update serviceItem id ${serviceItem.id}"
                     log.error message
                     throw new PermissionException(message)
@@ -343,8 +338,6 @@ class ServiceItemService extends OzoneService {
         }
     }
 
-
-
     @Transactional(readOnly = true)
     def populateDefaults(ServiceItem si, User owner) {
         Profile profile = Profile.findByUsername(owner.username)
@@ -355,7 +348,6 @@ class ServiceItemService extends OzoneService {
             state = State.findByTitle("Active")
         }
     }
-
 
     @Transactional(noRollbackFor=ValidationException)
     def save(ServiceItem serviceItem, def username = accountService.getLoggedInUsername()) {
@@ -448,7 +440,7 @@ class ServiceItemService extends OzoneService {
 
         log.debug "created service item activity approval for this item"
 
-        serviceItem.approvedDate = siAct.activityDate
+        serviceItem.approvalDate = siAct.activityTimestamp
         serviceItem.approvalStatus = Constants.APPROVAL_STATUSES["APPROVED"]
 
         // set the OWF approved flag in the stack descriptor if it's a stack
@@ -597,41 +589,42 @@ class ServiceItemService extends OzoneService {
     }
 
     @Transactional(readOnly = true)
-    def getAllowableItem(def id, def sessionParams, def rules) throws AccessControlException {
-        def item = ServiceItem.get(id)
-        def isUser = false
-        def isAvailable = false
-        def isApproved = false
-        def matchesRule = false
+    ServiceItem getAllowableItem(Long serviceItemId,
+                                 String username,
+                                 boolean isAdmin,
+                                 Map<String, Boolean> rules)
+            throws AccessControlException
+    {
+        def item = ServiceItem.get(serviceItemId)
 
-        if (item) {
-            isUser = item?.isAuthor((String) sessionParams?.username)
-            isAvailable = !item.isHidden
-            isApproved = item.statApproved()
+        if (!item) return null
 
-            if (rules?.allNoRestrictions && isAvailable) {
-                matchesRule = true
-            }
-            if (sessionParams?.isAdmin) {
-                matchesRule = true
-            }
-            if (rules?.allIfApproved && isAvailable && isApproved) {
-                matchesRule = true
-            }
-            if (rules?.userNoRestrictions && isUser) {
-                matchesRule = true
-            }
-            if (rules?.userIfApproved && isUser && isApproved) {
-                matchesRule = true
-            }
+        boolean isUser = item.isAuthor(username)
+        boolean isAvailable = !item.isHidden
+        boolean isApproved = item.statApproved()
 
-            if (matchesRule) {
-                return item
-            } else {
-                throw new AccessControlException('User is not authorized to access this item');
-            }
+        boolean matchesAnyRule = false
+        if (rules?.allNoRestrictions && isAvailable) {
+            matchesAnyRule = true
         }
-        return null;
+        if (isAdmin) {
+            matchesAnyRule = true
+        }
+        if (rules?.allIfApproved && isAvailable && isApproved) {
+            matchesAnyRule = true
+        }
+        if (rules?.userNoRestrictions && isUser) {
+            matchesAnyRule = true
+        }
+        if (rules?.userIfApproved && isUser && isApproved) {
+            matchesAnyRule = true
+        }
+
+        if (!matchesAnyRule) {
+            throw new AccessControlException('User is not authorized to access this item');
+        }
+
+        return item
     }
 
     @Transactional

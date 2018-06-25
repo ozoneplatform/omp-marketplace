@@ -1,0 +1,8 @@
+Domain object providers convert between Grails domain classes and their XML or JSON representations and support content
+negotiation.
+
+* Converting an XML or JSON representation to a domain object is done by the @org.grails.jaxrs.provider.DomainObjectReader@. This provider is used whenever a Grails domain class is used as resource method parameter.
+* Converting a domain object to an XML or JSON representation is done by the @org.grails.jaxrs.provider.DomainObjectWriter@. This provider is used whenever a Grails domain object (collection) is returned from a resource method.
+
+The behaviour of domain object providers can be customized as described in the [custom providers|guide:customproviders]
+section.

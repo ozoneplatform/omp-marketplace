@@ -1,41 +1,46 @@
-import grails.util.GrailsUtil
+import grails.util.Environment
 
+import marketplace.rest.AuditableDataBindingListener
+import marketplace.rest.HashMapWriter
+import marketplace.rest.ServiceItemDataBindingListener
+
+import org.ozoneplatform.auditing.AuditLogListener
 import org.springframework.security.web.FilterChainProxy
-import org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor
 
-import marketplace.*
-import marketplace.search.MarketplaceElasticSearchService
+import marketplace.AccountService
+import marketplace.AutoLoginAccountService
+import marketplace.Constants
+import ozone3.Configuration
+import util.CustomPropertyEditorRegistrar
+
+import ozone.banner.MP_BannerBean
+import ozone.interceptor.MP_RESTInterceptor
 import ozone.utils.ApplicationContextHolder
+import org.ozoneplatform.auditing.AuditStampEventListener
 
 // Place your Spring DSL code here
 beans = {
 
     def DEFAULT_AGENCY = 'DEFAULT_STORE_NAME'
 
-	xmlns context: 'http://www.springframework.org/schema/context'
-	context.'component-scan'('base-package': 'marketplace.validator,marketplace.rest')
+    xmlns context: 'http://www.springframework.org/schema/context'
+    context.'component-scan'('base-package': 'marketplace.validator,marketplace.rest')
 
-    auditLogListener(org.ozoneplatform.auditing.AuditLogListener) {
+    auditLogListener(AuditLogListener) {
         sessionFactory = ref('sessionFactory')
         accountService = ref('accountService')
         grailsApplication = ref('grailsApplication')
         marketplaceApplicationConfigurationService = ref('marketplaceApplicationConfigurationService')
     }
 
-    elasticSearchService(MarketplaceElasticSearchService) {
-        elasticSearchHelper = ref('elasticSearchHelper')
-        domainInstancesRebuilder = ref('domainInstancesRebuilder')
-        elasticSearchContextHolder = ref('elasticSearchContextHolder')
-        indexRequestQueue = ref('indexRequestQueue')
-        grailsApplication = ref('grailsApplication')
-    }
+    auditStampEventListener(AuditStampEventListener)
 
     applicationContextHolder(ApplicationContextHolder) { bean ->
         bean.factoryMethod = 'getInstance'
     }
 
     // wire up a different account service if -Duser=something and environment is development
-    if (GrailsUtil.environment != "production") {
+    if (isDevelopment()) {
         //empty sprint security bean
         springSecurityFilterChain(FilterChainProxy, [])
 
@@ -61,7 +66,8 @@ beans = {
                 }
                 break
             default:
-                if (GrailsUtil.environment == "test" || GrailsUtil.environment.startsWith('with_')) {
+                if (Environment.current == Environment.DEVELOPMENT)// || Environment.current.startsWith('with_')) {
+                {
                     println("Using AutoLoginAccountService - you will be logged in as testUser1")
                     accountService(AutoLoginAccountService) {
                         autoAccountUsername = "testUser1"
@@ -69,26 +75,41 @@ beans = {
                         autoAccountEmail = "testuser1@nowhere.com"
                         autoRoles = [Constants.USER]
                     }
-                } else {
+                }
+                else {
                     println("Not using AutoLoginAccountService - if you want to do so, set -Duser=[testUser1|testAdmin1|testAdmin2] in your environment")
                     accountService(AccountService)
                 }
                 break
         }
+    }
+    else if (isTest()) {
+        springSecurityFilterChain(FilterChainProxy, [])
 
-    } else {
+        accountService(AutoLoginAccountService) {
+            autoAccountUsername = "testUser1"
+            autoAccountName = "Test User 1"
+            autoAccountEmail = "testuser1@nowhere.com"
+            autoOrganization = DEFAULT_AGENCY
+            autoRoles = [Constants.USER]
+        }
+    }
+    else {
+        importBeans('classpath:ozone/marketplace/application.xml')
         accountService(AccountService)
     }
 
-    customPropertyEditorRegistrar(util.CustomPropertyEditorRegistrar)
+    importBeans('classpath:ozone/marketplace/session-control.xml')
 
-	mp_RESTInterceptorService(ozone.interceptor.MP_RESTInterceptor) {}
+    customPropertyEditorRegistrar(CustomPropertyEditorRegistrar)
 
-	mp_BannerBeanService(ozone.banner.MP_BannerBean) {
-		enableBanner = false
-		header = "<div class='north-banner-text'>Welcome to Marketplace</div>";
-		footer = "<div class='south-banner-text'>Welcome to Marketplace</div>";
-		css = """ body {
+    mp_RESTInterceptorService(MP_RESTInterceptor) {}
+
+    mp_BannerBeanService(MP_BannerBean) {
+        enableBanner = false
+        header = "<div class='north-banner-text'>Welcome to Marketplace</div>";
+        footer = "<div class='south-banner-text'>Welcome to Marketplace</div>";
+        css = """ body {
 					padding-top: 100px!important;
 					padding-bottom: 22px!important;
 				}
@@ -126,17 +147,33 @@ beans = {
         js = """jQuery('html').addClass('bannerClass');""";
     }
 
-    OzoneConfiguration(ozone3.Configuration) {
-
+    OzoneConfiguration(Configuration) {
         // log4j file watch interval in milliseconds
-        log4jWatchTime = 180000; // 3 minutes
+       // log4jWatchTime = 180000; // 3 minutes
         freeTextEntryWarningMessage = ""
     }
 
     /**
-     * OP-5818: Use the Spring class instead of the default Grails subclass of it.
-     */
-    openSessionInViewInterceptor(OpenSessionInViewInterceptor) {
-        sessionFactory = ref('sessionFactory')
-    }
+     * OP-5818: Use the Spring class instead of the default Grails subclass of it.*/
+//    openSessionInViewInterceptor(OpenSessionInViewInterceptor) {
+//        sessionFactory = ref('sessionFactory')
+//    }
+
+    hashMapWriter(HashMapWriter)
+
+    auditableDataBindingListener(AuditableDataBindingListener)
+    serviceItemDataBindingListener(ServiceItemDataBindingListener)
 }
+
+static boolean isProduction() {
+    Environment.current == Environment.PRODUCTION
+}
+
+static boolean isDevelopment() {
+    Environment.current == Environment.DEVELOPMENT
+}
+
+static boolean isTest() {
+    Environment.current == Environment.TEST
+}
+

@@ -1,0 +1,32 @@
+The *jaxrs* project is a set of Grails plugins that supports the development of RESTful web services based on the Java
+API for RESTful Web Services (JSR 311: JAX-RS).
+
+It is targeted at developers who want to structure the web service layer of an application in a JSR 311 compatible way
+but still want to continue to use Grails' powerful features such as GORM, automated XML and JSON marshalling, Grails
+services, Grails filters and so on. This plugin is an alternative to Grails' built-in mechanism for implementing RESTful
+web services.
+
+h3. Features
+* Makes the JSR 311 (JAX-RS) available to Grails applications for developing RESTful web services.
+* New Grails artefact types, [Resource|guide:resources] and [Provider|guide:providers], for JAX-RS classes.
+  ** JAX-RS Resource classes under @grails-app/resources@ are auto-detected and can be modified at runtime.
+  ** JAX-RS Provider classes under @grails-app/providers@ are auto-detected and can be modified at runtime.
+* Extended Grails command line interface
+  ** Create new resources and unit test templates via @grails create-resource <resource name>@.
+  ** Generate ready-to-use resources from domain objects via @grails generate-resources <domain class name>@.
+* [Scaffolding|guide:scaffolding]
+  ** Generate RESTful service interfaces for Grails domain objects.
+  ** Content negotiation support for XML and JSON representations.
+* Ability to use any Grails feature within JAX-RS resources and providers such as:
+  ** [GORM|http://grails.github.io/grails-doc/latest/guide/GORM.html] can be used\
+     [for interacting with persistent domain objects|guide:gorm].
+  ** Grails filters for intercepting requests to JAX-RS resources. (_Deprecated_)
+  ** Grails [services|http://grails.github.io/grails-doc/latest/guide/services.html] which can be\
+     [auto-injected by name|guide:injection].
+* Entity providers
+  ** Domain object providers that convert between Grails domain objects and XML or JSON representations.
+  ** Support classes for developing custom entity providers.
+  ** Support for content negotiation based on the @Accept@ request header.
+* Easy [integration testing|guide:testing] of JAX-RS resources and providers.
+* Plugin users may choose between Jersey and Restlet as JAX-RS implementations by means of configuration.
+* *jaxrs* applications can be [deployed to Google App Engine|guide:google] (GAE).

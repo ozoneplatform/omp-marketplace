@@ -1,15 +1,21 @@
 package marketplace
 
+import grails.core.GrailsApplication
+
 import org.springframework.dao.DataIntegrityViolationException
+
+import org.hibernate.SessionFactory
+
 import ozone.marketplace.domain.ValidationException
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.hibernate.FlushMode
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 class IntentActionService {
 
-    def sessionFactory
-    def grailsApplication
+    SessionFactory sessionFactory
+
+    GrailsApplication grailsApplication
 
     @Transactional(readOnly = false)
     def deleteIntentActionById(id) {

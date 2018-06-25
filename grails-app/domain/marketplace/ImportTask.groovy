@@ -1,8 +1,7 @@
 package marketplace
 
 
-@gorm.AuditStamp
-class ImportTask implements Serializable {
+class ImportTask extends AuditStamped implements Serializable {
 
     String name
     String updateType // Full or Delta
@@ -116,11 +115,6 @@ class ImportTask implements Serializable {
             truststorePath?.size() > 0)
     }
 
-    public static void main(String[] args) {
-        ImportTask t = new ImportTask(name: 'Test Name', url: 'http://yahoo.com')
-        println t.prettyPrint()
-    }
-
     /**
      * Sets the execInterval from a base interval and units
      * @param units The units which the baseInterval is in.
@@ -140,6 +134,7 @@ class ImportTask implements Serializable {
                 break
             case 'days':
                 multFactor = 1440
+                break
             default:
                 throw new IllegalArgumentException(
                     "ImportTask units must be one of 'minutes', 'hours', or 'days'")

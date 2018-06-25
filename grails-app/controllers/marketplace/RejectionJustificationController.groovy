@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class RejectionJustificationController extends MarketplaceAdminWithDeleteController {
 
-    def rejectionJustificationService
+    RejectionJustificationService rejectionJustificationService
 
     protected retrieveDomain() { return RejectionJustification.get(params.id) }
 
@@ -16,7 +16,7 @@ class RejectionJustificationController extends MarketplaceAdminWithDeleteControl
 
     @Override
     protected deleteDomain() {
-        rejectionJustificationService.delete(params.id)
+        rejectionJustificationService.delete(params.id as Long)
     }
 
     protected retrieveDomainList() {

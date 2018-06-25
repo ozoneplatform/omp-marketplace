@@ -4,13 +4,12 @@ import grails.converters.JSON
 
 class AffiliatedMarketplaceController extends BaseMarketplaceRestController {
 
-    def affiliatedMarketplaceService
+    AffiliatedMarketplaceService affiliatedMarketplaceService
 
     /***
      * List AS JSON
      */
     def listAsJSON = {
-        log.debug "listAsJSON: params = ${params}"
         def json
         try {
             def items = affiliatedMarketplaceService.listAsJSON(params)
@@ -18,6 +17,7 @@ class AffiliatedMarketplaceController extends BaseMarketplaceRestController {
                 success: true,
                 totalCount: items.totalCount,
                 data: items.ampList.collect { amp ->
+                    assert amp instanceof AffiliatedMarketplace
                     amp.asJSON("${request.contextPath}", true)
                 }
             ]

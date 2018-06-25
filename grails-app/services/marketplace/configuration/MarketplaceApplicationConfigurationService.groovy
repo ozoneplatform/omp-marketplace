@@ -1,44 +1,41 @@
 package marketplace.configuration
 
-import marketplace.DisableInactiveAccountsJob
+import grails.core.GrailsApplication
+import grails.gorm.transactions.ReadOnly
+import grails.gorm.transactions.Transactional
+import grails.util.Environment
+
+import org.springframework.beans.factory.NoSuchBeanDefinitionException
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy
+
 import marketplace.Constants
-import marketplace.CustomFieldUtility
+import marketplace.DisableInactiveAccountsJob
+import marketplace.ServiceItemService
+
+import ozone.marketplace.enums.MarketplaceApplicationSetting
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationServiceImpl
-import org.springframework.beans.factory.NoSuchBeanDefinitionException
-import org.springframework.transaction.annotation.Transactional
-import ozone.marketplace.enums.MarketplaceApplicationSetting
 
 import static ozone.marketplace.enums.MarketplaceApplicationSetting.*
-import grails.util.GrailsUtil
 
 
 class MarketplaceApplicationConfigurationService extends ApplicationConfigurationServiceImpl {
 
-    def profileService
-    def scoreCardService
-    def serviceItemService
-    def typesService
-    def stateService
-    def rejectionJustificationService
-    def owfWidgetTypesService
-    def intentActionService
-    def intentDataTypeService
-    def intentDirectionService
-    def grailsApplication
+    GrailsApplication grailsApplication
+
+    ServiceItemService serviceItemService
 
     def quartzScheduler
     def messageSource
 
-    //the spring security bean that is responsible for handling the max number of session.
-    def concurrentSessionControlStrategy
+    /** Spring Security bean responsible for handling the max number of sessions. */
+    ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy
 
     //Save the config object.  The save happens only if its an existing object as inserting a value does not make sense from here
 
     @Override
-    @Transactional(readOnly = false)
-    public ApplicationConfiguration saveApplicationConfiguration(ApplicationConfiguration item) {
-
+    @Transactional
+    ApplicationConfiguration saveApplicationConfiguration(ApplicationConfiguration item) {
         item = super.saveApplicationConfiguration(item)
 
         switch (item.code) {
@@ -49,8 +46,6 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
                 // OP-1318 Disabling inactive user accounts
                 handleDisableInactiveAccountsJobChange(item)
                 break
-            default:
-                break
         }
 
         handleSessionControlChange(item)
@@ -58,7 +53,7 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
         item
     }
 
-    private def handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {
+    private void handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {
         log.info "Doing disableInactiveAccountsJob change"
 
         def job = new DisableInactiveAccountsJob(getApplicationConfiguration(JOB_DISABLE_ACCOUNTS_INTERVAL).value,
@@ -77,16 +72,15 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
      * property in spring security
      * @param maxSessions The value to be set as the maximumSessions on the spring ConcurrentSessionControlStrategy
      */
-    private updateMaxSessions(int maxSessions) {
+    private void updateMaxSessions(int maxSessions) {
         log.debug "Updating max sessions per user to ${maxSessions}"
-        log.debug "Session Control Strategy Bean: ${concurrentSessionControlStrategy}"
+        log.debug "Session Control Strategy Bean: ${concurrentSessionControlAuthenticationStrategy}"
 
-        if (concurrentSessionControlStrategy) {
-            concurrentSessionControlStrategy.maximumSessions = maxSessions
-        } else {
-            throw new IllegalStateException("Attempted to update session control " +
-                "configuration when session control bean is not present")
+        if (!concurrentSessionControlAuthenticationStrategy) {
+            throw new IllegalStateException("Attempted to update session control configuration when session control bean is not present")
         }
+
+        concurrentSessionControlAuthenticationStrategy.maximumSessions = maxSessions
     }
 
     /**
@@ -110,7 +104,7 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
      * that the ConcurrentSessionControlStrategy is updated with the current configurations
      * from the database.  If not a SESSION_CONTROL configuration, this method does nothing
      */
-    private handleSessionControlChange(ApplicationConfiguration item) {
+    private void handleSessionControlChange(ApplicationConfiguration item) {
         final DISABLED_SETTING = -1 //this value tells spring not to limit sessions
 
         try {
@@ -133,8 +127,7 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
         }
     }
 
-
-    private def handleInsideOutsideBehaviorChange(ApplicationConfiguration configItem) {
+    private void handleInsideOutsideBehaviorChange(ApplicationConfiguration configItem) {
         def itemValue = configItem.value
         if (itemValue == Constants.INSIDE_OUTSIDE_ALL_INSIDE || itemValue == Constants.INSIDE_OUTSIDE_ALL_OUTSIDE) {
             def isOutsideValue = (itemValue == Constants.INSIDE_OUTSIDE_ALL_OUTSIDE)
@@ -144,19 +137,18 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
         // do nothing if transitioning to INSIDE_OUTSIDE_ADMIN_SELECTED
     }
 
-    @Transactional(readOnly = true)
-    public boolean isFranchiseStore() {
+    @ReadOnly
+    boolean isFranchiseStore() {
         return is(FRANCHISE_STORE)
     }
 
-    @Transactional(readOnly = true)
-    public boolean isStoreNameMissing() {
+    @ReadOnly
+    boolean isStoreNameMissing() {
         return (isFranchiseStore() && !this.valueOf(STORE_NAME))
     }
 
     //This will validate the configuration object
-    public void validateApplicationConfiguration(def applicationConfiguration) {
-
+    void validateApplicationConfiguration(def applicationConfiguration) {
         if (!applicationConfiguration)
             return
 
@@ -220,7 +212,7 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
     /**
      * Ensures required configs are present in the database.
      */
-    @Transactional(readOnly = true)
+    @ReadOnly
     void checkThatConfigsExist() {
         log.info "Doing configuration validation"
         MarketplaceApplicationSetting.values().each { setting ->
@@ -232,24 +224,7 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
         }
     }
 
-    //  TODO: Now that the actual creation of configurations has been moved from here to the database scripts,
-    //  we should probably find somewhere else to handle metadata creation and service initialization
-    @Transactional(readOnly = false)
-    void createRequired() {
-
-        // populate metadata - the listing parameter options
-        profileService.createRequired()
-        stateService.createRequired()
-        typesService.createRequired()
-        rejectionJustificationService.createRequired()
-        owfWidgetTypesService.createRequired()
-        intentActionService.createRequired()
-        intentDataTypeService.createRequired()
-        intentDirectionService.createRequired()
-        CustomFieldUtility.createPreConfiguredCustomFields()
-    }
-
-    @Transactional(readOnly = false)
+    @Transactional
     initializeConfigDependentServices() {
         //initialize session control
         try {
@@ -257,7 +232,7 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
             handleSessionControlChange()
         }
         catch (IllegalStateException e) {
-            if (GrailsUtil.environment == 'production') {
+            if (Environment.current == Environment.PRODUCTION) {
                 log.error "Unable to initialize session management: ${e.message}"
             }
             //this is expected in dev mode, since spring security is not set up
@@ -268,8 +243,9 @@ class MarketplaceApplicationConfigurationService extends ApplicationConfiguratio
 
     }
 
-    @Transactional(readOnly = true)
-    public String getApplicationSecurityLevel() {
+    @ReadOnly
+    String getApplicationSecurityLevel() {
         return this.valueOf(SECURITY_LEVEL) ?: ""
     }
+
 }

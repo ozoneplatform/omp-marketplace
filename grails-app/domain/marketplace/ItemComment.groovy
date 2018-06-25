@@ -1,9 +1,9 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class ItemComment implements Comparable, Serializable {
+
+class ItemComment extends AuditStamped implements Comparable, Serializable, ToJSON {
 
     static searchable = {
         root false
@@ -79,18 +79,23 @@ class ItemComment implements Comparable, Serializable {
         toString()
     }
 
-    def asJSON() {
-        JSONObject currJSON = new JSONObject(
-            id: id,
-            text: text,
-            rate: rate,
-            author: new JSONObject(
-                id: author.id,
-                username: author.username,
-                displayName: author.displayName
-            )
-        )
-        JSONUtil.addCreatedAndEditedInfo(currJSON, this)
-        return currJSON
+    @Override
+    JSONObject asJSON() {
+        marshall([id    : id,
+                  text  : text,
+                  rate  : rate,
+                  author: new JSONObject([id         : author.id,
+                                          username   : author.username,
+                                          displayName: author.displayName])])
+    }
+
+/**
+ * This method is used by the import logic to create a Domain object.
+ */
+    void bindFromJSON(JSONObject obj) {
+        this.with {
+            text: obj.text
+            rate: obj.rate
+        }
     }
 }

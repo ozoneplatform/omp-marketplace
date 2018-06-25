@@ -1,0 +1,374 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-application_configuration
+      author: omp
+      comment: create 'application_configuration' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: application_configuration
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: application_configurationPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: code
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+                      unique: true
+              - column:
+                  name: value
+                  type: varchar(2000)
+              - column:
+                  name: title
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(2000)
+              - column:
+                  name: type
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: group_name
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: sub_group_name
+                  type: varchar(250)
+              - column:
+                  name: mutable
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: sub_group_order
+                  type: bigint
+              - column:
+                  name: help
+                  type: varchar(2000)
+
+
+  - changeSet:
+      id: 7.17.0-application_configuration
+      author: omp
+      comment: create 'application_configuration' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: application_configuration
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: code
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+                      unique: true
+              - column:
+                  name: value
+                  type: varchar(2000)
+              - column:
+                  name: title
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(2000)
+              - column:
+                  name: type
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: group_name
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: sub_group_name
+                  type: varchar(250)
+              - column:
+                  name: mutable
+                  type: tinyint(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: sub_group_order
+                  type: bigint
+              - column:
+                  name: help
+                  type: varchar(2000)
+
+        - addAutoIncrement:
+            tableName: application_configuration
+            columnName: id
+            columnDataType: bigint
+            startWith: 48
+
+
+  - changeSet:
+      id: 7.17.0-application_configuration
+      author: omp
+      comment: create 'application_configuration' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: application_configuration
+
+            columns:
+              - column:
+                  name: id
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: application_configurationPK
+              - column:
+                  name: version
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(38,0)
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: edited_by_id
+                  type: number(38,0)
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: code
+                  type: varchar(250 BYTE)
+                  constraints:
+                      nullable: false
+                      unique: true
+              - column:
+                  name: value
+                  type: varchar(2000 BYTE)
+              - column:
+                  name: title
+                  type: varchar(250 BYTE)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(2000 BYTE)
+              - column:
+                  name: type
+                  type: varchar(250 BYTE)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: group_name
+                  type: varchar(250 BYTE)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: sub_group_name
+                  type: varchar(250 BYTE)
+              - column:
+                  name: mutable
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: sub_group_order
+                  type: number(38,0)
+              - column:
+                  name: help
+                  type: varchar(2000 BYTE)
+
+
+  - changeSet:
+      id: 7.17.0-application_configuration
+      author: omp
+      comment: create 'application_configuration' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: application_configuration
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: application_configurationPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: smalldatetime
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: smalldatetime
+              - column:
+                  name: code
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+                      unique: true
+              - column:
+                  name: value
+                  type: varchar(2000)
+              - column:
+                  name: title
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(2000)
+              - column:
+                  name: type
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: group_name
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: sub_group_name
+                  type: varchar(250)
+              - column:
+                  name: mutable
+                  type: bit
+                  constraints:
+                      nullable: false
+              - column:
+                  name: sub_group_order
+                  type: bigint
+              - column:
+                  name: help
+                  type: varchar(2000)
+
+
+  - changeSet:
+      id: 7.17.0-application_configuration-constraints
+      author: omp
+      comment: create 'application_configuration' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: application_configuration
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKFC9C0477666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: application_configuration
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKFC9C047E31CB353
+
+
+  - changeSet:
+      id: 7.17.0-application_configuration-indices
+      author: omp
+      comment: create 'application_configuration' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: application_configuration
+            indexName: FKFC9C0477666C6D2
+            columns:
+              - column:
+                  name: created_by_id
+
+        - createIndex:
+            tableName: application_configuration
+            indexName: FKFC9C047E31CB353
+            columns:
+              - column:
+                  name: edited_by_id
+
+        - createIndex:
+            tableName: application_configuration
+            indexName: app_config_group_name_idx
+            columns:
+              - column:
+                  name: group_name

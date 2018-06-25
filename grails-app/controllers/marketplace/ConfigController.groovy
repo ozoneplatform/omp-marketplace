@@ -1,30 +1,37 @@
 package marketplace
 
-import grails.converters.JSON
 import grails.util.Environment
-import marketplace.configuration.MarketplaceApplicationConfigurationService
-import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
-import ozone.marketplace.enums.MarketplaceApplicationSetting
 
+import marketplace.configuration.MarketplaceApplicationConfigurationService
 import marketplace.rest.ProfileRestService
+
+import ozone.marketplace.enums.MarketplaceApplicationSetting
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
+
 
 class ConfigController {
 
 	MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
     ProfileRestService profileRestService
+
     AccountService accountService
+
     ThemeService themeService
+
     StateService stateService
+
     TypesService typesService
 
-    def index = {
+    def config = {
 
         List<ApplicationConfiguration> appconfigs = marketplaceApplicationConfigurationService.getAllApplicationConfigurations()
 
         Integer affiliatedSearchSize =
             Integer.valueOf(marketplaceApplicationConfigurationService.valueOf(MarketplaceApplicationSetting.AMP_SEARCH_RESULT_SIZE))
-
+        //TODO BVEST Profile not present
         Profile currUser = profileRestService.currentUserProfile
+//        User currUser = accountService.getLoggedInUser()
 
         String accessAlertMsg = marketplaceApplicationConfigurationService.valueOf(MarketplaceApplicationSetting.ACCESS_ALERT_CONTENT)
 
@@ -38,7 +45,7 @@ class ConfigController {
         render(
             view: '/config_js',
             model: [
-                config: [
+                conf: [
                     appconfigs: appconfigs.collect { it.asMap() },
                     defaultState: defaultState?.asJSONRef(),
                     types: types.collect { it.asJSON() },
@@ -47,16 +54,17 @@ class ConfigController {
                     url: "${request.scheme}://${request.serverName}:${request.serverPort}" +
                         request.contextPath,
                     context: request.contextPath,
-                    blankImage: p.imageLink(src: 's.gif').replace("'",""),
+                    //TODO BVEST High Priority - Theming
+                    //blankImage: p.imageLink(src: 's.gif').replace("'",""),
                     bannerBeanNorth: myui.bannerBeanNorth().replaceAll("[\\r\\n]","")
                         .replaceAll("\'", ""),
                     bannerBeanSouth: myui.bannerBeanSouth().replaceAll("[\\r\\n]","")
                         .replaceAll("\'", ""),
                     currUser: [
-                        displayName: currUser.displayName,
-                        username: currUser.username,
-                        email: currUser.email,
-                        id: currUser.id,
+                        displayName: currUser?.displayName,
+                        username: currUser?.username,
+                        email: currUser?.email,
+                        id: currUser?.id,
                         isAdmin: accountService.isAdmin(),
                         organization: accountService.getLoggedInUser()?.org
                     ],
@@ -78,7 +86,8 @@ class ConfigController {
                     ],
                     allowImageUpload: allowImageUpload,
                     importTaskContext: g.createLink(controller:"importTask")
-                ]
+                ],
+                contentType: 'text/javascript'
             ]
         )
     }

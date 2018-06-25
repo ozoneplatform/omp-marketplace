@@ -1,0 +1,5 @@
+Any @*Resource.groovy@ file created under grails-app/resources is assumed to be a JAX-RS resource and auto-detected by the
+*jaxrs* plugin. These resources are checked for the presence of JAX-RS annotations as defined by JAX-RS 1.1
+specification, section 3.1. Resources that aren't properly annotated are ignored by the plugin.
+
+{note}When running applications locally, resource classes are watched and reloaded when any change to them occurs.{note}

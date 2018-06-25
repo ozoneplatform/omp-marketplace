@@ -1,0 +1,9 @@
+= Quick Reference
+:toc: right
+:toc-title: Quick Reference
+
+include::dynamicDomainMethods.adoc[]
+
+include::elasticSearchAdminService.adoc[]
+
+include::elasticSearchService.adoc[]

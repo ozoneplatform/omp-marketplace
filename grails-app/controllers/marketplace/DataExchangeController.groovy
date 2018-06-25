@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringEscapeUtils
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
 import grails.converters.JSON
 
@@ -12,10 +12,9 @@ class DataExchangeController extends BaseMarketplaceRestController {
 
     static final String NO_AGENCY = "ID_NO_AGENCY"
 
-    def dataExchangeService
-    def importService
-    def importTaskService
-    def exportController
+    ImportService importService
+
+    ImportTaskService importTaskService
 
     def index = {
         int listCount = ImportTask.list([id: params.id, sort: params.sort, order: params.order]).size()
@@ -126,6 +125,7 @@ class DataExchangeController extends BaseMarketplaceRestController {
             render ([success: false, message: "Errors: ${issues.join('; ')}"] as JSON)
         } else {
             redirect(action: "index")
+            return
         }
     }
 

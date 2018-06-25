@@ -1,0 +1,246 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-contact_type
+      author: omp
+      comment: create 'contact_type' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: contact_type
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: contact_typePK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: required
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-contact_type
+      author: omp
+      comment: create 'contact_type' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: contact_type
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: required
+                  type: tinyint(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-contact_type
+      author: omp
+      comment: create 'contact_type' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: contact_type
+
+            columns:
+              - column:
+                  name: id
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: contact_typePK
+              - column:
+                  name: version
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(38,0)
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: edited_by_id
+                  type: number(38,0)
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: required
+                  type: number(1,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(50 BYTE)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-contact_type
+      author: omp
+      comment: create 'contact_type' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: contact_type
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: contact_typePK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: smalldatetime
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: smalldatetime
+              - column:
+                  name: required
+                  type: bit
+                  constraints:
+                      nullable: false
+              - column:
+                  name: title
+                  type: varchar(50 BYTE)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-contact_type-constraints
+      author: omp
+      comment: create 'contact_type' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: contact_type
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK4C2BB7F97666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: contact_type
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FK4C2BB7F9E31CB353
+
+
+  - changeSet:
+      id: 7.17.0-contact_type-indices
+      author: omp
+      comment: create 'contact_type' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: contact_type
+            indexName: FK4C2BB7F97666C6D2
+            columns:
+              - column:
+                  name: created_by_id
+
+        - createIndex:
+            tableName: contact_type
+            indexName: FK4C2BB7F9E31CB353
+            columns:
+              - column:
+                  name: edited_by_id
+
+        - createIndex:
+            tableName: contact_type
+            indexName: title_unique_1389723125532
+            unique: true
+            columns:
+              - column:
+                  name: title

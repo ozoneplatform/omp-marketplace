@@ -1,0 +1,84 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-relationship_service_item
+      author: omp
+      comment: create 'relationship_service_item' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: relationship_service_item
+
+            columns:
+              - column:
+                  name: relationship_related_items_id
+                  type: bigint
+              - column:
+                  name: service_item_id
+                  type: bigint
+              - column:
+                  name: related_items_idx
+                  type: integer
+
+
+  - changeSet:
+      id: 7.17.0-relationship_service_item
+      author: omp
+      comment: create 'relationship_service_item' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: relationship_service_item
+
+            columns:
+              - column:
+                  name: relationship_related_items_id
+                  type: number(19,0)
+              - column:
+                  name: service_item_id
+                  type: number(19,0)
+              - column:
+                  name: related_items_idx
+                  type: number(10,0)
+
+
+  - changeSet:
+      id: 7.17.0-relationship_service_item
+      author: omp
+      comment: create 'relationship_service_item' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: relationship_service_item
+
+            columns:
+              - column:
+                  name: relationship_related_items_id
+                  type: number(19,0)
+              - column:
+                  name: service_item_id
+                  type: number(19,0)
+              - column:
+                  name: related_items_idx
+                  type: int
+
+
+  - changeSet:
+      id: 7.17.0-relationship_service_item-constraints
+      author: omp
+      comment: create 'relationship_service_item' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: service_item_id
+            baseTableName: relationship_service_item
+            referencedColumnNames: id
+            referencedTableName: service_item
+            constraintName: FKDA02504C7E5C662

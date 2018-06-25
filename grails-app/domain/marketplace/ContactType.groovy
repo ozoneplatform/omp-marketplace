@@ -1,12 +1,12 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
-import gorm.AuditStamp
 
-@AuditStamp
-class ContactType implements Serializable {
+
+class ContactType extends AuditStamped implements Serializable, ToJSON {
 
     static searchable = {
         root false
@@ -44,12 +44,11 @@ class ContactType implements Serializable {
         return false
     }
 
+    @Override
     JSONObject asJSON() {
-        new JSONObject([
-            id: id,
-            title: title,
-            required: required
-        ])
+        marshall([id      : id,
+                  title   : title,
+                  required: required])
     }
 
     String prettyPrint() {

@@ -1,0 +1,3 @@
+moduleName = marketplace-extensions
+moduleVersion = 1.0
+extensionClasses = marketplace.MarketplaceHttpSessionExtension, marketplace.MapExtensions

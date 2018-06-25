@@ -1,0 +1,250 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-intent_data_type
+      author: omp
+      comment: create 'intent_data_type' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: intent_data_type
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: intent_data_tPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: description
+                  type: varchar(256)
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255)
+
+
+  - changeSet:
+      id: 7.17.0-intent_data_type
+      author: omp
+      comment: create 'intent_data_type' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: intent_data_type
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: description
+                  type: varchar(256)
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255)
+
+
+  - changeSet:
+      id: 7.17.0-intent_data_type
+      author: omp
+      comment: create 'intent_data_type' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: intent_data_type
+
+            columns:
+              - column:
+                  name: id
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: intent_data_tPK
+              - column:
+                  name: version
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(38,0)
+              - column:
+                  name: created_date
+                  type: date
+              - column:
+                  name: description
+                  type: varchar(256 BYTE)
+              - column:
+                  name: edited_by_id
+                  type: number(38,0)
+              - column:
+                  name: edited_date
+                  type: date
+              - column:
+                  name: title
+                  type: varchar(256 BYTE)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255 BYTE)
+
+
+  - changeSet:
+      id: 7.17.0-intent_data_type
+      author: omp
+      comment: create 'intent_data_type' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: intent_data_type
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: intent_data_tPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: smalldatetime
+              - column:
+                  name: description
+                  type: varchar(256)
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: smalldatetime
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: uuid
+                  type: varchar(255)
+
+
+  - changeSet:
+      id: 7.17.0-intent_data_type-constraints
+      author: omp
+      comment: create 'intent_data_type' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: intent_data_type
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKEADB30CC7666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: intent_data_type
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKEADB30CCE31CB353
+
+
+  - changeSet:
+      id: 7.17.0-intent_data_type-indices
+      author: omp
+      comment: create 'intent_data_type' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: intent_data_type
+            indexName: FKEADB30CC7666C6D2
+            columns:
+              - column:
+                  name: created_by_id
+
+        - createIndex:
+            tableName: intent_data_type
+            indexName: FKEADB30CCE31CB353
+            columns:
+              - column:
+                  name: edited_by_id
+
+        - createIndex:
+            tableName: intent_data_type
+            indexName: uuid_unique_1366398847848
+            unique: true
+            columns:
+              - column:
+                  name: uuid

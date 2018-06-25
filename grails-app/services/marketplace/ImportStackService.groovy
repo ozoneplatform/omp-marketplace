@@ -1,15 +1,20 @@
 package marketplace
 
 import grails.converters.JSON
-import ozone.marketplace.enums.MarketplaceApplicationSetting
+
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 import ozone.utils.User
 
 class ImportStackService {
+
     boolean transactional = true
 
-    def marketplaceApplicationConfigurationService
-    def relationshipService
-    def serviceItemService
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
+    RelationshipService relationshipService
+
+    ServiceItemService serviceItemService
 
     /** Parse a stack descriptor into the stack and its component widgets
      @param exportedStack the file that OWF creates when the user does an "Export"

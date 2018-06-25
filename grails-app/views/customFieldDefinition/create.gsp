@@ -7,6 +7,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="layout" content="${session.marketplaceLayout}" />
+        <meta name="pageId" content="${controllerName.encodeAsHTML()}.${actionName.encodeAsHTML()}" />
         <script type="text/javascript" >
         jQuery(document).ready(function() {
              var $ = jQuery;
@@ -26,7 +27,7 @@
                     <h1><g:message code="customFieldDefinition.create.title" encodeAs="HTML" /></h1>
                     <g:if test="${failureMessage}">
                         <div class="errorText">
-                            <b><g:message code="${failureMessage}" args="${failureArgs}" default="${failureMessage}" encodeAs="HTML"  encodeAs="HTML" /></b>
+                            <b><g:message code="${failureMessage}" args="${failureArgs}" default="${failureMessage}" encodeAs="HTML" /></b>
                             <br>
                         </div>
                     </g:if>
@@ -118,7 +119,7 @@
                                 <%-- TODO: finish implementing this! TOP --%>
                                     <tr class="prop">
                                         <td>
-                                            <label for="fieldType"><g:message code="label.fieldType" encodeAs="HTML" /></label>
+                                            <label for="styleType"><g:message code="label.fieldType" encodeAs="HTML" /></label>
                                         </td>
                                         <td  class="admin_create_field  ${hasErrors(bean:customFieldDefinitionInstance,field:'isRequired','errors')}">
                                             <g:select name="styleType" from="${Constants.CustomFieldDefinitionStyleType}"
@@ -183,7 +184,7 @@
                                         <td  class="admin_create_field  ${hasErrors(bean:customFieldDefinitionInstance,field:'fieldValues','errors')}">
                                             <div id="fieldValueSelectListContainerId" class="field_val_sel_list_container">
                                                 <g:if test="${customFieldDefinitionInstance?.instanceOf(DropDownCustomFieldDefinition)}">
-                                                    <g:select id="fieldValueList" onChange="Marketplace.fieldValueChanged()" class="shuttleBox left admin_options_box" size="10" multiple="false"   from="${customFieldDefinitionInstance?.fieldValues}" optionKey="id" optionValue="displayText" />
+                                                    <g:select name="fieldValueList" id="fieldValueList" onChange="Marketplace.fieldValueChanged()" class="shuttleBox left admin_options_box" size="10" multiple="false"   from="${customFieldDefinitionInstance?.fieldValues}" optionKey="id" optionValue="displayText" />
                                                 </g:if>
                                                 <g:else>
                                                     <g:select id="fieldValueList" name="fieldValueList" onChange="Marketplace.fieldValueChanged()" class="shuttleBox left admin_options_box" size="10" multiple="false" from="" optionKey="id" optionValue="displayText" />
@@ -227,7 +228,7 @@
                                             <label for="isRequired"><g:message code="label.isRequired" encodeAs="HTML" /></label>
                                         </td>
                                         <td  class="admin_create_field  ${hasErrors(bean:customFieldDefinitionInstance,field:'isRequired','errors')}">
-                                            <g:checkBox name="isRequired" value="${customFieldDefinitionInstance?.isRequired}" class="switch ios brand-success"></g:checkBox>
+                                            <g:checkBox name="isRequired" value="${customFieldDefinitionInstance?.isRequired}" class="switch ios brand-success"/>
                                         </td>
                                     </tr>
                                     <tr>

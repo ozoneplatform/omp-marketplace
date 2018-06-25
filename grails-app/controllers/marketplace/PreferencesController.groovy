@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class PreferencesController extends BaseMarketplaceRestController {
 
-    def preferencesService
+    PreferencesService preferencesService
 
     def enableAnimations = {
         log.debug("enableAnimations: params = ${params}")

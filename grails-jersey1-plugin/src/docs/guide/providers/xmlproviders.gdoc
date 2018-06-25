@@ -1,0 +1,21 @@
+XML providers are superseded by domain object providers since *jaxrs* version 0.3.
+
+* @org.grails.jaxrs.provider.XMLReader@ converts an XML representation of a domain object into a @java.util.Map@. This map can be used for constructing domain objects.
+* @org.grails.jaxrs.provider.XMLWriter@ converts an @grails.converters.XML@ object into an XML representation.
+
+Usage example:
+
+{code}
+import grails.converters.XML
+
+class PersonResource {
+    @PUT
+    @Consumes('application/xml')
+    @Produces('application/xml')
+    XML update(Map dto) {
+        Person person = new Person(map)
+        // ... do something with person
+        return person as XML
+    }
+}
+{code}

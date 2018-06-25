@@ -2,12 +2,12 @@ package marketplace
 
 import grails.converters.JSON
 
-import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
+import org.grails.web.converters.exceptions.ConverterException
 import ozone.decorator.JSONDecoratorException
 
 class ExtProfileController extends BaseMarketplaceRestController {
 
-    def extProfileService
+    ExtProfileService extProfileService
 
     // TODO: Remove this once I get logging from the integration test working.
     def logIt(def strIn) {

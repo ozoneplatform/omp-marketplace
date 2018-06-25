@@ -1,23 +1,26 @@
 package marketplace
 
+import grails.converters.JSON
+import grails.plugins.elasticsearch.ElasticSearchService
+
+import marketplace.search.SearchCriteria
 import org.elasticsearch.action.search.SearchPhaseExecutionException
-import org.elasticsearch.index.query.QueryParsingException
-import org.elasticsearch.search.SearchHits
+import org.elasticsearch.common.ParsingException
+
+//import org.elasticsearch.action.search.SearchPhaseExecutionException
+//import org.elasticsearch.common.ParsingException
+//import org.elasticsearch.search.SearchHits
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock
 
-import marketplace.search.SearchCriteria
 
 class SearchableService {
 
     static transactional = false
 
-    def elasticSearchService
+    ElasticSearchService elasticSearchService
 
     def searchListings(SearchCriteria searchCriteria) {
-        log.debug 'searchListings:'
-
-
         def ops = [size: searchCriteria.max,
                    from: searchCriteria.offset,
                    types: searchCriteria.TYPES_TO_SEARCH]
@@ -26,14 +29,11 @@ class SearchableService {
 
         while (retry) {
             try {
-                retry = false
-                def results = elasticSearchService.search(ops, searchCriteria.searchClause, searchCriteria.extraSearchSource)
-                return results
+                return elasticSearchService.search(ops, searchCriteria.searchClause, searchCriteria.extraSearchSource)
             }
-            catch (QueryParsingException pe) {
+            catch (ParsingException pe) {
                 log.warn "!Search Engine Parse Issue: QueryString \'${options.queryString}\' is not valid, and all results will FAIL to return listings."
                 log.debug "!Search Engine Parse Exception Message: ${pe.getMessage()}"
-                retry = false
                 return null
             } catch (org.apache.lucene.search.BooleanQuery.TooManyClauses exp) {
                 updateMaxClause(exp)
@@ -44,9 +44,7 @@ class SearchableService {
                 throw new IllegalArgumentException()
             }
             catch (Exception e) {
-                retry = false
                 log.error('searchListings error', e)
-                //e.printStackTrace()
                 throw e
             }
         }

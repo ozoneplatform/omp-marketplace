@@ -50,6 +50,7 @@ class AvatarController {
         }
         flash.message = "Avatar (${avatar.contentType}, ${avatar.pic.size()} bytes) uploaded."
         redirect(action: 'pic', id: avatar.id)
+        return
     }
 
 }

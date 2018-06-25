@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="OzoneConfiguration" class="ozone3.Configuration">
+        <property name="log4jWatchTime" value="180000" />
+        <property name="marketplaceLocation" value="https://${ozone.host}:${ozone.port}/marketplace" />
+        <property name="freeTextEntryWarningMessage" value="" />
+    </bean>
+ 
+    <!-- Sample configuration for OMP's pluggable REST classification checker
+                MAP entries consist of a String as the key and true/false as the value
+                If the value is 'false' then a classification that matches the key (case insensitive) is allowed.
+                if the value is 'true' then the key is treated as a java regular expression, and the rest classification field
+                must match the pattern -->
+     <!--<bean id='mp_RESTInterceptorService' class='ozone.jblocks.interceptor.JBlocksRestInterceptor'>-->
+        <!--<property name="jsonClassificationKey" value="maxClassification"></property>-->
+        <!--<property name='allowedClassifications' >-->
+            <!--<map>-->
+                <!--<entry key='UNCLASSIFIED//FOUO' value="false" />-->
+                <!--<entry key='APPLES|BANANAS' value="true" />-->
+            <!--</map>-->
+        <!--</property>-->
+        <!--<property name="configMessage" value="UNCLASSIFIED//FOUO"></property>-->
+    <!--</bean>-->
+     
+</beans>

@@ -1,10 +1,12 @@
 package marketplace
 
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
-import org.codehaus.groovy.grails.web.json.JSONObject
 
-class ServiceItemDocumentationUrl implements Serializable {
+
+class ServiceItemDocumentationUrl implements Serializable, ToJSON {
 
     static searchable = {
         root false
@@ -24,11 +26,10 @@ class ServiceItemDocumentationUrl implements Serializable {
         url(maxSize: Constants.MAX_URL_SIZE, nullable: false)
     }
 
-    def asJSON() {
-        return new JSONObject(
-            name: name,
-            url: url
-        )
+    @Override
+    JSONObject asJSON() {
+        new JSONObject([name: name,
+                        url : url])
     }
 
     def asJSONRef() {

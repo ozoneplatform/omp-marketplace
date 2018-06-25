@@ -50,7 +50,7 @@
 			<div class="clear"></div>
 		</div>
 		<!-- Item Release Date -->
-		<div class="item_released"><span class="item_bold"><g:message code="label.released"/></span> <g:formatDate format="MM/dd/yyyy" date="${item.releaseDate}" encodeAs="HTML" /></div>
+		<div class="item_released"><span class="item_bold"><g:message code="label.released"/></span> <g:formatDate format="MM/dd/yyyy" date="${item.releasedDate}" encodeAs="HTML" /></div>
 	  	<!-- Last Edited Date i.e. Date the status was set -->
       	<div class="item_modified"><span class="item_bold"><g:message code="label.modified" default="Modified"/></span> <g:formatDate format="MM/dd/yyyy" date="${item.editedDate}" encodeAs="HTML" /></div>
 

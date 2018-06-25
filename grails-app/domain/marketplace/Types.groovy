@@ -1,14 +1,15 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import grails.util.Holders
-import ozone.utils.Utils
-import marketplace.JSONUtil as JS
-import org.apache.commons.lang.builder.HashCodeBuilder
-import org.apache.commons.lang.builder.EqualsBuilder
+import org.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class Types implements Serializable {
+import marketplace.JSONUtil as JS
+import org.apache.commons.lang.builder.EqualsBuilder
+import org.apache.commons.lang.builder.HashCodeBuilder
+
+import ozone.utils.Utils
+
+
+class Types extends AuditStamped implements Serializable, ToJSON {
     static searchable = {
         root false
         title index: 'analyzed', excludeFromAll: false
@@ -57,7 +58,7 @@ class Types implements Serializable {
     static transients = ['sortTypeTitle', 'typeId', 'iconImageJSON']
 
     String creatorNameDisplay() {
-        def returnVal = Profile.get(createdBy)?.username
+        def returnVal = findCreatedByProfile()?.username
         if (returnVal == null) {
             // TODO: get this string from properties file
             returnVal = 'System'
@@ -67,7 +68,7 @@ class Types implements Serializable {
     }
 
     String editorNameDisplay() {
-        def returnVal = Profile.get(updatedBy)?.username
+        def returnVal = findEditedByProfile()?.username
         if (returnVal == null) {
             // TODO: get this string from properties file
             returnVal = 'System'
@@ -128,17 +129,16 @@ class Types implements Serializable {
         }
     }
 
-    def asJSON() {
-        return new JSONObject(
-            id: id,
-            uuid: uuid,
-            title: title,
-            description: description,
-            ozoneAware: ozoneAware,
-            hasLaunchUrl: hasLaunchUrl,
-            hasIcons: hasIcons,
-            isPermanent: isPermanent,
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id          : id,
+                  uuid        : uuid,
+                  title       : title,
+                  description : description,
+                  ozoneAware  : ozoneAware,
+                  hasLaunchUrl: hasLaunchUrl,
+                  hasIcons    : hasIcons,
+                  isPermanent : isPermanent])
     }
 
     public String getIconUrl(String contextPath) {

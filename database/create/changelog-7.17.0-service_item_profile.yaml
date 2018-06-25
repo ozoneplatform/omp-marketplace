@@ -1,0 +1,69 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-service_item_profile
+      author: omp
+      comment: create 'service_item_profile' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: service_item_profile
+
+            columns:
+              - column:
+                  name: service_item_owners_id
+                  type: bigint
+              - column:
+                  name: profile_id
+                  type: bigint
+              - column:
+                  name: owners_idx
+                  type: integer
+
+
+  - changeSet:
+      id: 7.17.0-service_item_profile
+      author: omp
+      comment: create 'service_item_profile' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: service_item_profile
+
+            columns:
+              - column:
+                  name: service_item_owners_id
+                  type: number(38,0)
+              - column:
+                  name: profile_id
+                  type: number(38,0)
+              - column:
+                  name: owners_idx
+                  type: number(*,0)
+
+
+  - changeSet:
+      id: 7.17.0-service_item_profile
+      author: omp
+      comment: create 'service_item_profile' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: service_item_profile
+
+            columns:
+              - column:
+                  name: service_item_owners_id
+                  type: bigint
+              - column:
+                  name: profile_id
+                  type: bigint
+              - column:
+                  name: owners_idx
+                  type: int

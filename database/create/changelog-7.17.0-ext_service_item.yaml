@@ -1,0 +1,114 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-ext_service_item
+      author: omp
+      comment: create 'ext_service_item' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: ext_service_item
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: external_view_url
+                  type: varchar(2083)
+              - column:
+                  name: system_uri
+                  type: varchar(256)
+              - column:
+                  name: external_id
+                  type: varchar(256)
+              - column:
+                  name: external_edit_url
+                  type: varchar(2083)
+
+
+  - changeSet:
+      id: 7.17.0-ext_service_item
+      author: omp
+      comment: create 'ext_service_item' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: ext_service_item
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: external_view_url
+                  type: varchar(2083 CHAR)
+              - column:
+                  name: system_uri
+                  type: varchar(256 CHAR)
+              - column:
+                  name: external_id
+                  type: varchar(256 CHAR)
+              - column:
+                  name: external_edit_url
+                  type: varchar(2083 CHAR)
+
+        - addPrimaryKey:
+            tableName: ext_service_item
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-ext_service_item
+      author: omp
+      comment: create 'ext_service_item' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: ext_service_item
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: external_view_url
+                  type: nvarchar(2083)
+              - column:
+                  name: system_uri
+                  type: nvarchar(256)
+              - column:
+                  name: external_id
+                  type: nvarchar(256)
+              - column:
+                  name: external_edit_url
+                  type: nvarchar(2083)
+
+        - addPrimaryKey:
+            tableName: ext_service_item
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-ext_service_item-constraints
+      author: omp
+      comment: create 'ext_service_item' constraints
+      context: create
+
+      changes:
+        - addUniqueConstraint:
+            tableName: ext_service_item
+            columnNames: system_uri, external_id

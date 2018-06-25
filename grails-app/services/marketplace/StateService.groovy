@@ -1,48 +1,71 @@
 package marketplace
 
-import ozone.marketplace.domain.ValidationException
-import org.apache.commons.lang.exception.ExceptionUtils
-import org.hibernate.FlushMode
-import java.text.SimpleDateFormat
-import org.springframework.transaction.annotation.Transactional
-// import static org.codehaus.groovy.grails.commons.ConfigurationHolder.config
-import grails.util.Holders
+import javax.annotation.Nonnull
 
+import grails.gorm.transactions.ReadOnly
+import grails.gorm.transactions.Transactional
+
+import org.hibernate.FlushMode
+import org.hibernate.SessionFactory
+
+import org.apache.commons.lang.exception.ExceptionUtils
+
+import ozone.marketplace.domain.ValidationException
+
+import static com.google.common.base.Preconditions.checkNotNull
+
+
+@Transactional
 class StateService extends MarketplaceService {
 
-    def sessionFactory
-    def config = Holders.config
+    SessionFactory sessionFactory
 
-    @Transactional(readOnly = true)
-    def listB(def params) {
-        def results = State.list(params)
-        def dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
-        results.each() {
-            log.debug "    ${it} ${it.editedDate} ${it.editedDate.getClass()}"
-            log.debug "    ${it} ${dateFormatter.format(it.editedDate)}"
-        }
-        return results
+    @ReadOnly
+    State get(Map params) {
+        State.get(params.id as Long)
     }
 
-    @Transactional(readOnly = true)
-    def list(def params) {
-        def results
+    @ReadOnly
+    List<State> getAllStates() {
+        State.list(sort: 'title', order: 'asc')
+    }
+
+    @ReadOnly
+    List<State> list(Map params) {
+        List<State> results
         def dateSearch = parseEditedSinceDate(params)
         if (dateSearch) {
             def criteria = State.createCriteria()
             results = onOrAfterEditedDate(criteria, params, dateSearch)
-        } else {
+        }
+        else {
             results = State.list(params)
         }
         return results
     }
 
-    def get(def params) {
-        return State.get(params.id)
+    @Deprecated
+    @ReadOnly
+    List<State> listB(Map params) {
+        list(params)
     }
 
-    def countTypes() {
-        return State.count()
+    @ReadOnly
+    State findByTitle(String title) {
+        State.findByTitle(title)
+    }
+
+    @ReadOnly
+    int countTypes() {
+        State.count()
+    }
+
+    void delete(long id) {
+        State state = State.get(id)
+        if (!state) {
+            throw new ValidationException(message: "objectNotFound", args: [id])
+        }
+        delete(state)
     }
 
     /**
@@ -50,67 +73,43 @@ class StateService extends MarketplaceService {
      * 1. State with no listing associated with it. Just delete it
      * 2. State with active listing associated with it. Throw error, don't delete it
      * 3. State with soft deleted listing associated with it. Throw error, don't delete it
-     */
-    @Transactional
-    def delete(def id) {
-        State st
+     **/
+    void delete(@Nonnull State state) {
+        checkNotNull(state, "state must not be null")
+
+        if (ServiceItem.countByState(state) > 0) {
+            throw new ValidationException(message: "delete.failure.serviceItem.exists", args: [state?.toString()])
+        }
+
         try {
-            st = State.get(id)
-            if (!st) {
-                throw new ValidationException(message: "objectNotFound", args: [id])
-            }
-            def criteria = ServiceItem.createCriteria()
-            def cnt = criteria.get {
-                projections {
-                    count('id')
-                }
-                state {
-                    eq('id', new Long(id))
-                }
-            }
-            if (cnt > 0) {
-                throw new ValidationException(message: "delete.failure.serviceItem.exists", args: [st?.toString()])
-            }
-            st.delete(flush: true)
-        }
-        catch (ValidationException ve) {
-            throw ve
-        }
-        catch (Exception e) {
+            state.delete(flush: true)
+        } catch (Exception e) {
             String message = ExceptionUtils.getRootCauseMessage(e)
-            log.error "Error occurred trying to delete ${st}. ${message}"
+            log.error "Error occurred trying to delete ${state}. ${message}"
+
+            // TODO: Is this still needed?
             // Need this to prevent flush exception. See http://jira.codehaus.org/browse/GRAILS-5865
             def session = sessionFactory.currentSession
             session.setFlushMode(FlushMode.MANUAL)
-            throw new ValidationException(message: "delete.failure", args: [st?.toString(), message])
+            throw new ValidationException(message: "delete.failure", args: [state?.toString(), message])
         }
     }
 
-    @Transactional(readOnly = true)
-    def getAllStates() {
-        State.list(sort: 'title', order: 'asc')
-    }
-
-    @Transactional(readOnly = true)
-    def findByTitle(String title) {
-        return State.findByTitle(title)
-    }
-
-    @Transactional
-    def createRequired() {
-
+    void createRequired() {
         log.info "Loading states..."
 
         def statesInConfig = config.marketplace.metadata.states
 
-        if (statesInConfig) {
-            statesInConfig.each { item ->
-                if (!State.findByTitle(item.title)) {
-                    new State(title: item.title, description: item.description, isPublished: item.isPublished).save()
-                }
-            }
-        } else {
+        if (!statesInConfig) {
             log.error "States metadata info was not found in the loaded config files."
+            return
+        }
+
+        statesInConfig.each { item ->
+            if (!State.findByTitle(item.title as String)) {
+                new State(title: item.title, description: item.description, isPublished: item.isPublished).save()
+            }
         }
     }
+
 }

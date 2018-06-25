@@ -1,0 +1,126 @@
+== Elasticsearch Grails plugin
+
+An Elasticsearch plugin for Grails; This project is a fork based on the great work done by the guys at https://github.com/mstein/elasticsearch-grails-plugin.
+
+=== Why would you want to fork the original Elasticsearch plugin?
+
+The original Elasticsearch plugin relies on *Hibernate-specific* GORM components, thus rendering it unusable if you back your Grails application by any other database.
+
+=== How can I obtain the plugin?
+
+image:https://travis-ci.org/noamt/elasticsearch-grails-plugin.svg?branch=master["Build Status", link="https://travis-ci.org/noamt/elasticsearch-grails-plugin"]
+
+[NOTE]
+====
+The latest verion of plugin documentation can be found at http://noamt.github.io/elasticsearch-grails-plugin/docs/index.html
+====
+
+Just like any other Grails plugin, through the Grails Plugin center.
+Edit your project's +build.gradle+ file, by adding the plugin's dependency declaration:
+
+
+----
+dependencies {
+    ...
+    compile "org.grails.plugins:elasticsearch:1.2.1"
+    ...
+
+}
+----
+
+
+=== Versioning
+
+|===
+|Plugin Version | Grails Version | Elasticsearch Version
+
+|1.2.1
+|3.2.y
+|2.3.z
+
+
+|1.2.0
+|3.1.y
+|2.3.z
+
+|1.0.0.x
+|3.1.y
+|1.6.z
+
+|0.1.0.x
+|2.y
+|2.1.z
+
+|0.0.4.x
+|2.y
+|1.6.z
+|===
+
+=== Ohs Nos! I'm hitting a +java.lang.Exception: No datastore implementation specified+
+
+This error means that you probably haven't specified your datastore type in your +application.groovy+ or +application.yml+ file.
+This plugin has an auto-index feature which automatically propagates any changes made to searchable Domains into the search index;
+this is done by hooking into GORM's storage events but also requires a reference to the active datastore implementation.
+To fix, edit your project's +application.groovy+ or +application.yml+ file and add:
+application.groovy
+----
+elasticSearch {
+    ...
+    datastoreImpl = 'nameOfDatastoreBean'
+    ...
+}
+----
+
+application.yml
+----
+elasticSearch:
+    datastoreImpl: nameOfDatastoreBean
+----
+Where the value should be the name of the datastore bean as it is configured in the Spring context; some possible values:
+
+MongoDB::
+    +mongoDatastore+
+Hibernate::
+    +hibernateDatastore+
+
+== License
+
+----
+Copyright 2014 the original author or authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----
+
+
+
+
+==== Here, have a yak:
+----
+                            _,,,_
+                        .-'`  (  '.
+                     .-'    ,_  ;  \___      _,
+                 __.'    )   \'.__.'(:;'.__.'/
+         __..--""       (     '.__{':');}__.'
+       .'         (    ;    (   .-|` '  |-.
+      /    (       )     )      '-p     q-'
+     (    ;     ;          ;    ; |.---.|
+     ) (              (      ;    \ o  o)
+     |  )     ;       |    )    ) /'.__/
+     )    ;  )    ;   | ;       //
+     ( )             _,\    ;  //
+     ; ( ,_,,-~""~`""   \ (   //
+      \_.'\\_            '.  /<_
+       \\_)--\             \ \--\
+   jgs )--\""`             )--\"`
+       `""`                `""`
+----

@@ -1,0 +1,6 @@
+[[elasticSearchAdminService]]
+== ElasticSearchAdminService
+
+include::elasticSearchAdminService/deleteIndex.adoc[]
+
+include::elasticSearchAdminService/refresh.adoc[]

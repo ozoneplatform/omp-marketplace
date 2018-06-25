@@ -1,0 +1,261 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-score_card_item
+      author: omp
+      comment: create 'score_card_item' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: score_card_item
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: sc_itemPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp with time zone
+              - column:
+                  name: description
+                  type: varchar(500)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: timestamp with time zone
+              - column:
+                  name: question
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image
+                  type: varchar(255)
+              - column:
+                  name: show_on_listing
+                  type: boolean
+
+
+  - changeSet:
+      id: 7.17.0-score_card_item
+      author: omp
+      comment: create 'score_card_item' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: score_card_item
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: description
+                  type: varchar(500)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: bigint
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: question
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image
+                  type: varchar(255)
+              - column:
+                  name: show_on_listing
+                  type: tinyint(1)
+
+
+  - changeSet:
+      id: 7.17.0-score_card_item
+      author: omp
+      comment: create 'score_card_item' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: score_card_item
+
+            columns:
+              - column:
+                  name: id
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: sc_itemPK
+              - column:
+                  name: version
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(38,0)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: description
+                  type: varchar(500 BYTE)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(38,0)
+              - column:
+                  name: edited_date
+                  type: timestamp
+              - column:
+                  name: question
+                  type: varchar(250 BYTE)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image
+                  type: varchar(255 BYTE)
+              - column:
+                  name: show_on_listing
+                  type: number(1,0)
+
+
+  - changeSet:
+      id: 7.17.0-score_card_item
+      author: omp
+      comment: create 'score_card_item' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: score_card_item
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: sc_itemPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_by_id
+                  type: number(19,0)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: description
+                  type: varchar(500)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: edited_by_id
+                  type: number(19,0)
+              - column:
+                  name: edited_date
+                  type: datetime
+              - column:
+                  name: question
+                  type: varchar(250)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image
+                  type: varchar(255)
+              - column:
+                  name: show_on_listing
+                  type: bit
+
+
+  - changeSet:
+      id: 7.17.0-score_card_item-constraints
+      author: omp
+      comment: create 'score_card_item' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_id
+            baseTableName: score_card_item
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKE51CCD757666C6D2
+
+        - addForeignKeyConstraint:
+            baseColumnNames: edited_by_id
+            baseTableName: score_card_item
+            referencedColumnNames: id
+            referencedTableName: profile
+            constraintName: FKE51CCD75E31CB353
+
+  - changeSet:
+      id: 7.17.0-score_card_item-indices
+      author: omp
+      comment: create 'score_card_item' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: score_card_item
+            indexName: FKE51CCD757666C6D2
+            columns:
+              - column:
+                  name: created_by_id
+
+        - createIndex:
+            tableName: score_card_item
+            indexName: FKE51CCD75E31CB353
+            columns:
+              - column:
+                  name: edited_by_id

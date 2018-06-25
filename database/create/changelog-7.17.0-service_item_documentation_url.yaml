@@ -1,0 +1,143 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-service_item_documentation_url
+      author: omp
+      comment: create 'service_item_documentation_url' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: service_item_documentation_url
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: service_item_PK
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: service_item_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(2083)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-service_item_documentation_url
+      author: omp
+      comment: create 'service_item_documentation_url' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: service_item_documentation_url
+
+            columns:
+              - column:
+                  name: id
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: service_item_PK
+              - column:
+                  name: version
+                  type: number(38,0)
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(256 BYTE)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: service_item_id
+                  type: number(38,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(2083 BYTE)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-service_item_documentation_url
+      author: omp
+      comment: create 'service_item_documentation_url' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: service_item_documentation_url
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: service_item_PK
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: 0
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: service_item_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(2083)
+                  constraints:
+                      nullable: false
+
+
+  - changeSet:
+      id: 7.17.0-service_item_documentation_url-constraints
+      author: omp
+      comment: create 'service_item_documentation_url' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: service_item_id
+            baseTableName: service_item_documentation_url
+            referencedColumnNames: id
+            referencedTableName: service_item
+            constraintName: FK24572D08C7E5C662

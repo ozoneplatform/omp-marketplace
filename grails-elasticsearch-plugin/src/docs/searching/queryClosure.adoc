@@ -1,0 +1,25 @@
+[[queryClosure]]
+=== Query Closure
+
+You can use the http://www.elasticsearch.org/guide/en/elasticsearch/client/groovy-api/current/search.html[Groovy Query DSL] to build your search query as a `Closure`.
+
+The format of the search `Closure` follow the same JSON syntax as the  http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search.html[ElasticSearch REST API]
+and the http://www.elasticsearch.org/guide/en/elasticsearch/client/java-api/current/query-dsl-queries.html[Java Query DSL].
+
+*Example*
+
+[source, groovy]
+----
+def result = elasticSearchService.search(searchType:'dfs_query_and_fetch') {
+  bool {
+      must {
+          query_string(query: params.query)
+      }
+      if (params.firstname) {
+          must {
+              term(firstname: params.firstname)
+          }
+      }
+  }
+}
+----

@@ -5,8 +5,9 @@ import grails.converters.JSON
 
 class CategoryController extends MarketplaceAdminWithDeleteController {
 
-    def categoryService
-    def searchableService
+    CategoryService categoryService
+
+    SearchableService searchableService
 
     protected String getDomainName() { return "category" }
 
@@ -18,7 +19,7 @@ class CategoryController extends MarketplaceAdminWithDeleteController {
 
     @Override
     protected deleteDomain() {
-        categoryService.delete(params.id)
+        categoryService.delete(params.id as Long)
     }
 
     protected retrieveDomainList() {

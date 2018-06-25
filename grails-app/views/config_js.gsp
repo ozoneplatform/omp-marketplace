@@ -1,16 +1,16 @@
 <%@ page import="grails.util.Holders" contentType="text/javascript" %>
 <%@ page import="grails.converters.JSON" %>
-
+<%@  page import="grails.util.Environment" %>
+;
 var Marketplace = Marketplace || {};
 //externalize any config properties here as javascript properties
 //this should be only place where these config properties are exposed to javascript
 ;(function() {
-    //interpolate server values in as JSON
-    var config = ${config as JSON};
-
+   //interpolate server values in as JSON
+   var config = ${raw((conf as JSON).toString())};
     //auto convert to JSON this will take care of special characters
     Marketplace.url = config.url;
-    Marketplace.environment = "${GrailsUtil.environment}";
+    Marketplace.environment = "${Environment.current}";
     Marketplace.context = config.context;
 
     //IMAGE resources

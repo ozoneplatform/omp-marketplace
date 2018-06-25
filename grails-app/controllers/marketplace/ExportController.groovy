@@ -2,13 +2,14 @@ package marketplace
 
 import grails.converters.JSON
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 import ozone.marketplace.dataexchange.ExportSettings
 
 class ExportController extends BaseMarketplaceRestController {
-    def exportService
-    def JSONDecoratorService
-    def relationshipService
+
+    ExportService exportService
+
+    RelationshipService relationshipService
 
     def index = {}
 

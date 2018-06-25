@@ -1,0 +1,43 @@
+h3. Version 3.0.4
+* Integrate *Swagger* into the @jaxrs-jersey1@ plugin.
+* Introduce the @jaxrs-swagger-ui@ plugin.
+
+h3. Version 3.0.3
+* Added missing @jersey-client@ dependency for the *jersey1* plugin.\
+  ([#25|https://github.com/budjb/grails-jaxrs/issues/25])
+* Refactored JAX-RS servlet initialization order due to call order differences between the embedded tomcat\
+  server and the standalone tomcat server. ([#26|https://github.com/budjb/grails-jaxrs/issues/26])
+
+h3. Version 3.0.2
+* Add @ResourceRegistrar@ and @ScanningResourceRegistrar@ so that applications and plugins can provide a set of\
+  resources or providers outside of the normal artefact scanning process.
+* Move integration tests out of the @jaxrs-core@ plugin and into the @jaxrs-integration-test@ plugin.
+* Add tests to the @jaxrs-restlet@ plugin.
+* Changed how URL mappings work:
+  * URL mappings are no longer configured statically via application configuration.
+  * URL mappings are compiled by scanning resource classes and their methods, and a new URL mapping entry will be added\
+    per unique path. This works for both resource classes present in @grails-app/resources@ and other resource classes\
+    registered via other means.
+* Update restlet to 2.3.6.
+
+h3. Version 3.0.1
+* Fix *jaxrs-core* plugin descriptor class name.
+* Compile the plugin with JDK 1.7 compatibility.
+* Update authors.
+* Fill in missing information in plugin descriptor files.
+* Lowered Grails version requirement to 3.0.0.
+
+h3. Version 3.0.0
+This is the initial release of the *jaxrs* project for Grails 3. Structurally, this is a major refactor from the
+existing codebase. Procedurally, the plugin has not changed much.
+
+Major changes include:
+* Plugin has been broken up into several plugins.
+  ** *jaxrs-core* contains the base logic for the plugin but will not work standalone.
+  ** *jaxrs-jersey1* uses the Jersey 1.9 implementation.
+  ** *jaxrs-restlet* uses the Restlet 2.1.4 implementation.
+  ** *jaxrs-integration-test* provides base classes to test resources in integration tests.
+* Most source files have been changed from @\*.java@ to @\*.groovy@ files.
+* Many class packages have changed, and all class packages have been moved under @org.grails.plugins.jaxrs@.
+* Grails-generated [documentation|http://budjb.github.io/grails-jaxrs/latest/] has been created.
+* Ownership and maintenance of the project has been transferred.

@@ -1,0 +1,138 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition_types
+      author: omp
+      comment: create 'custom_field_definition_types' table
+      context: create
+      dbms: postgresql
+
+      changes:
+        - createTable:
+            tableName: custom_field_definition_types
+
+            columns:
+              - column:
+                  name: cf_definition_types_id
+                  type: bigint
+              - column:
+                  name: types_id
+                  type: bigint
+              - column:
+                  name: types_idx
+                  type: integer
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition_types
+      author: omp
+      comment: create 'custom_field_definition_types' table
+      context: create
+      dbms: mysql
+
+      changes:
+        - createTable:
+            tableName: custom_field_definition_types
+
+            columns:
+              - column:
+                  name: cf_definition_types_id
+                  type: bigint
+              - column:
+                  name: types_id
+                  type: bigint
+              - column:
+                  name: types_idx
+                  type: int(11)
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition_types
+      author: omp
+      comment: create 'custom_field_definition_types' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: custom_field_definition_types
+
+            columns:
+              - column:
+                  name: cf_definition_types_id
+                  type: number(19,0)
+              - column:
+                  name: types_id
+                  type: number(19,0)
+              - column:
+                  name: types_idx
+                  type: number(10,0)
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition_types
+      author: omp
+      comment: create 'custom_field_definition_types' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: custom_field_definition_types
+
+            columns:
+              - column:
+                  name: cf_definition_types_id
+                  type: number(19,0)
+              - column:
+                  name: types_id
+                  type: number(19,0)
+              - column:
+                  name: types_idx
+                  type: int
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition_types-constraints
+      author: omp
+      comment: create 'custom_field_definition_types' constraints
+      context: create
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: types_id
+            baseTableName: custom_field_definition_types
+            referencedColumnNames: id
+            referencedTableName: types
+            constraintName: FK1A84FFC06928D597
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition_types-mysql
+      author: omp
+      comment: create 'custom_field_definition_types' indices for mysql
+      context: create
+      dbms: mysql
+
+      changes:
+        - createIndex:
+            tableName: custom_field_definition_types
+            indexName: FK1A84FFC06928D597
+            columns:
+              - column:
+                  name: types_id
+
+
+  - changeSet:
+      id: 7.17.0-custom_field_definition_types-indices
+      author: omp
+      comment: create 'custom_field_definition_types' indices
+      context: create
+
+      changes:
+        - createIndex:
+            tableName: custom_field_definition_types
+            indexName: cfd_types_types_idx
+            columns:
+              - column:
+                  name: types_id

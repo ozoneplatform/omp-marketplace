@@ -29,7 +29,7 @@ class AggregationsService {
                 termCounts = aggregations.types.getAggregations().id.buckets
                 returnValue['types'] = new TreeMap<Types, Integer>(comparator)
                 termCounts.each { entry ->
-                    Types type = Types.get(Integer.valueOf(entry.getKey()))
+                    Types type = Types.get(Long.valueOf(entry.getKey()))
                     returnValue['types'][(type)] = entry.getDocCount()
                 }
             }

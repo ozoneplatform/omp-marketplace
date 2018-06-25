@@ -1,11 +1,15 @@
 package marketplace
 
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
+
+import ozone.decorator.JSONDecoratorService
+
 
 class ExtProfileService {
 
-    def accountService
-    def JSONDecoratorService
+    AccountService accountService
+
+    JSONDecoratorService JSONDecoratorService
 
     /**
      * The public-facing create method.
@@ -13,7 +17,7 @@ class ExtProfileService {
      */
     @Transactional
     def create(def json, def username) {
-        if (!accountService.isExternAdmin()) {
+        if (!accountService.isExtAdmin()) {
             throw new PermissionException('Insufficient authority to add profile')
         }
         JSONDecoratorService.preProcessJSON(json)
@@ -31,7 +35,7 @@ class ExtProfileService {
      */
     @Transactional
     def update(def itemId, def json, def username) {
-        if (!accountService.isExternAdmin()) {
+        if (!accountService.isExtAdmin()) {
             throw new PermissionException('Insufficient authority to update profile')
         }
         JSONDecoratorService.preProcessJSON(json)
@@ -61,6 +65,8 @@ class ExtProfileService {
             extProfile.avatar = avatar
         }
 
+        extProfile.validate()
+        println('EXTProfile Errors: ' + extProfile.errors)
         extProfile.save(failOnError: true, flush: true)
 
         log.debug "ExtProfile ${extProfile.id} saved"

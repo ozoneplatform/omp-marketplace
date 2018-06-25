@@ -1,17 +1,19 @@
 package marketplace.rest
 
+import marketplace.testutil.NullObject
+import org.grails.orm.hibernate.cfg.HibernateMappingContext
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-
+import org.grails.datastore.mapping.model.MappingContext
+import org.grails.datastore.mapping.model.PersistentEntity
 import grails.converters.JSON
-import org.codehaus.groovy.grails.commons.GrailsDomainClass
-import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty
-import org.codehaus.groovy.grails.exceptions.InvalidPropertyException
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONElement
-import org.codehaus.groovy.grails.web.json.JSONException
-import org.codehaus.groovy.grails.web.json.JSONObject
-import org.grails.jaxrs.support.DomainObjectReaderSupport
+
+import org.grails.core.exceptions.InvalidPropertyException
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONElement
+import org.grails.web.json.JSONException
+import org.grails.web.json.JSONObject
+import org.grails.plugins.jaxrs.provider.DomainObjectReaderSupport
 
 import javax.ws.rs.Consumes
 import javax.ws.rs.WebApplicationException
@@ -22,10 +24,11 @@ import java.lang.annotation.Annotation
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-import static org.grails.jaxrs.support.ConverterUtils.getDefaultJSONEncoding
-import static org.grails.jaxrs.support.ConverterUtils.getDefaultXMLEncoding
-import static org.grails.jaxrs.support.ProviderUtils.isJsonType
-import static org.grails.jaxrs.support.ProviderUtils.isXmlType
+import static org.grails.plugins.jaxrs.provider.ConverterUtils.getDefaultJSONEncoding
+import static org.grails.plugins.jaxrs.provider.ConverterUtils.getDefaultXMLEncoding
+import static org.grails.plugins.jaxrs.provider.ProviderUtils.isJsonType
+import static org.grails.plugins.jaxrs.provider.ProviderUtils.isXmlType
+
 import static ozone.utils.Utils.collectEntries
 
 import marketplace.Constants
@@ -190,14 +193,14 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
                 value
             }
         }
-
-        GrailsDomainClass grailsClass = grailsApplication.getDomainClass(type.name)
+        HibernateMappingContext mappingContext = new HibernateMappingContext()
+        PersistentEntity persistentClass = mappingContext.getPersistentEntity(type.name)
 
         collectEntries(map) { key, value ->
             if (key != 'class') {
                 try {
                     //the given property of the parent domain class
-                    GrailsDomainClassProperty property = grailsClass.getPropertyByName(key)
+                    MappingContext property = persistentClass.getPropertyByName(key)
 
                     //the instantiated domain object or list of domain objects, or primitive or
                     //list of primitives
@@ -249,7 +252,7 @@ class CustomDomainObjectReader extends DomainObjectReaderSupport {
 
         def handlePrimitive = {
             it instanceof String ? handleString(it) :
-            it == JSONObject.NULL ? null :
+            it == NullObject.NULL ? null :
             it
         }
 

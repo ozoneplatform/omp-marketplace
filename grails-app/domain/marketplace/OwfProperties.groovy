@@ -1,16 +1,19 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import org.codehaus.groovy.grails.web.json.JSONArray
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
+
+import com.google.common.base.MoreObjects
+
 import ozone.marketplace.enums.OzoneSize
-import gorm.AuditStamp
 
 /*
  Properties associated with ServiceItems that represent OWF Widgets, describing how the widget
  should be presented in OWF.
 */
-@AuditStamp
-class OwfProperties implements Serializable {
+class OwfProperties extends AuditStamped implements Serializable, ToJSON {
+
+    static final String DEFAULT_WIDGET_TYPE = 'standard'
 
     static bindableProperties = [
         'singleton', 'visibleInLaunch',
@@ -38,7 +41,7 @@ class OwfProperties implements Serializable {
     static long maxDimension = 2000L
 
     static searchable = {
-        root false
+        //root false
         owfWidgetType index: 'not_analyzed', excludeFromAll: false
         singleton index: 'not_analyzed', excludeFromAll: true
         visibleInLaunch index: 'not_analyzed', excludeFromAll: true
@@ -54,6 +57,7 @@ class OwfProperties implements Serializable {
 
     static transients = ['size']
 
+    // back-reference used for universalName validation.
     static belongsTo = [serviceItem: ServiceItem]
 
     boolean singleton = false
@@ -62,7 +66,7 @@ class OwfProperties implements Serializable {
     boolean mobileReady = false
     Long height
     Long width
-    String owfWidgetType = 'standard'
+    String owfWidgetType = DEFAULT_WIDGET_TYPE
     String stackContext
     String stackDescriptor
     String universalName
@@ -73,11 +77,11 @@ class OwfProperties implements Serializable {
         owfWidgetType(nullable: false, blank: false)
         singleton(nullable:false)
         visibleInLaunch(nullable:false)
-        intents(nullable:true)
+        intents(nullable:true, modifiable: true)
         background(nullable:false)
         mobileReady(nullable:false)
-        height min: minDimension, max: maxDimension, nullable: true
-        width min: minDimension, max: maxDimension, nullable: true
+        height min: this.minDimension, max: this.maxDimension, nullable: true
+        width min: this.minDimension, max: this.maxDimension, nullable: true
         stackContext nullable: true, maxSize: 200
         stackDescriptor nullable: true
         universalName maxSize: 255, nullable: true, validator: { val, obj ->      //SQL Server treats nulls as comparable values,
@@ -96,12 +100,15 @@ class OwfProperties implements Serializable {
                 }
             }
         }
-        descriptorUrl(nullable: true, blank: true, maxSize: Constants.MAX_URL_SIZE)
+        descriptorUrl(nullable: true, blank: true, maxSize: Constants.MAX_URL_SIZE, auditable: false)
+        serviceItem(nullable: true, bindable: false)
     }
 
     static hasMany = [ intents : Intent ]
 
+
     static mapping = {
+        cache true
         stackDescriptor type: 'text'
         intents index:'owfProps_intent_id_idx'
         intents joinTable: [
@@ -111,27 +118,29 @@ class OwfProperties implements Serializable {
     }
 
     def beforeValidate() {
-        intents.each { it.beforeValidate() }
+        //TODO BVEST added if statement
+        intents.each {
+            if (it?.metaClass?.respondsTo(it, 'beforeValidate')) {
+                it.beforeValidate()
+            }
+        }
     }
 
-    def asJSON() {
-        def currJSON = new JSONObject(
-            id: id,
-            singleton: singleton,
-            visibleInLaunch: visibleInLaunch,
-            background: background,
-            mobileReady: mobileReady,
-            height: height,
-            width: width,
-            owfWidgetType: owfWidgetType,
-            stackContext: stackContext,
-            stackDescriptor: stackDescriptor,
-            universalName: universalName,
-            descriptorUrl: descriptorUrl,
-            intents: new JSONArray(intents?.collect { it.asJSON() })
-        )
-
-        return currJSON
+    @Override
+    JSONObject asJSON() {
+        new JSONObject([id             : id,
+                        singleton      : singleton,
+                        visibleInLaunch: visibleInLaunch,
+                        background     : background,
+                        mobileReady    : mobileReady,
+                        height         : height,
+                        width          : width,
+                        owfWidgetType  : owfWidgetType,
+                        stackContext   : stackContext,
+                        stackDescriptor: stackDescriptor,
+                        universalName  : universalName,
+                        descriptorUrl  : descriptorUrl,
+                        intents        : new JSONArray(intents?.collect { it.asJSON() })])
     }
 
     public Long getHeight() {
@@ -168,10 +177,33 @@ class OwfProperties implements Serializable {
         return size
     }
 
-    public void setUniversalName(String name) {
+    void bindFromJSON(JSONObject obj) {
+        this.with {
+            singleton = obj.singleton
+            visibleInLaunch = obj.visibleInLaunch
+            background = obj.background
+            height = obj.height
+            stackDescriptor = obj.stackDescriptor
+            width = obj.width
+            descriptorUrl = obj.descriptorUrl
+            owfWidgetType = obj.owfWidgetType
+            stackContext = obj.stackContext
+            universalName = obj.universalName
+            mobileReady = obj.mobileReady
+            intents = obj.intents
+        }
+    }
+
+    void setUniversalName(String name) {
         universalName = null
         if(name) {
             universalName = name.isAllWhitespace() || name.size() == 0 ? null : name.trim()
         }
     }
+
+    @Override
+    String toString() {
+        MoreObjects.toStringHelper(this).add("id", id).toString()
+    }
+
 }

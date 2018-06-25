@@ -1,10 +1,12 @@
 package marketplace
 
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 import static ozone.marketplace.enums.MarketplaceApplicationSetting.*
 
 class CustomHeaderFooterService {
 
-    def marketplaceApplicationConfigurationService
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
 
     def hasCustomHeader() {
         customHeaderUrl.size() > 0 && customHeaderHeight > 0

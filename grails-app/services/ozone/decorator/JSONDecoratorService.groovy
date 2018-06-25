@@ -1,15 +1,15 @@
 package ozone.decorator
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 
 class JSONDecoratorService implements ApplicationContextAware {
 
-    ApplicationContext applicationContext
-
     static transactional = false
+
+    ApplicationContext applicationContext
 
     void postProcessJSON(JSONObject json) {
         def interceptor = getBean("mp_RESTInterceptorService")

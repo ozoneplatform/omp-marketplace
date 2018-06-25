@@ -9,7 +9,7 @@
 		<div id="omp_header_logo" class="omp_header_logo bootstrap-active">
 			<div id="omp_header_logo_img" class="omp_header_logo_img">
 				<a id="omp_market_box_img_link" href='${request.contextPath}${session.spaEnabled ? "/spa" : "/serviceItem/shoppe?max=5&offset=0"}'>
-					<img src='${logoUrl.encodeAsHTML()}' class="omp_header_logo_img_cls"/>
+					<img src=<marketplaceTheme:imageLink src="Mp_logo.png"/> class="omp_header_logo_img_cls"/>
 				</a>
 			</div>
 			<div class="omp_header_logo_text">
@@ -24,7 +24,6 @@
                     <!--  User menu -->
                     <div id="userMenu" class="userMenu"></div>
                 </div>
-
                 <div class="omp_item_right omp_user_search">
                     <g:render template="/search"/>
                 </div>

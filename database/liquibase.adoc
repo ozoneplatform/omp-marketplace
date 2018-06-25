@@ -1,0 +1,28 @@
+.Liquibase Data Type Conversions
+[cols="1h,1m,1m,1m,1m,1m,1m,1m", width="100%", options="header"]
+|====================
+|           | H2        | PostgreSQL                  | MySQL     | Oracle        | MS SQL             | SQLite    | Unsupported
+| boolean   | boolean   | boolean                     | bit(1)    | number(1)     | [bit]              | boolean   | boolean
+| tinyint   | tinyint   | smallint                    | tinyint   | number(3)     | [tinyint]          | tinyint   | tinyint
+| int       | int       | int                         | int       | integer       | [int]              | integer   | int
+| mediumint | mediumint | mediumint                   | mediumint | mediumint     | [int]              | mediumint | mediumint
+| bigint    | bigint    | bigint                      | bigint    | number(38, 0) | [bigint]           | bigint    | bigint
+| float     | float     | float                       | float     | float         | [float](53)        | float     | float
+| double    | double    | double precision            | double    | float(24)     | [float](53)        | double    | double
+| decimal   | decimal   | decimal                     | decimal   | decimal       | [decimal](18, 0)   | decimal   | decimal
+| number    | number    | numeric                     | numeric   | number        | [numeric](18, 0)   | number    | number
+| currency  | decimal   | decimal                     | decimal   | number(15, 2) | [money]            | real      | decimal
+| blob      | blob      | bytea                       | longblob  | blob          | [varbinary](max)   | blob      | blob
+| datetime  | timestamp | timestamp without time zone | datetime  | timestamp     | [datetime]         | text      | datetime
+| time      | time      | time without time zone      | time      | date          | [time](7)          | time      | time
+| timestamp | timestamp | timestamp without time zone | timestamp | timestamp     | [datetime]         | text      | timestamp
+| date      | date      | date                        | date      | date          | [date]             | date      | date
+| char      | char      | char                        | char      | char          | [char](1)          | char      | char
+| varchar   | varchar   | varchar                     | varchar   | varchar2      | [varchar](1)       | varchar   | varchar
+| nchar     | nchar     | nchar                       | nchar     | nchar         | [nchar](1)         | nchar     | nchar
+| nvarchar  | nvarchar  | varchar                     | nvarchar  | nvarchar2     | [nvarchar](1)      | nvarchar  | nvarchar
+| clob      | clob      | text                        | longtext  | clob          | [varchar](max)     | text      | clob
+| uuid      | uuid      | uuid                        | char(36)  | raw(16)       | [uniqueidentifier] | text      | char(36)
+| function  | function  | function                    | function  | function      | [function]         | function  | function
+| unknown   | unknown   | unknown                     | unknown   | unknown       | [unknown]          | unknown   | unknown
+|====================

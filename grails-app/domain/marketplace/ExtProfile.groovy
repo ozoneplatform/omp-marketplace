@@ -1,9 +1,11 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject;
+import org.grails.web.json.JSONObject
+
 import marketplace.JSONUtil as JS
 
-class ExtProfile extends Profile {
+
+class ExtProfile extends Profile implements ToJSON {
 
     String systemUri
     String externalId
@@ -35,12 +37,15 @@ class ExtProfile extends Profile {
         return "${super.toString()} || ${systemUri}, ${externalId}, ${externalViewUrl}, ${externalEditUrl}"
     }
 
-    def asJSON() {
-        def jsonObject = super.asJSON()
-        jsonObject.putAll(systemUri: systemUri, externalId: externalId,
-            externalViewUrl: externalViewUrl, externalEditUrl: externalEditUrl,
-            id: id)
-        return jsonObject
+    @Override
+    JSONObject asJSON() {
+        def json = super.asJSON()
+        json.putAll([systemUri      : systemUri,
+                     externalId     : externalId,
+                     externalViewUrl: externalViewUrl,
+                     externalEditUrl: externalEditUrl,
+                     id             : id])
+        json
     }
 
     def bindFromJSON(JSONObject json) {

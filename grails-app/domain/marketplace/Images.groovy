@@ -1,11 +1,11 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import gorm.AuditStamp
+import org.grails.web.json.JSONObject
+
 import ozone.marketplace.enums.ImageType
 
-@AuditStamp
-class Images implements Serializable {
+
+class Images extends AuditStamped implements Serializable, ToJSON {
 
     static bindableProperties = ['contentType', 'type', 'isDefault', 'bytes', 'imageSize']
     static modifiableReferenceProperties = []
@@ -27,13 +27,13 @@ class Images implements Serializable {
         cache true
     }
 
-    def asJSON() {
-        return new JSONObject(
-            id: id,
-            isDefault: isDefault,
-            imageSize: imageSize,
-            contentType: contentType,
-            type: type
-        )
+    @Override
+    JSONObject asJSON() {
+        new JSONObject([id         : id,
+                        isDefault  : isDefault,
+                        imageSize  : imageSize,
+                        contentType: contentType,
+                        type       : type])
     }
+
 }

@@ -7,8 +7,9 @@ import grails.converters.JSON
 
 class CustomFieldDefinitionController extends MarketplaceAdminController {
 
-    def customFieldDefinitionService
-    def typesService
+    CustomFieldDefinitionService customFieldDefinitionService
+
+    TypesService typesService
 
     protected retrieveDomain() { return CustomFieldDefinition.get(params.id) }
 
@@ -38,7 +39,7 @@ class CustomFieldDefinitionController extends MarketplaceAdminController {
             }
             log.debug("retrieveDomainList: ${params}")
             def domainList = customFieldDefinitionService.list(params)
-            log.debug(domainList)
+            log.debug(domainList.toString())
             domainList.each { log.debug "${it.name} ${it.label} ${it.styleType} ${it.getClass()}" }
             return domainList
         }
@@ -133,6 +134,7 @@ class CustomFieldDefinitionController extends MarketplaceAdminController {
                     flash.message = "update.success"
                     flash.args = [domain.toString()]
                     redirect(action: "show", id: domain.id)
+                    return
                 } else {
                     domain.errors.each { log.warn it }
                     def map = getDomainMap(domain)
@@ -142,6 +144,7 @@ class CustomFieldDefinitionController extends MarketplaceAdminController {
                     session.modelMap = map
                     session.modelDomainErrors = domain.errors
                     redirect(action: "edit", id: domain.id)
+                    return
                 }
             }
             catch (Exception e) {
@@ -169,26 +172,31 @@ class CustomFieldDefinitionController extends MarketplaceAdminController {
                 session.modelMap = map
                 session.modelDomainErrors = domain.errors
                 redirect(action: "edit", id: domain.id)
+                return
             }
         } else {
             flash.message = "objectNotFound"
             flash.args = [params.id]
             redirect(action: "edit", id: params.id)
+            return
         }
     }
 
-    def delete = {
+    def delete() {
         try{
+            response.reset()
             def cfd = retrieveDomain()
             customFieldDefinitionService.delete(cfd)
             flash.message = "delete.success"
             flash.args = [cfd.name]
             redirect(action:'list')
+            return
         }
         catch (ValidationException ve) {
             flash.message = ve.message
             flash.args = ve.args
             redirect(action: "show", id: params.id)
+            return
         }
     }
 
@@ -202,6 +210,7 @@ class CustomFieldDefinitionController extends MarketplaceAdminController {
                 flash.message = "create.success"
                 flash.args = [domain.toString()]
                 redirect(action: "show", id: domain.id)
+                return
             } else {
                 String message = domain.errors.allErrors.join(" ")
                 domain.errors.each { log.warn it }
@@ -212,6 +221,7 @@ class CustomFieldDefinitionController extends MarketplaceAdminController {
                 session.modelMap = map
                 session.modelDomainErrors = domain.errors
                 redirect(action: "create")
+                return
             }
         }
         catch (Exception e) {
@@ -239,6 +249,7 @@ class CustomFieldDefinitionController extends MarketplaceAdminController {
             session.modelMap = map
             session.modelDomainErrors = domain.errors
             redirect(action: "create")
+            return
         }
     }
 

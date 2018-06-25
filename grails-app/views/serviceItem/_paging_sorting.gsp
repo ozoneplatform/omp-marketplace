@@ -23,7 +23,7 @@
 	if ("score" == params.sort) { selRel = "selected" }
 	if ("totalComments" == params.sort) { selCom = "selected" }
 	if ("editedDate" == params.sort) { selRec = "selected" }
-	if ("approvedDate" == params.sort) { selRad = "selected" }
+	if ("approvalDate" == params.sort) { selRad = "selected" }
 	if ("avgRate" == params.sort) { selRat = "selected" }
 	if ("title" == params.sort) {
 	  if ("asc" == params.order) {
@@ -190,7 +190,7 @@
 			<option value="profileDisplayName|desc" ${selOdw}><g:message code="sort.owner.desc" default="owner [z-a]"/></option>
 		  	<option value="editedDate|desc" ${selRec}><g:message code="sort.recentlyUpdated" default="recently updated"/></option>
             <g:if test="${comingFromPendingListings != 'true'}">
-                <option value="approvedDate|desc" ${selRad}><g:message code="sort.recentlyAdded" default="recently added"/></option>
+                <option value="approvalDate|desc" ${selRad}><g:message code="sort.recentlyAdded" default="recently added"/></option>
             </g:if>
 			<option value="title|asc" ${selAup}><g:message code="sort.title.asc" default="alphabetical [a-z]"/></option>
 			<option value="title|desc" ${selAdw}><g:message code="sort.title.desc" default="alphabetical [z-a]"/></option>

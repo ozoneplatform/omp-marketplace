@@ -1,20 +1,23 @@
 package marketplace
 
-import org.apache.commons.lang.exception.ExceptionUtils
-import grails.util.Holders
-import org.apache.commons.lang.StringUtils
-import ozone.marketplace.enums.MarketplaceApplicationSetting
-import ozone.marketplace.enums.RelationshipType
-import ozone.utils.Utils;
+import javax.servlet.http.HttpSession
 
 import grails.converters.JSON
 
-class RelationshipController extends BaseMarketplaceRestController {
-    def config = Holders.config
+import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang.exception.ExceptionUtils
 
-    def genericQueryService
-    def relationshipService
-    def serviceItemService
+import ozone.marketplace.enums.RelationshipType
+import ozone.utils.Utils
+
+
+class RelationshipController extends BaseMarketplaceRestController {
+
+    GenericQueryService genericQueryService
+
+    RelationshipService relationshipService
+
+    ServiceItemService serviceItemService
 
     def index = {}
 
@@ -33,10 +36,15 @@ class RelationshipController extends BaseMarketplaceRestController {
 				opts.id = "<> " + params.id
 				//relatedItems = Relationship.findByOwningEntityAndRelationshipType(parent, RelationshipType.REQUIRE)?.relatedItems ?: []
 			}
-			def itemsModel = genericQueryService.serviceItems(opts)
-			def items = itemsModel['serviceItemList']
-			def totalItems = itemsModel['listSize']
-			def sizeOfItems = items.size()
+
+            HttpSession session = getSession()
+            String username = session?.getAttribute('username')
+            String accessType = session?.getAttribute('accessType')
+
+			SearchResult<ServiceItem> result = genericQueryService.serviceItems(opts, username, accessType)
+			def items = result.items
+            def sizeOfItems = items.size()
+            def totalItems = result.total
 			def numberOfListingsMessage
 			if (sizeOfItems < totalItems){
 				numberOfListingsMessage = message(code: "message.NumberOfListingsDisplayedRefineSearch", args: [sizeOfItems,totalItems])
@@ -49,13 +57,13 @@ class RelationshipController extends BaseMarketplaceRestController {
                 success: true,
                 totalCount: totalItems,
                 msg: numberOfListingsMessage,
-                data: items.collect { si ->
-                    def imageUrl = si.imageSmallUrl ?: getImageUrl(si.id, request)
+                data: items.collect { serviceItem ->
+                    def imageUrl = serviceItem.imageSmallUrl ?: getImageUrl(serviceItem.id, request)
                     return [
-                        id: si.id,
-                        title: si.title,
+                        id: serviceItem.id,
+                        title: serviceItem.title,
                         imageURL: imageUrl,
-                        versionName: si.versionName
+                        versionName: serviceItem.versionName
                     ]
                 }
             ] as JSON)
@@ -78,14 +86,19 @@ class RelationshipController extends BaseMarketplaceRestController {
      * @return
      */
     String getImageUrl(long serviceItemId, def request) {
-        def params = [serviceItemId: serviceItemId, getSmallUrl: true, contextPath: request.contextPath]
-        params.serviceItem = (ServiceItem) ServiceItem.get(serviceItemId)
+        def params = [serviceItemId: serviceItemId,
+                      getSmallUrl: true,
+                      contextPath: request.contextPath,
+                      serviceItem: ServiceItem.get(serviceItemId)]
+
         def imageMap = serviceItemService.getServiceItemIconImage(params)
         def imageUrl = imageMap.url
+
         return imageUrl
     }
 
 	def getRelatedItems = {
+        session
 		try{
 			def items = []
 			if (params.id){

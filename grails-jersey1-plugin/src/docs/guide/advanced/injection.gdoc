@@ -1,0 +1,31 @@
+Services can be auto-injected into resource and provider objects by name. Assue we have a service class named
+@TestService.groovy@ in @grails-app/services@ that looks like:
+
+{code}
+package hello
+
+class TestService {
+
+     String greet(String name) {
+         'Hello ' + (name ? name : 'unknown')
+     }
+}
+{code}
+
+We can then auto-inject the service by defining a @testService@ property like in the following resource class.
+
+{code}
+package hello
+
+@Path('/api/test')
+class TestResource {
+
+    def testService // injected
+
+    @GET
+    @Produces('text/plain')
+    String getTestRepresentation(@QueryParam('name') String name) {
+        testService.greet(name)
+    }
+}
+{code}

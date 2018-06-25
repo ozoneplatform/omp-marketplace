@@ -1,0 +1,6 @@
+[[twitter]]
+=== Twitter
+
+include::twitter/theDomains.adoc[]
+
+include::twitter/theController.adoc[]

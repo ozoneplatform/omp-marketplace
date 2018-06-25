@@ -522,28 +522,28 @@ databaseChangeLog = {
 	changeSet(author: "marketplace", id: "5.0-12", dbms: "mysql", context: "create, 5.0") {
 		comment("Add column to service item table to store the approved date")
         addColumn(tableName: "service_item") {
-			column(name: "approved_date", type: "datetime")
+			column(name: "approval_date", type: "datetime")
 		}
 	}
 	
 	changeSet(author: "marketplace", id: "5.0-12", dbms: "oracle", context: "create, 5.0") {
 		comment("Add column to service item table to store the approved date")
 		addColumn(tableName: "service_item") {
-			column(name: "approved_date", type: "TIMESTAMP (6)")
+			column(name: "approval_date", type: "TIMESTAMP (6)")
 		}
 	}
 	
 	changeSet(author: "marketplace", id: "5.0-12", dbms: "postgresql", context: "create, 5.0") {
 		comment("Add column to service item table to store the approved date")
 		addColumn(tableName: "service_item") {
-			column(name: "approved_date", type: "timestamp")
+			column(name: "approval_date", type: "timestamp")
 		}
 	}
 	
 	changeSet(author: "marketplace", id: "5.0-12", dbms: "mssql", context: "create, 5.0") {
 		comment("Add column to service item table to store the approved date")
 		addColumn(tableName: "service_item") {
-			column(name: "approved_date", type: "datetime")
+			column(name: "approval_date", type: "datetime")
 		}
 	}
 	
@@ -552,9 +552,9 @@ databaseChangeLog = {
 		comment("Transfer approved date information into the service_item table")
 		sql("""
 			update service_item
-			set approved_date =
+			set approval_date =
 			(
-				select service_item_activity.activity_date
+				select service_item_activity.activity_timestamp
 					from service_item_activity
 					where service_item.id = service_item_activity.service_item_id
 					and service_item_activity.action = 'APPROVED'

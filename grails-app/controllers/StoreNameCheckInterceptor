@@ -1,0 +1,34 @@
+import marketplace.Constants
+import marketplace.WebUtil
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
+class StoreNameCheckInterceptor {
+
+    int order = 100
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
+
+    StoreNameCheckInterceptor() {
+        match(controller:'*')
+    }
+
+    boolean before() {
+        if (!(controllerName == "profile" && actionName == "showAccessAlert") &&
+                    controllerName != "applicationConfiguration" &&
+                     controllerName != "error" &&
+                     controllerName != "config" &&
+                    !WebUtil.isRESTRequest()) {
+
+                    if (marketplaceApplicationConfigurationService.isStoreNameMissing()) {
+                        if (session.accessType == Constants.VIEW_USER) {
+                            redirect(controller: "error", action: "maintenanceWarning")
+                            return false
+                        } else {
+                            flash.message = 'application.configuration.store.name.empty'
+                            redirect(controller: "applicationConfiguration", action: "show")
+                            return false
+                        }
+                    }
+                }
+    }
+
+}

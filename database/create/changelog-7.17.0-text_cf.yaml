@@ -1,0 +1,76 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-text_cf
+      author: omp
+      comment: create 'text_cf' table
+      context: create
+      dbms: postgresql, mysql
+
+      changes:
+        - createTable:
+            tableName: text_cf
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+              - column:
+                  name: value
+                  type: varchar(256)
+
+
+  - changeSet:
+      id: 7.17.0-text_cf
+      author: omp
+      comment: create 'text_cf' table
+      context: create
+      dbms: oracle
+
+      changes:
+        - createTable:
+            tableName: text_cf
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: value
+                  type: varchar(256 CHAR)
+
+        - addPrimaryKey:
+            tableName: text_cf
+            columnNames: id
+
+
+  - changeSet:
+      id: 7.17.0-text_cf
+      author: omp
+      comment: create 'text_cf' table
+      context: create
+      dbms: mssql
+
+      changes:
+        - createTable:
+            tableName: text_cf
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: value
+                  type: nvarchar(256)
+
+        - addPrimaryKey:
+            tableName: text_cf
+            columnNames: id
+

@@ -1,24 +1,18 @@
 package marketplace
 
-import java.text.ParseException
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import org.grails.web.json.JSONObject
 
-
-import gorm.AuditStamp
-import org.codehaus.groovy.grails.web.json.JSONObject
 import marketplace.Constants.Action
 
 //Domain object that holds an audit trail of a listing.
-@AuditStamp
-class ServiceItemActivity implements Serializable {
+class ServiceItemActivity extends AuditStamped implements Serializable, ToJSON {
 
     static constraints = {
         action maxSize: 128
     }
 
     Action action
-    Date activityDate = new Date()
+    Date activityTimestamp = new Date()
 
     static belongsTo = [serviceItem: ServiceItem, author: Profile]
 
@@ -29,32 +23,54 @@ class ServiceItemActivity implements Serializable {
         cache true
         tablePerHierarchy false
         serviceItem index: 'svc_item_act_svc_item_id_idx'
+        activityTimestamp type: Date
         changeDetails batchSize: 25
     }
 
     String toString(){
-        return AdminObjectFormatter.fullDateDisplay(activityDate)
+        return AdminObjectFormatter.fullDateDisplay(activityTimestamp)
     }
 
     String prettyPrint() {
         toString()
     }
 
-    public void setActivityDate(String dateString) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
-        activityDate = dateFormat.parse(dateString)
-    }
-    public void setActivityDate(Date activityDate) {
-        this.activityDate = activityDate
+//    void setActivityTimestamp(timestamp) {
+//        switch(timestamp.getClass()) {
+//            case String:
+//                this.setActivityTimestampString((String) timestamp)
+//                break
+//            case Date:
+//                this.setActivityTimestampDate((Date) timestamp)
+//                break
+//            default:
+//                this.setActivityTimestampString((String) timestamp)
+//        }
+//    }
+//
+//    public void setActivityTimestampString(String dateString) throws ParseException {
+//        DateFormat dateFormat = new SimpleDateFormat(Constants.EXTERNAL_DATE_PARSE_FORMAT)
+//        this.activityTimestamp = dateFormat.parse(dateString)
+//    }
+//
+//    public void setActivityTimestampDate(Date activityTimestamp) {
+//        this.activityTimestamp = activityTimestamp
+//    }
+
+    @Override
+    JSONObject asJSON() {
+        new JSONObject([author           : author.asJSONRef(),
+                        action           : action.asJSON(),
+                        activityTimestamp: activityTimestamp,
+                        serviceItem      : serviceItem.asJSONMinimum(),
+                        changeDetails    : changeDetails.collect { it.asJSON() }])
     }
 
-    JSONObject asJSON() {
-        new JSONObject(
-            author: author.asJSONRef(),
-            action: action.asJSON(),
-            activityDate: activityDate,
-            serviceItem: serviceItem.asJSONMinimum(),
-            changeDetails: changeDetails.collect { it.asJSON() }
-        )
+    void bindFromJSON(JSONObject obj) {
+        println(obj)
+        this.with {
+            action = obj.action
+            activityTimestamp = obj.activityTimestamp
+        }
     }
 }

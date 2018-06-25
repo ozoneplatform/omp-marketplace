@@ -1,11 +1,12 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
+
 import org.apache.commons.lang.builder.EqualsBuilder
 import org.apache.commons.lang.builder.HashCodeBuilder
 
-@gorm.AuditStamp
-class Intent implements Serializable {
+
+class Intent extends AuditStamped implements Serializable, ToJSON {
     static searchable = {
         root false
         action component: true
@@ -53,14 +54,13 @@ class Intent implements Serializable {
         toString()
     }
 
-    def asJSON() {
-        return new JSONObject(
-            id: id,
-            action: action.asJSONRef(),
-            dataType: dataType.asJSONRef(),
-            send: send,
-            receive: receive
-        )
+    @Override
+    JSONObject asJSON() {
+        new JSONObject([id      : id,
+                        action  : action.asJSONRef(),
+                        dataType: dataType.asJSONRef(),
+                        send    : send,
+                        receive : receive])
     }
 
     def bindFromJSON(JSONObject json) {

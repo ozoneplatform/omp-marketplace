@@ -1,13 +1,15 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import ozone.utils.Utils
-import marketplace.JSONUtil as JS
-import org.apache.commons.lang.builder.HashCodeBuilder
-import org.apache.commons.lang.builder.EqualsBuilder
+import org.grails.web.json.JSONObject
 
-@gorm.AuditStamp
-class State implements Serializable {
+import marketplace.JSONUtil as JS
+import org.apache.commons.lang.builder.EqualsBuilder
+import org.apache.commons.lang.builder.HashCodeBuilder
+
+import ozone.utils.Utils
+
+
+class State extends AuditStamped implements Serializable, ToJSON {
 
     static bindableProperties = ['title', 'description', 'isPublished', 'uuid']
     static modifiableReferenceProperties = []
@@ -56,14 +58,13 @@ class State implements Serializable {
         }
     }
 
-    def asJSON() {
-        return new JSONObject(
-            id: id,
-            title: title,
-            description: description,
-            isPublished: isPublished,
-            uuid: uuid
-        )
+    @Override
+    JSONObject asJSON() {
+        marshall([id         : id,
+                  title      : title,
+                  description: description,
+                  isPublished: isPublished,
+                  uuid       : uuid])
     }
 
     def asJSONRef() {

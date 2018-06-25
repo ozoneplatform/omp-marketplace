@@ -13,14 +13,14 @@
         mediaBack = 'guideBack'
         mediaFront = 'guideFront'
         mediaIconSrc = 'page_icon_small.png'
-        fileIconSrc = '../themes/common/images/media_page/doc_placeholder'
+        fileIconSrc = '../static/themes/common/images/media_page/doc_placeholder'
     }
 
     if(fileType.toLowerCase() == "slideshow"){
         mediaBack = 'slideshowBack'
         mediaFront = 'slideshowFront'
         mediaIconSrc = 'page_icon_small.png'
-        fileIconSrc = '../themes/common/images/media_page/ppt_placeholder'
+        fileIconSrc = '../static/themes/common/images/media_page/ppt_placeholder'
     }
 %>
 <div class="media_badge_container" style="height:150px; width:150px;" >
@@ -32,7 +32,7 @@
     <input type="hidden" value="${fileDisplayName}" id="displayNameData"
         name="displayNameData" />
 
-    <div id="media_badge" class="${mediaBack}"><image src="${fileIconSrc}.png" title="${fileName}" style="padding-top: 6px;"/></div>
+    <div id="media_badge" class="${mediaBack}"><!---<image src="${fileIconSrc}.png" title="${fileName}" style="padding-top: 6px;"/>---></div>
     <div width="150px">
         <div class="${mediaFront}"></div>
         <div class="media_length"><p:image src="media_page/${mediaIconSrc}" class="media_type_icon"/> ${fileLength.encodeAsHTML()}</div>

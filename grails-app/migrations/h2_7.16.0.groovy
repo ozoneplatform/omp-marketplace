@@ -1240,7 +1240,7 @@ databaseChangeLog = {
                 constraints(nullable: "false")
             }
 
-            column(name: "approved_date", type: "timestamp")
+            column(name: "approval_date", type: "timestamp")
 
             column(name: "avg_rate", type: "float") {
                 constraints(nullable: "false")
@@ -1342,7 +1342,7 @@ databaseChangeLog = {
                 constraints(nullable: "false")
             }
 
-            column(name: "activity_date", type: "timestamp") {
+            column(name: "activity_timestamp", type: "timestamp") {
                 constraints(nullable: "false")
             }
 

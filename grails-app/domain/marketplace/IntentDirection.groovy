@@ -2,8 +2,7 @@ package marketplace
 
 import ozone.utils.Utils
 
-@gorm.AuditStamp
-class IntentDirection implements Serializable {
+class IntentDirection extends AuditStamped implements Serializable {
 
     //TODO: This class and its associated service appears to be unused
 
@@ -26,7 +25,7 @@ class IntentDirection implements Serializable {
     }
 
     static constraints = {
-        title(blank: false, unique: true, inList: DIRECTION_TITLES)
+        title(blank: false, unique: true, inList: this.DIRECTION_TITLES)
         description(nullable: true, maxSize: 250)
         uuid(nullable: true, unique: true)
     }

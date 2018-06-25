@@ -1,0 +1,84 @@
+The *jaxrs-integration-test* plugin contains classes that make integration testing resources much easier.
+
+Integration tests for resources are created in the same way that other integration tests are created, except
+that the test spec classes should extend @JaxrsIntegrationSpec@. This class sets up a mocked servlet context
+that tests can use to send mocked requests through the JAX-RS servlet stack, effectively emulating the path
+real requests would take.
+
+{note}Integration tests will use the JAX-RS implementation that is included in the project.{note}
+
+h3. JaxrsIntegrationSpec
+
+An example of a test may look something like:
+
+{code}
+package com.budjb
+
+import grails.test.mixin.integration.Integration
+import org.grails.plugins.jaxrs.test.JaxrsIntegrationSpec
+import org.grails.plugins.jaxrs.test.JaxrsRequestProperties
+
+@Integration
+class TestResourceSpec extends JaxrsIntegrationSpec {
+    def 'Ensure GET /api/test returns the correct content'() {
+        when:
+        def response = makeRequest(new JaxrsRequestProperties(method: 'GET', uri: '/api/test'))
+
+        then:
+        response.bodyAsString == 'Test'
+        response.status == 200
+    }
+
+    /**
+     * Return the list of additional resources to build the JAX-RS servlet with.
+     *
+     * @return
+     */
+    @Override
+    List getResources() {
+        return []
+    }
+}
+{code}
+
+Classes that extend @JaxrsIntegrationSpec@ are required to implements the @getResources@ method. This method
+is expected to return a list of classes that represent additional resources or providers that should be loaded by the
+JAX-RS implementation. This method is useful when there are test-specific resources or providers that tests require to
+operate. The advantage is that these test-specific classes need not be present on the classpath when the application is
+deployed, and so do not need to exist in the @src/main@ folder.
+
+h3. Making Requests
+
+The @JaxrsIntegrationSpec@ contains a @makeRequest@ method that should be used to make requests to a resource. This
+method sets up servlet requests and response objects, and hands the request off properly. The @makeRequest@ method takes
+a @JaxrsRequestProperties@ object as its parameter. This object contains several properties that make up a request.
+
+{table}
+Property | Description
+@uri@ | Path of the request. This does not need the whole hostname of running application, but only the path to the resource being tested.
+@method@ | The string HTTP method to use with the request. Common values are _GET_, _POST_, _PUT_, and _DELETE_.
+@contentType@ | The content type of the body of the request.
+@accept@ | The requested content type of the body of the response.
+@headers@ | A map of headers, where the key is the name of the header and the value is the value of the header. Supports multi-valued headers.
+@characterEncoding@ | Character encoding of the request. Defaults to _UTF-8_.
+{table}
+
+The @makeRequest@ method returns a @JaxrsResponseProperties@ object containing important properties of the response, as
+well as a couple of convenience methods for converting the response body.
+
+*Properties*
+{table}
+Property | Description
+@status@ | The HTTP status code of the response.
+@body@ | The body of the response, if applicable. This property is a byte array.
+@contentType@ | The content type of the response, if applicable.
+@headers@ | The headers of the response.
+{table}
+
+*Methods*
+{table}
+Method | Description
+@getBodyAsString()@ | Returns the body of the response as a @String@.
+@getBodyAsJson()@ | Parses the body of the response as JSON, and returns either a @List@ or a @Map@.
+@getBodyAsXml()@ | Parses the body of the response as XML, and returns a @GPathResult@.
+{table}

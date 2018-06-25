@@ -1,11 +1,11 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 
 import ozone.marketplace.enums.RelationshipType
 
-class Relationship implements Serializable {
+class Relationship implements Serializable, ToJSON {
 
     static bindableProperties = ['relatedItems', 'relationshipType']
     static modifiableReferenceProperties = []
@@ -21,11 +21,10 @@ class Relationship implements Serializable {
         owningEntity(nullable: false)
     }
 
+    @Override
     JSONObject asJSON() {
-        new JSONObject(
-            relatedItems: (this.getRelatedItems().collect { it?.asJSONMinimum() }.findAll { it != null }) as JSONArray,
-            relationshipType: relationshipType.name()
-        )
+        new JSONObject([relatedItems    : (this.getRelatedItems().collect { it?.asJSONMinimum() }.findAll { it != null }) as JSONArray,
+                        relationshipType: relationshipType.name()])
     }
 
     /**

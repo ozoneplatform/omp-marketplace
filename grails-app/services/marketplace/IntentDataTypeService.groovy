@@ -1,15 +1,20 @@
 package marketplace
 
+import grails.core.GrailsApplication
+
+import org.hibernate.SessionFactory
+
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.hibernate.FlushMode
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 import ozone.marketplace.domain.ValidationException
 
 class IntentDataTypeService extends MarketplaceService {
 
-    def sessionFactory
-    def grailsApplication
+    SessionFactory sessionFactory
+
+    GrailsApplication grailsApplication
 
     @Transactional
     def create(paramMap) {

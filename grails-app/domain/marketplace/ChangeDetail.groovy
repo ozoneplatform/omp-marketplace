@@ -1,8 +1,8 @@
 package marketplace
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
-class ChangeDetail implements Serializable {
+class ChangeDetail implements Serializable, ToJSON {
 
     final static Integer MAX_VALUE_LENGTH = 4000
 
@@ -25,14 +25,13 @@ class ChangeDetail implements Serializable {
 
     String toString() { "id:${id} field ${fieldName} was ${oldValue} now is ${newValue}" }
 
-    def asJSON() {
-        new JSONObject(
-            id: id,
-            displayName: Constants.getSiListingName(fieldName),
-            fieldName: fieldName,
-            oldValue: oldValue,
-            newValue: newValue
-        )
+    @Override
+    JSONObject asJSON() {
+        new JSONObject([id         : id,
+                        displayName: Constants.getSiListingName(fieldName),
+                        fieldName  : fieldName,
+                        oldValue   : oldValue,
+                        newValue   : newValue])
     }
 
     public void setOldValue(String oldValue) {

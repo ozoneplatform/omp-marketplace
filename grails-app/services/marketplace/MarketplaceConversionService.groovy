@@ -1,12 +1,16 @@
 package marketplace
 
+import org.hibernate.SessionFactory
+
 import ozone.utils.Utils
 
 class MarketplaceConversionService {
 
     boolean transactional = true
-    def sessionFactory
-    def owfWidgetTypesService
+
+    SessionFactory sessionFactory
+
+    OwfWidgetTypesService owfWidgetTypesService
 
     /* Account for database changes resulting from changing the customFields member of serviceItem from
     a Map to List. With the Map the relationship was stored in the table service_item_custom_fields and

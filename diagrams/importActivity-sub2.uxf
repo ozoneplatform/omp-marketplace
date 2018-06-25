@@ -156,7 +156,7 @@ m2=no
       <w>180</w>
       <h>70</h>
     </coordinates>
-    <panel_attributes>re-format releaseDate, 
+    <panel_attributes>re-format releasedDate,
 editedDate, createdDate,
 lastActivityDate</panel_attributes>
     <additional_attributes/>

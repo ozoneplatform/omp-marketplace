@@ -1,10 +1,12 @@
 package marketplace
 
+import marketplace.configuration.MarketplaceApplicationConfigurationService
+
 import ozone.marketplace.enums.MarketplaceApplicationSetting
 
 class CommonTagLib {
 
-    def marketplaceApplicationConfigurationService
+    MarketplaceApplicationConfigurationService marketplaceApplicationConfigurationService
 
     static namespace = "common"
 

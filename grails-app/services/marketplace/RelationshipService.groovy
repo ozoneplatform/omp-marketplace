@@ -1,14 +1,19 @@
 package marketplace
 
+import marketplace.rest.ServiceItemActivityInternalService
+
 import ozone.marketplace.enums.RelationshipType
-import org.springframework.transaction.annotation.Transactional
+import grails.gorm.transactions.Transactional
 
 class RelationshipService {
 
-    def serviceItemService
-    def serviceItemActivityService
-    def serviceItemActivityInternalService
-    def changeLogService
+    ServiceItemService serviceItemService
+
+    ServiceItemActivityService serviceItemActivityService
+
+    ServiceItemActivityInternalService serviceItemActivityInternalService
+
+    ChangeLogService changeLogService
 
     // TODO: Remove this once I get logging from the integration test working.
     def logIt(def strIn) {
