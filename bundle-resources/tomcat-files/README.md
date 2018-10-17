@@ -19,6 +19,7 @@ Example configuration files are provided in `$TOMCAT_HOME/lib/config/`:
 Usage:
 ```
 start.bat [/dev] [/init] [/db database]
+  /dev       Start server in DEVELOPMENT mode                
   /init      Pre-populate the database with the initial data (only use on the first launch!)
   /db        Use the selected database configuration
   database     h2     - Embedded H2 file-based database (default)
@@ -26,7 +27,6 @@ start.bat [/dev] [/init] [/db database]
                mysql  - MySQL
                oracle - Oracle RDBMS
                mssql  - Microsoft SQL Server
-  /dev       Start server in DEVELOPMENT mode                
 ```
 
 
@@ -34,8 +34,13 @@ start.bat [/dev] [/init] [/db database]
 
 Usage:
 ```
-./start.sh [dev] [init] [db [--mysql | --h2 | --pg | --oracle] ]
-  init   Pre-populate the database with the initial data (only use on the first launch!)
-  dev    Start in `development` mode
-  db	 Takes an additional parameter for type of database to be used:  [--mysql | --h2 | --pg | --oracle]
+./start.sh [--dev] [--init] [--db database]
+  --dev       Start in DEVELOPMENT mode
+  --init      Pre-populate the database with the initial data (only use on the first launch!)
+  --db	      Use the selected database configuration
+  database      h2     - Embedded H2 file-based database (default)
+                pg     - PostgreSQL
+                mysql  - MySQL
+                oracle - Oracle RDBMS
+                mssql  - Microsoft SQL Server
 ```

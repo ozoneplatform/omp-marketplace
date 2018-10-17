@@ -3,16 +3,18 @@ SETLOCAL
 
 SET GRAILS_ENV=production
 SET CONFIG_DB=h2
-
 SET AUTO_USER=testAdmin1
 
+
 GOTO :parseOptions
+
 
 :showUsage
 ECHO:
 ECHO Usage: %0 [/dev] [/init] [/db database]
 ECHO:
 ECHO Optional arguments:
+ECHO   /dev       Start server in DEVELOPMENT mode
 ECHO   /init      Initialize the database
 ECHO   /db        Use the selected database configuration
 ECHO   database     h2     - Embedded H2 file-based database (default)
@@ -20,12 +22,12 @@ ECHO                pg     - PostgreSQL
 ECHO                mysql  - MySQL
 ECHO                oracle - Oracle RDBMS
 ECHO                mssql  - Microsoft SQL Server
-ECHO   /dev       Start server in DEVELOPMENT mode
 ECHO:
 ECHO Note: Selecting a database (other than H2) requires that the respective
 ECHO       database JDBC driver JAR be placed in the 'tomcat\lib\' directory.
 ECHO:
 GOTO :end
+
 
 :parseOptions
 IF NOT "%1"=="" (
@@ -81,6 +83,7 @@ SHIFT /1
 :parseNextOption
 SHIFT /1
 GOTO :parseOptions
+
 
 :startServer
 SET JAVA_OPTS=%JAVA_OPTS% -Dgrails.env=%GRAILS_ENV%
