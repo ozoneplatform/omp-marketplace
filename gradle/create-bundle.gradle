@@ -15,18 +15,11 @@ task extractCustomTomcat(type: Sync, group: 'bundle') {
 task copyTomcatCustomizations(type: Copy, group: 'bundle') {
     dependsOn(extractCustomTomcat)
 
-    from fileTree("bundle-resources/tomcat-files")
+    from fileTree("bundle-resources/tomcat")
     into file("$tomcatBundleStaging/tomcat")
 }
 
-task copyDatabaseDrivers(type: Copy, group: 'bundle') {
-    dependsOn(extractCustomTomcat)
-
-    from configurations.drivers
-    into file("$tomcatBundleStaging/drivers")
-}
-
-task copyFrameworkSpringConfigurations(type: Copy, group: 'bundle') {
+task copyMarketplaceSpringConfigurations(type: Copy, group: 'bundle') {
     dependsOn(extractCustomTomcat)
 
     from fileTree("src/main/resources/ozone/marketplace")
@@ -36,8 +29,22 @@ task copyFrameworkSpringConfigurations(type: Copy, group: 'bundle') {
 task copyMarketplaceConfigurations(type: Copy, group: 'bundle') {
     dependsOn(extractCustomTomcat)
 
-    from fileTree("bundle-resources/config")
+    from fileTree("config")
     into file("$tomcatBundleStaging/tomcat/lib/config")
+}
+
+task copyCertificates(type: Copy, group: 'build') {
+    dependsOn(extractCustomTomcat)
+
+    from fileTree("certs")
+    into file("$tomcatBundleStaging/tomcat/certs")
+}
+
+task copyDatabaseDrivers(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from configurations.drivers
+    into file("$tomcatBundleStaging/drivers")
 }
 
 task copyMarketplaceWar(type: Copy, group: 'bundle') {
@@ -60,10 +67,11 @@ task copyDocumentation(type: Copy, group: 'bundle') {
 }
 
 task bundle(type: Zip, group: 'build') {
-    dependsOn(copyDatabaseDrivers,
-              copyTomcatCustomizations,
-              copyFrameworkSpringConfigurations,
+    dependsOn(copyTomcatCustomizations,
+              copyMarketplaceSpringConfigurations, 
               copyMarketplaceConfigurations,
+              copyCertificates,
+              copyDatabaseDrivers,
               copyMarketplaceWar,
               copyDatabaseScripts,
               copyDocumentation)

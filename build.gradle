@@ -29,7 +29,7 @@ plugins {
 }
 
 group 'org.ozoneplatform'
-version '7.17.1-0-RC1'
+version '7.17.1-1'
 
 
 apply plugin: 'idea'
@@ -97,12 +97,12 @@ configurations {
 
 dependencies {
     // Ozone
-    compile group: 'org.ozoneplatform', name: 'owf-appconfig', version: '0.9.1-0-RC1'
-    compile group: 'org.ozoneplatform', name: 'owf-auditing', version: '1.3.2-0-RC1'
-    compile group: 'org.ozoneplatform', name: 'owf-security', version: '4.0.4-0-RC1'
-    compile group: 'org.ozoneplatform', name: 'owf-messaging', version: '1.19.1-0-RC1'
+    compile group: 'org.ozoneplatform', name: 'owf-appconfig', version: '0.9.1-0'
+    compile group: 'org.ozoneplatform', name: 'owf-auditing', version: '1.3.2-0'
+    compile group: 'org.ozoneplatform', name: 'owf-security', version: '4.0.4-0'
+    compile group: 'org.ozoneplatform', name: 'owf-messaging', version: '1.19.1-0'
 
-    customTomcat(group: 'org.ozoneplatform', name: 'owf-custom-tomcat', version: '1.2.3-0-RC1') {
+    customTomcat(group: 'org.ozoneplatform', name: 'owf-custom-tomcat', version: '1.2.3-1') {
         artifact {
             name = 'owf-custom-tomcat'
             type = 'zip'
@@ -201,7 +201,7 @@ dependencies {
         exclude([group:"httpclient"])
     }
 
-    runtime group: 'net.sf.ehcache', name: 'ehcache-jgroupsreplication', version: '1.4'
+    runtime group: 'net.sf.ehcache', name: 'ehcache-jgroupsreplication', version: '1.7'
 
     // Ruby Gems (to build themes)
     themeCompileGem group: 'rubygems', name: 'sass', version: '3.1.3'

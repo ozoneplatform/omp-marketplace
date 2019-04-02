@@ -72,7 +72,7 @@ Desktop.ini
 build-base*/*
 target/*
 target-eclipse/*
-logs/*
+/logs/
 .settings/*
 out/*
 plugins/*
@@ -81,7 +81,6 @@ plugins/*
 node_modules
 js-build
 .vagrant
-/bin
 
 ### local backup files
 *.bak
@@ -101,3 +100,14 @@ web-app/js/mp-api.js
 cobertura.ser
 
 Vagrantfile
+
+### JGIT CAC files
+/RITE_server_public/
+/mscapi-agent-option/
+/agent.jar
+/card.config
+/jgit-cli-*.jar
+/jgit.cac.sh
+/jgit.unix.sh
+/jssecacerts
+/pkcs11.config

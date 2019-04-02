@@ -15,6 +15,8 @@ grails:
         ehcache:
             ehcacheXmlLocation: 'classpath:ozone/marketplace/ehcache3.xml'
             lockTimeout: 200  # milliseconds
+    cors:
+      enabled: true
 
 info:
     app:
@@ -61,17 +63,17 @@ environments:
     test:
         dataSource:
             dbCreate: create-drop
-            url: jdbc:oracle:thin:@localhost:1521/ORCLCDB
-            driverClassName: oracle.jdbc.driver.OracleDriver
-            username: system
+            url: jdbc:jtds:sqlserver://localhost:1433/omp-test
+            driverClassName: net.sourceforge.jtds.jdbc.Driver
+            username: omp
             password: omp
 
     development:
         dataSource:
             dbCreate: create-drop
-            url: jdbc:oracle:thin:@localhost:1521/ORCLCDB
-            driverClassName: oracle.jdbc.driver.OracleDriver
-            username: system
+            url: jdbc:jtds:sqlserver://localhost:1433/omp-dev
+            driverClassName: net.sourceforge.jtds.jdbc.Driver
+            username: omp
             password: omp
             properties:
                 minEvictableIdleTimeMillis: 30000
@@ -79,7 +81,7 @@ environments:
                 testOnBorrow: true
                 testWhileIdle: true
                 testOnReturn: false
-                validationQuery: "SELECT 1 FROM DUAL"
+                validationQuery: "SELECT 1"
                 validationInterval: 30000
                 maxActive: 100
                 initialSize: 10
@@ -93,9 +95,9 @@ environments:
     production:
         dataSource:
             dbCreate: update
-            url: jdbc:oracle:thin:@localhost:1521/ORCLCDB
-            driverClassName: oracle.jdbc.driver.OracleDriver
-            username: system
+            url: jdbc:jtds:sqlserver://localhost:1433/omp
+            driverClassName: net.sourceforge.jtds.jdbc.Driver
+            username: omp
             password: omp
             properties:
                 jmxEnabled: true
@@ -107,7 +109,7 @@ environments:
                 maxAge: 600000
                 timeBetweenEvictionRunsMillis: 5000
                 minEvictableIdleTimeMillis: 60000
-                validationQuery: SELECT 1 FROM DUAL
+                validationQuery: SELECT 1
                 validationQueryTimeout: 3
                 validationInterval: 15000
                 testOnBorrow: true

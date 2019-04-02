@@ -2,11 +2,14 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
                            http://www.springframework.org/schema/security
-                           http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+                           http://www.springframework.org/schema/security/spring-security-4.2.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
     <!-- Enable annotation-driven security -->
     <sec:global-method-security jsr250-annotations="enabled"
@@ -34,22 +37,38 @@
         <property name="cache" ref="ehcache"/>
     </bean>
 
-    <!-- Authentication provider for form login (username & password) authentication -->
-    <bean id="basicAuthenticationAuthProvider"
-          class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="userService"/>
+    <!-- Authentication provider for X509 certificate authentication -->
+    <bean id="preAuthenticatedAuthProvider"
+          class="ozone.security.authentication.CachingPreAuthenticatedAuthenticationProvider">
+        <property name="preAuthenticatedUserDetailsService">
+            <bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+                <constructor-arg ref="userService"/>
+            </bean>
+        </property>
         <property name="userCache" ref="userCache"/>
+        <property name="order">
+            <util:constant static-field="org.springframework.core.Ordered.HIGHEST_PRECEDENCE"/>
+        </property>
     </bean>
 
     <!-- Authentication manager must be defined using 'id' and not 'ref' -->
-    <sec:authentication-manager alias="authenticationManager">
-        <sec:authentication-provider ref="basicAuthenticationAuthProvider"/>
+    <sec:authentication-manager id="preAuthenticatioAuthManager">
+        <sec:authentication-provider ref="preAuthenticatedAuthProvider"/>
     </sec:authentication-manager>
+
+    <!-- Entry point to return a '403 Forbidden' error if certificate authentication fails -->
+    <bean id="authenticationEntryPoint"
+          class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
 
     <!-- Custom Ozone cookie filter -->
     <bean id="ozoneCookieFilter" class="ozone.security.filters.OzoneCookieFilter"/>
 
-    <sec:http realm="OZONE">
+    <!-- X509 certificate filter -->
+    <bean id="x509Filter" class="org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter">
+        <property name="authenticationManager" ref="preAuthenticatioAuthManager"/>
+    </bean>
+
+    <sec:http realm="OZONE" entry-point-ref="authenticationEntryPoint">
 
         <sec:port-mappings>
             <sec:port-mapping http="8080" https="8443"/>
@@ -62,43 +81,22 @@
         <!-- Set the 'X-Frame-Options' header (defaults to DENY) to allow widgets to run in iframes -->
         <sec:headers>
             <sec:frame-options policy="SAMEORIGIN"/>
-            <!-- Allow localhost connection from OWF -->
-            <!--<sec:frame-options policy="ALLOW-FROM" strategy="static" value="http://localhost:8099" />-->
-            <!--<sec:hsts disabled="true"/>-->
         </sec:headers>
 
         <sec:custom-filter ref="ozoneCookieFilter" before="ANONYMOUS_FILTER"/>
+        <sec:custom-filter ref="x509Filter" position="X509_FILTER"/>
 
         <sec:intercept-url pattern="/static/**"
                            access="permitAll()" />
-
-        <sec:intercept-url pattern="/login*"
-                           access="permitAll()"
-                           requires-channel="https" />
-
-        <sec:intercept-url pattern="/perform_login*"
-                           access="permitAll()"
-                           requires-channel="https" />
 
         <sec:intercept-url pattern="/**"
                            access="hasAnyRole('ADMIN', 'USER', 'EXTERN_ADMIN')"
                            requires-channel="https" />
 
-        <sec:form-login login-page="/login"
-                        login-processing-url="/perform_login"
-                        default-target-url="/"
-                        always-use-default-target="true"
-                        username-parameter="username"
-                        password-parameter="password" />
-
         <sec:logout logout-url="/logout"
                     logout-success-url="/login?out=1"
                     delete-cookies="JSESSIONID"
                     invalidate-session="true" />
-
-        <sec:session-management invalid-session-url="/login?invalid=1">
-            <sec:concurrency-control max-sessions="1" expired-url="/login?time=1" />
-        </sec:session-management>
 
     </sec:http>
 
